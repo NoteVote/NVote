@@ -29,6 +29,7 @@ class HostTableCell: UITableViewCell {
             voteButton.setTitleColor(UIColor(red: 23/255, green: 23/255, blue: 23/255, alpha: 1.0), forState: UIControlState.Normal)
             voteButton.setTitle(String(Int(voteButton.currentTitle!)!+1), forState: UIControlState.Normal)
             serverLink.increment(self.songURI)
+            serverLink.voteURI(songURI)
             
         }
         

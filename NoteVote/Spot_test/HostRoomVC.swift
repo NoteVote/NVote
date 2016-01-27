@@ -39,7 +39,6 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
     func hideDropDownView() {
         var frame:CGRect = self.dropDownView.frame
         frame.origin.y = -frame.size.height + 80
-        print("pullUp")
         self.animateDropDownToFrame(frame) {
         }
     }
@@ -47,7 +46,6 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
     func showDropDownView() {
         var frame:CGRect = self.dropDownView.frame
         frame.origin.y = 64
-        print("dropDown")
         self.animateDropDownToFrame(frame) {
         }
     }
@@ -126,11 +124,7 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
         }
         self.refreshControl.endRefreshing()
     }
-    
-    
-    
-    
-    
+
     
     private var player:SPTAudioStreamingController?
     private let authController = SpotifyAuth()
@@ -162,9 +156,9 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
     @IBAction func menuButtonPressed(sender: AnyObject) {
         toggleSideMenuView()
     }
+    
     @IBAction func playPausePressed(sender: AnyObject) {
         if (self.player!.isPlaying) {
-            
             self.player!.setIsPlaying(false, callback: { (error:NSError!) -> Void in
                 if error != nil {
                     print("Enabling playback got error \(error)")
@@ -174,7 +168,6 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
             playPauseButton.setBackgroundImage(UIImage(named:"PlayButton"), forState: UIControlState.Normal)
             
         } else {
-            
             self.player!.setIsPlaying(true, callback: { (error:NSError!) -> Void in
                 if error != nil {
                     print("Enabling playback got error \(error)")

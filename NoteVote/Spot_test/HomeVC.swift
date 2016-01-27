@@ -67,10 +67,7 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
     
     /*CurrentPlayer Selected and moves to next page*/
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        userDefaults.setObject(self.roomsNearby[indexPath.row].objectForKey("partyID") as! String, forKey: "roomID")
-        //takes name of current room and saves it.
-        userDefaults.setObject(self.roomsNearby[indexPath.row].objectForKey("partyName") as! String, forKey: "currentRoom")
-        userDefaults.synchronize()
+        serverLink.setParty(self.roomsNearby[indexPath.row])
         self.performSegueWithIdentifier("Home_ActiveRoom", sender: nil)
         
     }

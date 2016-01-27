@@ -22,13 +22,14 @@ class QueueTableCell: UITableViewCell {
             voteButton.setTitleColor(UIColor(red: 125/255, green: 205/255, blue: 3/255, alpha: 1.0), forState: UIControlState.Normal)
             voteButton.setTitle(String(Int(voteButton.currentTitle!)!-1), forState: UIControlState.Normal)
             serverLink.decrement(self.songURI)
+            serverLink.unvoteURI(songURI)
             
         } else {
             voteButton.setBackgroundImage(UIImage(named: "voted"), forState: UIControlState.Normal)
             voteButton.setTitleColor(UIColor(red: 23/255, green: 23/255, blue: 23/255, alpha: 1.0), forState: UIControlState.Normal)
             voteButton.setTitle(String(Int(voteButton.currentTitle!)!+1), forState: UIControlState.Normal)
             serverLink.increment(self.songURI)
-        
+            serverLink.voteURI(songURI)
         }
         
 		PFAnalytics.trackEventInBackground("savequeue", dimensions: ["where":"vote"], block: nil)

@@ -82,7 +82,7 @@
 		918A22E31BB1BBC200CE76AF /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		918A22E51BB1BCEA00CE76AF /* Spot_test-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Spot_test-Bridging-Header.h"; sourceTree = "<group>"; };
 		91E4FB2A1BE967C70044762C /* QueueTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueTableCell.swift; sourceTree = "<group>"; };
-		91E4FB2C1BEC069D0044762C /* HostRoomVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HostRoomVC.swift; sourceTree = "<group>"; };
+		91E4FB2C1BEC069D0044762C /* HostRoomVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HostRoomVC.swift; sourceTree = "<group>"; usesTabs = 0; };
 		91EFD91A1BBB163200818FA7 /* SpotifyAuth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotifyAuth.swift; sourceTree = "<group>"; };
 		AD23D4AA1BE2C9A7000B9F14 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		AD23D4AC1BE2C9B9000B9F14 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };

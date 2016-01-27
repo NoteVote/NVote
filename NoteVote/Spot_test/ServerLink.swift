@@ -66,6 +66,10 @@ class ServerLink {
         partyObject = rooms[objectNum]
     }
     
+    func setParty(party:PFObject){
+        self.partyObject = party
+    }
+    
     /**
      * Adds a party object to the Parse PartyObject class.
      * -takes in a String(partyName) -> used to set the parties name.
@@ -225,7 +229,10 @@ class ServerLink {
         let query = PFQuery(className: "SongLibrary")
         query.whereKey("partyID", equalTo: partyObject.objectForKey("partyID") as! String)
         do{
-            try self.musicList = query.findObjects()
+            let list =  try query.findObjects()
+            for object in list {
+                self.musicList.append(object)
+            }
         }
         catch{ print("synchronise query failed" ) }
     }
@@ -241,8 +248,9 @@ class ServerLink {
             (objects:[PFObject]?, error: NSError?) -> Void in
             PFAnalytics.trackEventInBackground("deleteroom", block: nil)
             if(error == nil){
-                self.musicList = objects!
-                print(self.musicList.count)
+                for object in objects!{
+                    self.musicList.append(object)
+                }
                 completion(result: self.musicList)
             }
         }
