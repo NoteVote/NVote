@@ -53,15 +53,16 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
     func animateDropDownToFrame(frame: CGRect, completion:() -> Void) {
         UIView.animateWithDuration(0.5, delay: 0.0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.8, options: [], animations: {
             self.dropDownView.frame = frame
-            serverLink.getQueue(){
-                (result: [PFObject]) in
-                serverLink.musicList = result
-                PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"active"], block: nil)
-                serverLink.sortMusicList()
-                self.tableView.reloadData()
-            }
+            
             }, completion:  { finished in
-        })
+                serverLink.getQueue(){
+                    (result: [PFObject]) in
+                    //serverLink.musicList = result
+                    PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"active"], block: nil)
+                    serverLink.sortMusicList()
+                    self.tableView.reloadData()
+                }
+            })
     }
     
     
@@ -78,6 +79,7 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
     
     /*Number of rows of tableView*/
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print(String(serverLink.musicList.count) + " cells allowed")
         return serverLink.musicList.count
         
     }
@@ -93,21 +95,22 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
         let customColor = UIView()
         customColor.backgroundColor = UIColor.clearColor()
         cell.selectedBackgroundView = customColor
+        
         if(!serverLink.musicList.isEmpty){
+            print(String(serverLink.musicList.count) + " cells to build")
             let object:PFObject = serverLink.musicList[indexPath.row]
             cell.artistLabel.text! = object.objectForKey("trackArtist") as! String
             cell.songTitle.text! = object.objectForKey("trackTitle") as! String
             cell.songURI = object.objectForKey("uri") as! String
             cell.voteButton.setTitle(String(object.objectForKey("votes") as! Int), forState: UIControlState.Normal)
+            
             //initializing cells to voted state or unvoted state.
-            let votes = serverLink.songsVoted[(userDefaults.objectForKey("roomID") as! String)]
-            if(votes != nil){
-                if (votes!.contains(cell.songURI)){
-                    cell.alreadyVoted()
-                }
-                else{
-                    cell.notalreadyVoted()
-                }
+            let votes = serverLink.getSongsVoted()
+            if (votes.contains(cell.songURI)){
+                cell.alreadyVoted()
+            }
+            else{
+                cell.notalreadyVoted()
             }
         }
         return cell
@@ -117,9 +120,10 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
     {
         serverLink.getQueue(){
             (result: [PFObject]) in
-            serverLink.musicList = result
+            //serverLink.musicList = result
             PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"active"], block: nil)
             serverLink.sortMusicList()
+            print(serverLink.musicList)
             self.tableView.reloadData()
         }
         self.refreshControl.endRefreshing()

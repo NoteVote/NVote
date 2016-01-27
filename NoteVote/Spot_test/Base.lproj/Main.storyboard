@@ -313,7 +313,8 @@
                                                             <exclude reference="U8p-tJ-a5K"/>
                                                         </mask>
                                                     </variation>
-                                                    <variation key="heightClass=regular-widthClass=compact">
+                                                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                                        <rect key="frame" x="8" y="34" width="174" height="25"/>
                                                         <mask key="constraints">
                                                             <include reference="U8p-tJ-a5K"/>
                                                         </mask>
@@ -340,7 +341,8 @@
                                                             <exclude reference="ycD-No-Sbf"/>
                                                         </mask>
                                                     </variation>
-                                                    <variation key="heightClass=regular-widthClass=compact">
+                                                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                                        <rect key="frame" x="182" y="9" width="50" height="50"/>
                                                         <mask key="constraints">
                                                             <include reference="rzu-ug-x59"/>
                                                             <include reference="ycD-No-Sbf"/>
@@ -363,7 +365,8 @@
                                                             <exclude reference="0rx-FP-gGA"/>
                                                         </mask>
                                                     </variation>
-                                                    <variation key="heightClass=regular-widthClass=compact">
+                                                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                                        <rect key="frame" x="8" y="0.0" width="174" height="34"/>
                                                         <mask key="constraints">
                                                             <exclude reference="0rx-FP-gGA"/>
                                                         </mask>
@@ -1164,11 +1167,12 @@
                                         </mask>
                                     </variation>
                                 </view>
+                                <color key="backgroundColor" red="0.090196078430000007" green="0.090196078430000007" blue="0.090196078430000007" alpha="1" colorSpace="calibratedRGB"/>
                                 <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="D98-3H-NhY" secondAttribute="height" multiplier="400:567" id="WBG-4T-Mng"/>
                                 </constraints>
-                                <blurEffect style="light"/>
+                                <blurEffect style="dark"/>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="WBG-4T-Mng"/>

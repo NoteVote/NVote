@@ -70,6 +70,16 @@ class ServerLink {
         self.partyObject = party
     }
     
+    func getSongsVoted() -> [String]{
+        let voted = self.songsVoted[self.partyObject.objectForKey("partyID") as! String]
+        if(voted != nil){
+            return voted!
+        }
+        else {
+            return []
+        }
+    }
+    
     /**
      * Adds a party object to the Parse PartyObject class.
      * -takes in a String(partyName) -> used to set the parties name.
@@ -261,24 +271,42 @@ class ServerLink {
      */
     func sortMusicList(){
         var temp:[PFObject] = []
-        for object in musicList {
-            if(temp.isEmpty){
-                temp.append(object)
-            }
-            else{
-                var index = 0
-                for obj in temp {
-                    let num1 = object.objectForKey("votes") as! Int
-                    let num2 = obj.objectForKey("votes") as! Int
-                    if(num1 > num2){
-                        temp.insert(object, atIndex: index)
-                        break
+        var voteChecker:[String] = []
+        if !self.musicList.isEmpty {
+            for i in 0...self.musicList.count - 1 {
+                voteChecker.append(self.musicList[i].objectForKey("uri") as! String)
+                if temp.count == 0 {
+                    temp.append(self.musicList[i])
+                } else {
+                    for j in 0...temp.count-1 {
+                        
+                        //if its larger, insert in temp
+                        if self.musicList[i].objectForKey("votes") as! Int > temp[j].objectForKey("votes") as! Int {
+                            temp.insert(self.musicList[i], atIndex: j)
+                            break
+                        }
+                        
+                        //if its not larger than any element in temp
+                        if j == temp.count-1 {
+                            temp.append(self.musicList[i])
+                        }
                     }
-                    index+=1
+                    
                 }
             }
+            self.updateSongsVoted(voteChecker)
+            self.musicList = temp
         }
-        musicList = temp
+    }
+    
+    func updateSongsVoted(currentSongs:[String]){
+        let temp:[String] = []
+        for item in self.songsVoted[self.partyObject.objectForKey("partyID") as! String]!{
+            if(currentSongs.contains(item)){
+               temp.append(item)
+            }
+        }
+        
     }
     
     func removeSongFromBatch(songTitle:String, trackArtist:String){
