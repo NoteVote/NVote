@@ -19,9 +19,15 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
     @IBOutlet weak var dropDownButton: UIButton!
     var dropDownViewIsDisplayed = false
     @IBOutlet weak var dropDownView: UIView!
+    private var player:SPTAudioStreamingController?
+    private let authController = SpotifyAuth()
     
     @IBOutlet weak var tableView: UITableView!
     var refreshControl:UIRefreshControl!
+    
+    
+    
+//----------Drop Down View Methods----------------
     
     @IBAction func dropDownButtonPressed(sender: UIButton) {
         if(dropDownViewIsDisplayed){
@@ -66,7 +72,7 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
     }
     
     
-    
+//----------Table View Methods----------------
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 60
@@ -128,10 +134,12 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
         }
         self.refreshControl.endRefreshing()
     }
-
     
-    private var player:SPTAudioStreamingController?
-    private let authController = SpotifyAuth()
+    
+    
+    
+    
+//----------Nav Bar / Side Menu Items----------------
     
     @IBAction func SearchButtonPressed(sender: UIBarButtonItem) {
         performSegueWithIdentifier("Host_Search", sender: nil)
@@ -160,6 +168,12 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
     @IBAction func menuButtonPressed(sender: AnyObject) {
         toggleSideMenuView()
     }
+    
+    
+    
+    
+    
+//----------Spotify/Music Playing in general----------------
     
     @IBAction func playPausePressed(sender: AnyObject) {
         if (self.player!.isPlaying) {
@@ -203,7 +217,6 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
             if !serverLink.musicList.isEmpty {
                 //TODO dynamic track URI
                 let currentTrack = serverLink.pop()
-				//serverLink.currentURI = currentTrack
                 print(currentTrack)
                 self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
                     if error != nil {
@@ -216,8 +229,6 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
         })
     }
     
-    //SPTAudioStreamingPlaybackDelegate methods
-
     
     //fires whenever the track changes
     func audioStreaming(audioStreaming: SPTAudioStreamingController!, didChangeToTrack trackMetadata: [NSObject : AnyObject]!) {
@@ -279,6 +290,9 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
         playUsingSession(session)
     }
     
+    
+    
+//----------Methods for enter/exit HostVC----------------
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)

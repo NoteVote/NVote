@@ -300,13 +300,13 @@ class ServerLink {
     }
     
     func updateSongsVoted(currentSongs:[String]){
-        let temp:[String] = []
+        var temp:[String] = []
         for item in self.songsVoted[self.partyObject.objectForKey("partyID") as! String]!{
             if(currentSongs.contains(item)){
                temp.append(item)
             }
         }
-        
+        self.songsVoted[self.partyObject.objectForKey("partyID") as! String] = temp
     }
     
     func removeSongFromBatch(songTitle:String, trackArtist:String){

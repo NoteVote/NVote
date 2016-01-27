@@ -9,12 +9,15 @@
 import UIKit
 import Parse
 
-class CreateRoomVC: UIViewController, ENSideMenuDelegate {
+class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource, UIPickerViewDelegate {
     
     let sessionHandler = SessionHandler()
     var session:SPTSession? = nil
     @IBOutlet weak var roomName: UITextField!
-    
+    @IBOutlet weak var infoButton: UIButton!
+    @IBOutlet weak var pickerView: UIPickerView!
+    var privateParty:Bool = false
+    let playlistNames:[String] = ["good times","Party Harty", "My Jams!"]
     // MARK: - ENSideMenu Delegate
     func sideMenuWillOpen() {
         print("sideMenuWillOpen")
@@ -37,6 +40,9 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate {
         print("sideMenuDidOpen")
     }
 
+    @IBAction func privateSwitchSwitched(sender: UISwitch) {
+        self.privateParty = !self.privateParty
+    }
     
     @IBAction func cancelButtonPressed(sender: UIBarButtonItem) {
         performSegueWithIdentifier("CreateRoom_Home", sender: nil)
@@ -58,6 +64,31 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate {
     func setCurrentSession(session: SPTSession) {
         self.session = session
     }
+    
+//------------Picker View Methods-----------------
+    
+    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return self.playlistNames.count
+    }
+    
+    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+        return 40
+    }
+    
+    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return self.playlistNames[row]
+    }
+    
+    
+    
+    
+    
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
