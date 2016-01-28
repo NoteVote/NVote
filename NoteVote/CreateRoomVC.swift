@@ -16,6 +16,7 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
     @IBOutlet weak var roomName: UITextField!
     @IBOutlet weak var infoButton: UIButton!
     @IBOutlet weak var pickerView: UIPickerView!
+    
     var privateParty:Bool = false
     let playlistNames:[String] = ["good times","Party Harty", "My Jams!"]
     // MARK: - ENSideMenu Delegate
@@ -60,14 +61,15 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
     
     //TODO: Still need to add slide button for private Switch.
     @IBAction func doneButtonPressed(sender: UIBarButtonItem) {
-        
-        print(roomName.text!)
         serverLink.musicList = []
         serverLink.songsVoted[session!.canonicalUsername] = []
         serverLink.addParty(roomName.text!, partyID: session!.canonicalUsername, priv: privateParty)
         userDefaults.setObject(roomName.text!, forKey: "currentRoom")
         userDefaults.setObject(session!.canonicalUsername, forKey: "roomID")
         userDefaults.synchronize()
+        let chosenIndex:Int = self.pickerView.selectedRowInComponent(1)
+        //
+
         self.performSegueWithIdentifier("CreateRoom_HostRoom", sender: nil)
         
     }
@@ -95,8 +97,6 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
         attributedString = NSAttributedString(string: self.playlistNames[row], attributes: [NSForegroundColorAttributeName : UIColor(colorLiteralRed: 125/255, green: 205/255, blue: 3/255, alpha: 1.0)])
         return attributedString
     }
-    
-    
     
     
     
