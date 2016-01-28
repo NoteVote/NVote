@@ -129,7 +129,7 @@ class ActiveRoomVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         super.viewWillAppear(true)
         serverLink.musicList = []
         serverLink.songsVotedCheck()
-        self.title! = serverLink.partyObject.objectForKey("partyName") as! String
+        self.title = serverLink.partyObject.objectForKey("partyName") as? String
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.SingleLine
         self.tableView.separatorColor = UIColor.lightGrayColor()
         serverLink.getQueue(){
