@@ -53,7 +53,7 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
         print(roomName.text!)
         serverLink.musicList = []
         serverLink.songsVoted[session!.canonicalUsername] = []
-        serverLink.addParty(roomName.text!, partyID: session!.canonicalUsername, priv: false)
+        serverLink.addParty(roomName.text!, partyID: session!.canonicalUsername, priv: privateParty)
         userDefaults.setObject(roomName.text!, forKey: "currentRoom")
         userDefaults.setObject(session!.canonicalUsername, forKey: "roomID")
         userDefaults.synchronize()
@@ -78,12 +78,12 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
     func pickerView(pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
         return 40
     }
-    
-    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return self.playlistNames[row]
+
+    func pickerView(pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+        var attributedString: NSAttributedString!
+        attributedString = NSAttributedString(string: self.playlistNames[row], attributes: [NSForegroundColorAttributeName : UIColor(colorLiteralRed: 125/255, green: 205/255, blue: 3/255, alpha: 1.0)])
+        return attributedString
     }
-    
-    
     
     
     
