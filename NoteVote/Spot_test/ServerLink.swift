@@ -331,8 +331,8 @@ class ServerLink {
      *      if they have it sets songsVoted to that list of song titles.
      */
     func songsVotedCheck(){
-        if(!songsVoted.keys.contains(userDefaults.objectForKey("roomID") as! String)){
-            songsVoted[(userDefaults.objectForKey("roomID") as! String)] = []
+        if(!songsVoted.keys.contains(partyObject.objectForKey("partyID") as! String)){
+            songsVoted[(partyObject.objectForKey("partyID") as! String)] = []
         }
     }
     
