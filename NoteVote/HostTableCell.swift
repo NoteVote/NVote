@@ -17,7 +17,7 @@ class HostTableCell: UITableViewCell {
     @IBAction func voteButtonPressed(sender: UIButton) {
         serverLink.syncGetQueue()
         PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"vote"], block: nil)
-        if (serverLink.songsVoted[(userDefaults.objectForKey("roomID") as! String)]!.contains(songURI)){
+        if (serverLink.songsVoted[(serverLink.partyObject.objectForKey("partyID") as! String)]!.contains(songURI)){
             serverLink.unvoteURI(songURI)
             voteButton.setBackgroundImage(UIImage(named: "unvoted"), forState: UIControlState.Normal)
             voteButton.setTitleColor(UIColor(red: 125/255, green: 205/255, blue: 3/255, alpha: 1.0), forState: UIControlState.Normal)
