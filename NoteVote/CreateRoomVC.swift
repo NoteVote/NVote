@@ -39,6 +39,12 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
     func sideMenuDidOpen() {
         print("sideMenuDidOpen")
     }
+    @IBAction func infoButtonPressed(sender: UIButton) {
+        let alertController = UIAlertController(title: "Playlist Info", message:
+            "Choosing a playlist to pull music from when no music is in your party queue. It keeps the party going.", preferredStyle: UIAlertControllerStyle.Alert)
+        alertController.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default,handler: nil))
+        self.presentViewController(alertController, animated: true, completion: nil)
+    }
 
     @IBAction func privateSwitchSwitched(sender: UISwitch) {
         self.privateParty = !self.privateParty
@@ -48,8 +54,21 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
         performSegueWithIdentifier("CreateRoom_Home", sender: nil)
     }
     
+    func noThanks(){
+        
+    }
+    
     //TODO: Still need to add slide button for private Switch.
     @IBAction func doneButtonPressed(sender: UIBarButtonItem) {
+//        //if(session!.canonicalUsername (is not premium member)){
+//            let alertController = UIAlertController(title: "Spotify Account", message:
+//                "To Create and Host your own room you must be a Premium member of Spotify", preferredStyle: UIAlertControllerStyle.Alert)
+//        alertController.addAction(UIAlertAction(title: "No Thanks", style: UIAlertActionStyle.Destructive,handler: nil))
+//            alertController.addAction(UIAlertAction(title: "Upgrage", style: UIAlertActionStyle.Default,handler: nil))
+//            self.presentViewController(alertController, animated: true, completion: nil)
+//        //}
+        
+        
         print(roomName.text!)
         serverLink.musicList = []
         serverLink.songsVoted[session!.canonicalUsername] = []

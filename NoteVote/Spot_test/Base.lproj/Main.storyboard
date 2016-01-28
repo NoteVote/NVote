@@ -807,6 +807,9 @@
                                         <include reference="c0t-0K-Bv5"/>
                                     </mask>
                                 </variation>
+                                <connections>
+                                    <action selector="infoButtonPressed:" destination="Cr3-3m-eo6" eventType="touchUpInside" id="Og7-oY-pS0"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Choose A Playlist" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nJS-cM-PBh">
                                 <rect key="frame" x="-42" y="-21" width="42" height="21"/>
@@ -1068,7 +1071,7 @@
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yhx-pr-vXm">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="0.49019607840000001" green="0.80392156859999997" blue="0.01176470588" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="eVw-yK-s71"/>
                                     <constraint firstAttribute="width" constant="240" id="w7P-tN-t84"/>
@@ -1476,9 +1479,9 @@
         <image name="unvoted" width="51" height="51"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Ho6-XE-rV5"/>
-        <segue reference="wLP-qv-tEz"/>
-        <segue reference="tYq-9N-r8a"/>
         <segue reference="2vZ-zX-Cv8"/>
+        <segue reference="92O-nV-S4i"/>
+        <segue reference="72C-Fl-sSr"/>
+        <segue reference="XLL-xL-9Q6"/>
     </inferredMetricsTieBreakers>
 </document>
