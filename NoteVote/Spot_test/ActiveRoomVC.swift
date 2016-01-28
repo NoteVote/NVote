@@ -72,7 +72,7 @@ class ActiveRoomVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             cell.songURI = object.objectForKey("uri") as! String
             cell.voteButton.setTitle(String(object.objectForKey("votes") as! Int), forState: UIControlState.Normal)
             //initializing cells to voted state or unvoted state.
-            let votes = serverLink.songsVoted[(userDefaults.objectForKey("roomID") as! String)]
+            let votes = serverLink.songsVoted[(serverLink.partyObject.objectForKey("partyID") as! String)]
             if(votes != nil){
                 if (votes!.contains(cell.songURI)){
                     cell.alreadyVoted()
@@ -129,7 +129,7 @@ class ActiveRoomVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         super.viewWillAppear(true)
         serverLink.musicList = []
         serverLink.songsVotedCheck()
-        self.title = userDefaults.objectForKey("currentRoom") as! String
+        self.title = serverLink.partyObject.objectForKey("partyName") as! String
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.SingleLine
         self.tableView.separatorColor = UIColor.lightGrayColor()
         serverLink.getQueue(){

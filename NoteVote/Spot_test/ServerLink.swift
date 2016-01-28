@@ -19,7 +19,7 @@ class ServerLink {
     
     var songBatch:[(String,String,String)] = []
     private var rooms:[PFObject] = []
-    private var partyObject:PFObject!
+    var partyObject:PFObject!
     var songsVoted:[String:[String]] = [:]
     var musicOptions:[Song] = []
     var musicList:[PFObject] = []
