@@ -140,18 +140,36 @@ class ServerLink {
      * uses these variables to create a song object in Parse.
      */
     func addSongBatch(){
+        var notin:Bool = true
         for song in self.songBatch{
-            let trackObject = PFObject(className: "SongLibrary")
-            trackObject["trackTitle"] = song.0
-            trackObject["trackArtist"] = song.1
-            trackObject["uri"] = song.2
-            trackObject["votes"] = 1
-            trackObject["partyID"] = self.partyObject.objectForKey("partyID") as! String
-            voteURI(song.2)
-            trackObject.saveInBackground()
-            serverLink.musicList.append(trackObject)
+            notin = true
+            for track in self.musicList{
+                if(track.objectForKey("uri") as! String == song.2){
+                    if(!self.songsVoted[self.partyObject.objectForKey("partyID") as! String]!.contains(song.2)){
+                        self.increment(song.2)
+                        self.voteURI(song.2)
+                    }
+                    notin = false
+                    break
+                }
+            }
+            if(notin){
+                let trackObject = PFObject(className: "SongLibrary")
+                trackObject["trackTitle"] = song.0
+                trackObject["trackArtist"] = song.1
+                trackObject["uri"] = song.2
+                trackObject["votes"] = 1
+                trackObject["partyID"] = self.partyObject.objectForKey("partyID") as! String
+                voteURI(song.2)
+                trackObject.saveInBackground()
+                serverLink.musicList.append(trackObject)
+            }
         }
         self.songBatch = []
+    }
+    
+    func addVote(uri:String){
+        
     }
     
     func voteURI(uri:String){
