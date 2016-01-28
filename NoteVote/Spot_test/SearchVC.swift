@@ -94,7 +94,7 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource, EN
         cell.selectedBackgroundView = customColor
         cell.songURI = serverLink.musicOptions[indexPath.row].URI
         if(serverLink.songsVoted.count > 0){
-            if(serverLink.songsVoted[userDefaults.objectForKey("roomID") as! String]!.contains(cell.songURI)){
+            if(serverLink.songsVoted[serverLink.partyObject.objectForKey("partyID") as! String]!.contains(cell.songURI)){
                 cell.QueueButton.setBackgroundImage(UIImage(named:"songAdded"), forState: UIControlState.Normal)
             }
             else{
