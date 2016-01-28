@@ -54,20 +54,19 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
         frame.origin.y = 64
         self.animateDropDownToFrame(frame) {
         }
+        serverLink.getQueue(){
+            (result: [PFObject]) in
+            //serverLink.musicList = result
+            PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"active"], block: nil)
+            serverLink.sortMusicList()
+            self.tableView.reloadData()
+        }
     }
     
     func animateDropDownToFrame(frame: CGRect, completion:() -> Void) {
         UIView.animateWithDuration(0.5, delay: 0.0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.8, options: [], animations: {
             self.dropDownView.frame = frame
-            
             }, completion:  { finished in
-                serverLink.getQueue(){
-                    (result: [PFObject]) in
-                    //serverLink.musicList = result
-                    PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"active"], block: nil)
-                    serverLink.sortMusicList()
-                    self.tableView.reloadData()
-                }
             })
     }
     

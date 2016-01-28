@@ -60,14 +60,6 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
     
     //TODO: Still need to add slide button for private Switch.
     @IBAction func doneButtonPressed(sender: UIBarButtonItem) {
-//        //if(session!.canonicalUsername (is not premium member)){
-//            let alertController = UIAlertController(title: "Spotify Account", message:
-//                "To Create and Host your own room you must be a Premium member of Spotify", preferredStyle: UIAlertControllerStyle.Alert)
-//        alertController.addAction(UIAlertAction(title: "No Thanks", style: UIAlertActionStyle.Destructive,handler: nil))
-//            alertController.addAction(UIAlertAction(title: "Upgrage", style: UIAlertActionStyle.Default,handler: nil))
-//            self.presentViewController(alertController, animated: true, completion: nil)
-//        //}
-        
         
         print(roomName.text!)
         serverLink.musicList = []
