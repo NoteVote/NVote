@@ -67,12 +67,12 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
         UIView.animateWithDuration(0.5, delay: 0.0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.8, options: [], animations: {
             self.dropDownView.frame = frame
             }, completion:  { finished in
-                if(self.dropDownViewIsDisplayed){
-                    self.dropDownButton.setBackgroundImage(UIImage(named: "dropUp"), forState: UIControlState.Normal)
-                }
-                else{
-                    self.dropDownButton.setBackgroundImage(UIImage(named: "dropDown"), forState: UIControlState.Normal)
-                }
+//                if(self.dropDownViewIsDisplayed){
+//                    self.dropDownButton.setBackgroundImage(UIImage(named: "dropUp"), forState: UIControlState.Normal)
+//                }
+//                else{
+//                    self.dropDownButton.setBackgroundImage(UIImage(named: "dropDown"), forState: UIControlState.Normal)
+//                }
                 
             })
     }
@@ -220,22 +220,26 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
             
             serverLink.syncGetQueue()
             PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"host"], block: nil)
-            let currentTrack:String!
+            var currentTrack:String = ""
             if !serverLink.musicList.isEmpty {
                 //TODO dynamic track URI
                 currentTrack = serverLink.pop()
               
             } else {
-                currentTrack = serverLink.playlistMusic.removeFirst()
-                serverLink.playlistMusic.append(currentTrack)
-            }
-            self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
-                if error != nil {
-                    print("Track lookup got error \(error)")
-                    return
+                if(!serverLink.playlistMusic.isEmpty){
+                    currentTrack = serverLink.playlistMusic.removeFirst()
+                    serverLink.playlistMusic.append(currentTrack)
                 }
-                
-            })
+            }
+            if(currentTrack != ""){
+                self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
+                    if error != nil {
+                        print("Track lookup got error \(error)")
+                        return
+                    }
+                    
+                })
+            }
             
         })
     }

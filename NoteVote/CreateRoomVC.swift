@@ -70,8 +70,9 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
         userDefaults.synchronize()
 		
 		//Playlist Selection and Conversion
-		serverLink.playlistToTracks(currentPickerRow)
-
+        if(!playlistNames.isEmpty){
+            serverLink.playlistToTracks(currentPickerRow)
+        }
         self.performSegueWithIdentifier("CreateRoom_HostRoom", sender: nil)
         
     }
@@ -113,7 +114,8 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
         let session = sessionHandler.getSession()
 		//TODO: why are we setting current session?
         setCurrentSession(session!)
-		
+        self.playlistNames.removeAll()
+
 		searchHandler.getPlaylists(){
 			(result: String) in
 			
