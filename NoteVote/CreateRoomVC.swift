@@ -12,13 +12,14 @@ import Parse
 class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource, UIPickerViewDelegate {
     
     let sessionHandler = SessionHandler()
+	private var currentPickerRow = 0
     var session:SPTSession? = nil
     @IBOutlet weak var roomName: UITextField!
     @IBOutlet weak var infoButton: UIButton!
     @IBOutlet weak var pickerView: UIPickerView!
     
     var privateParty:Bool = false
-    let playlistNames:[String] = ["good times","Party Harty", "My Jams!"]
+    var playlistNames:[String] = []
     // MARK: - ENSideMenu Delegate
     func sideMenuWillOpen() {
         print("sideMenuWillOpen")
@@ -67,8 +68,9 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
         userDefaults.setObject(roomName.text!, forKey: "currentRoom")
         userDefaults.setObject(session!.canonicalUsername, forKey: "roomID")
         userDefaults.synchronize()
-        let chosenIndex:Int = self.pickerView.selectedRowInComponent(1)
-        //
+		
+		//Playlist Selection and Conversion
+		serverLink.playlistToTracks(currentPickerRow)
 
         self.performSegueWithIdentifier("CreateRoom_HostRoom", sender: nil)
         
@@ -97,18 +99,33 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
         attributedString = NSAttributedString(string: self.playlistNames[row], attributes: [NSForegroundColorAttributeName : UIColor(colorLiteralRed: 125/255, green: 205/255, blue: 3/255, alpha: 1.0)])
         return attributedString
     }
+
+	func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+		currentPickerRow = row
+	}
     
     
-    
-    
+	
     override func viewDidLoad() {
         super.viewDidLoad()
         self.sideMenuController()?.sideMenu?.delegate = self;
         let sessionHandler = SessionHandler()
         let session = sessionHandler.getSession()
+		//TODO: why are we setting current session?
         setCurrentSession(session!)
-    }
+		
+		searchHandler.getPlaylists(){
+			(result: String) in
+			
+			for x in searchHandler.playlistData {
+				self.playlistNames.append(x.0)
+			}
+			self.pickerView.reloadAllComponents()
+		}
 
-    
-    
+    }
+	
+	
+	
+	
 }

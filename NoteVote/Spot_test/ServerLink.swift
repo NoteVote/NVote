@@ -23,6 +23,7 @@ class ServerLink {
     var songsVoted:[String:[String]] = [:]
     var musicOptions:[Song] = []
     var musicList:[PFObject] = []
+	var playlistMusic:[String] = []
     var searchList:[SPTPartialTrack] = []
     
     
@@ -378,4 +379,47 @@ class ServerLink {
             self.musicOptions.append(song)
         }
     }
+	
+	func playlistToTracks(index: Int){
+		
+		//get the selected playlist URI from the list
+		let uri:NSURL = searchHandler.playlistData[index].1
+		let sessionHandler = SessionHandler()
+		let session = sessionHandler.getSession()
+		
+		//get playlist using URI
+		SPTPlaylistSnapshot.playlistWithURI(uri, session: session, callback: { (error:NSError!, result:AnyObject!) -> Void in
+			let snapshot = result as! SPTPlaylistSnapshot
+			
+			//get first 100 partial tracks from playlist
+			var trackListItems = snapshot.firstTrackPage.items
+			//var trackListFull:[String] = []
+			
+			//convert partial tracks to full tracks, and append full track URI to trackListFull
+			let count = trackListItems.count
+			for _ in 0...count-1 {
+				let partialTrack = trackListItems.removeFirst() as! SPTPartialTrack
+				
+				searchHandler.getURIwithPartial(String(partialTrack.playableUri)){
+					(result: String) in
+					self.playlistMusic.append(result)
+				}
+			}
+			self.shuffleArray(self.playlistMusic)
+			
+		})
+	}
+	
+	//copied method from http://iosdevelopertips.com/swift-code/swift-shuffle-array-type.html for shuffling arrays
+	func shuffleArray<T>(var array: Array<T>) -> Array<T> {
+		for var index = array.count - 1; index > 0; index-- {
+			// Random int from 0 to index-1
+			let j = Int(arc4random_uniform(UInt32(index-1)))
+			
+			// Swap two array elements
+			// Notice '&' required as swap uses 'inout' parameters
+			swap(&array[index], &array[j])
+		}
+		return array
+	}
 }

@@ -9,7 +9,9 @@
 import Foundation
 
 class SearchHandler {
-    
+	
+	var playlistData:[(String, NSURL)] = []
+	
     func Search(input:String, completion: (result: String) -> Void){
         SPTRequest.performSearchWithQuery(input, queryType: SPTSearchQueryType.QueryTypeTrack, offset: 0, session: nil, callback: { (error:NSError!, result:AnyObject!) -> Void in
             var trackListItems:[SPTPartialTrack] = []
@@ -44,6 +46,32 @@ class SearchHandler {
                 })
         })
     }
+	
+	
+	//TODO: clean up variable names
+	func getPlaylists( completion: (result: String) -> Void){
+		let sessionHandler = SessionHandler()
+		let session = sessionHandler.getSession()
+		SPTRequest.playlistsForUserInSession(session, callback: { (error:NSError!, result:AnyObject!) -> Void in
+			var playlistList = result as! SPTPlaylistList
+			var playlistItems = playlistList.items
+			var playlistPartials:[SPTPartialPlaylist] = []
+			
+			if playlistItems != nil {
+				let count = playlistItems.count
+				while playlistPartials.count < count {
+					playlistPartials.append(playlistItems.removeFirst() as! SPTPartialPlaylist)
+				}
+			}
+			
+			for x in playlistPartials {
+				self.playlistData.append((x.name, x.uri))
+			}
+			
+			
+			completion(result: "Done" )
+		})
+	}
     
     
     

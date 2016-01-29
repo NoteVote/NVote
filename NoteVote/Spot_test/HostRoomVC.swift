@@ -220,18 +220,23 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
             
             serverLink.syncGetQueue()
             PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"host"], block: nil)
+            let currentTrack:String!
             if !serverLink.musicList.isEmpty {
                 //TODO dynamic track URI
-                let currentTrack = serverLink.pop()
-                print(currentTrack)
-                self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
-                    if error != nil {
-                        print("Track lookup got error \(error)")
-                        return
-                    }
-                    
-                })
+                currentTrack = serverLink.pop()
+              
+            } else {
+                currentTrack = serverLink.playlistMusic.removeFirst()
+                serverLink.playlistMusic.append(currentTrack)
             }
+            self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
+                if error != nil {
+                    print("Track lookup got error \(error)")
+                    return
+                }
+                
+            })
+            
         })
     }
     
@@ -243,17 +248,21 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
             //TODO: SELECT SONGS ON VOTES, SOMEHOW IMPLEMENT PLAYLIST INTEGRATION
             serverLink.syncGetQueue()
             PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"host"], block: nil)
+            
+            let currentTrack:String!
             if (!serverLink.musicList.isEmpty) {
-                let currentTrack = serverLink.pop()
-				//serverLink.currentURI = currentTrack
-                print(currentTrack)
-                self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
-                    if error != nil {
-                        print("Track lookup got error \(error)")
-                        return
-                    }
-                })
+                currentTrack = serverLink.pop()
+				
+            } else {
+                currentTrack = serverLink.playlistMusic.removeFirst()
+                serverLink.playlistMusic.append(currentTrack)
             }
+            self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
+                if error != nil {
+                    print("Track lookup got error \(error)")
+                    return
+                }
+            })
         } else {
             let albumURI = trackMetadata["SPTAudioStreamingMetadataAlbumURI"] as! String
             trackTitle.text! = trackMetadata["SPTAudioStreamingMetadataTrackName"] as! String
@@ -323,9 +332,9 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
     override func viewDidLoad() {
         super.viewDidLoad()
         self.sideMenuController()?.sideMenu?.delegate = self;
-        if !serverLink.musicList.isEmpty {
+        //if !serverLink.musicList.isEmpty {
             startSession()
-        }
+        //}
         self.refreshControl = UIRefreshControl()
         self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         self.refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
