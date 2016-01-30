@@ -94,7 +94,7 @@ class MyMenuTableViewController: UITableViewController {
 			if menuOptions[indexPath.row] == "Close Room" {
 				destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("Home")
 				serverLink.deleteRoom()
-				serverLink.currentURI = ""
+				spotifyPlayer.currentURI = ""
 			} else { //if equal to "Log out"
 				destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("Login")
 				userDefaults.removeObjectForKey("session")

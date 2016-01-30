@@ -46,6 +46,7 @@
 		AD69DCCE1C587FBF0054C1EC /* HostTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD69DCCD1C587FBF0054C1EC /* HostTableCell.swift */; };
 		AD6B9FD51BC7197D0079424F /* CreateRoomVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6B9FD41BC7197D0079424F /* CreateRoomVC.swift */; };
 		AD6B9FD71BC71F9E0079424F /* ActiveRoomVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6B9FD61BC71F9E0079424F /* ActiveRoomVC.swift */; };
+		CE7BF0031C5D22F1002257C7 /* SpotifyPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7BF0021C5D22F1002257C7 /* SpotifyPlayer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -103,6 +104,7 @@
 		AD69DCCD1C587FBF0054C1EC /* HostTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HostTableCell.swift; path = ../HostTableCell.swift; sourceTree = "<group>"; };
 		AD6B9FD41BC7197D0079424F /* CreateRoomVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CreateRoomVC.swift; path = ../CreateRoomVC.swift; sourceTree = "<group>"; };
 		AD6B9FD61BC71F9E0079424F /* ActiveRoomVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveRoomVC.swift; sourceTree = "<group>"; };
+		CE7BF0021C5D22F1002257C7 /* SpotifyPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotifyPlayer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,24 +163,18 @@
 		918A22BD1BB1BAFB00CE76AF /* Spot_test */ = {
 			isa = PBXGroup;
 			children = (
-				9118BF8A1BBDE80700893CF8 /* MyNavigationController.swift */,
+				ADDD8BDE1C0E271B002B0EC9 /* Menus */,
 				ADDD8BDC1C0E26D9002B0EC9 /* TableCells */,
 				ADDD8BDD1C0E26FD002B0EC9 /* Spotify */,
-				ADDD8BDE1C0E271B002B0EC9 /* Menus */,
+				CE7BF0011C5D2298002257C7 /* Global Classes */,
+				CE7BF0041C5D2311002257C7 /* View Controllers */,
 				918A22BE1BB1BAFB00CE76AF /* AppDelegate.swift */,
-				91E4FB2C1BEC069D0044762C /* HostRoomVC.swift */,
-				918A22C01BB1BAFB00CE76AF /* ViewController.swift */,
+				9118BF8A1BBDE80700893CF8 /* MyNavigationController.swift */,
 				918A22C21BB1BAFB00CE76AF /* Main.storyboard */,
-				AD631E221C502A28002A151B /* ServerLink.swift */,
 				AD631E241C502A88002A151B /* Song.swift */,
-				AD6B9FD61BC71F9E0079424F /* ActiveRoomVC.swift */,
-				AD6B9FD41BC7197D0079424F /* CreateRoomVC.swift */,
-				9118BF851BBB2E5300893CF8 /* HomeVC.swift */,
-				910808601C0DF5B000FBF037 /* SearchVC.swift */,
 				918A22C51BB1BAFB00CE76AF /* Assets.xcassets */,
 				918A22C71BB1BAFB00CE76AF /* LaunchScreen.storyboard */,
 				918A22CA1BB1BAFB00CE76AF /* Info.plist */,
-				918A22E51BB1BCEA00CE76AF /* Spot_test-Bridging-Header.h */,
 			);
 			path = Spot_test;
 			sourceTree = "<group>";
@@ -229,9 +225,11 @@
 		ADDD8BDD1C0E26FD002B0EC9 /* Spotify */ = {
 			isa = PBXGroup;
 			children = (
+				918A22E51BB1BCEA00CE76AF /* Spot_test-Bridging-Header.h */,
 				9118BF831BBB1F9900893CF8 /* SessionHandler.swift */,
 				AD4349FB1C175DA2005104A9 /* SearchHandler.swift */,
 				91EFD91A1BBB163200818FA7 /* SpotifyAuth.swift */,
+				CE7BF0021C5D22F1002257C7 /* SpotifyPlayer.swift */,
 			);
 			name = Spotify;
 			sourceTree = "<group>";
@@ -244,6 +242,27 @@
 				9118BF891BBDE80700893CF8 /* MyMenuTableViewController.swift */,
 			);
 			name = Menus;
+			sourceTree = "<group>";
+		};
+		CE7BF0011C5D2298002257C7 /* Global Classes */ = {
+			isa = PBXGroup;
+			children = (
+				AD631E221C502A28002A151B /* ServerLink.swift */,
+			);
+			name = "Global Classes";
+			sourceTree = "<group>";
+		};
+		CE7BF0041C5D2311002257C7 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				91E4FB2C1BEC069D0044762C /* HostRoomVC.swift */,
+				918A22C01BB1BAFB00CE76AF /* ViewController.swift */,
+				AD6B9FD61BC71F9E0079424F /* ActiveRoomVC.swift */,
+				AD6B9FD41BC7197D0079424F /* CreateRoomVC.swift */,
+				9118BF851BBB2E5300893CF8 /* HomeVC.swift */,
+				910808601C0DF5B000FBF037 /* SearchVC.swift */,
+			);
+			name = "View Controllers";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -376,6 +395,7 @@
 				918A22BF1BB1BAFB00CE76AF /* AppDelegate.swift in Sources */,
 				AD6B9FD51BC7197D0079424F /* CreateRoomVC.swift in Sources */,
 				AD4349FC1C175DA3005104A9 /* SearchHandler.swift in Sources */,
+				CE7BF0031C5D22F1002257C7 /* SpotifyPlayer.swift in Sources */,
 				910808611C0DF5B000FBF037 /* SearchVC.swift in Sources */,
 				91E4FB2D1BEC069D0044762C /* HostRoomVC.swift in Sources */,
 			);

@@ -10,24 +10,19 @@ import Foundation
 import Parse
 
 class ServerLink {
-    
+	
+	//MARK: Variables
     //Needed for HostVC Refresh
-    var albumArt:UIImage?
-    var trackTitle:String?
-    var artistName:String?
-    var currentURI:String?
+
     
     var songBatch:[(String,String,String)] = []
     private var rooms:[PFObject] = []
     var partyObject:PFObject!
     var songsVoted:[String:[String]] = [:]
-    var musicOptions:[Song] = []
     var musicList:[PFObject] = []
-	var playlistMusic:[String] = []
-    var searchList:[SPTPartialTrack] = []
-    
-    
-    //- - - - - Internal Methods - - - - -
+	
+	
+	//MARK: Internal Methods
     
     /**
     * Finds rooms based on a geolocation point of the current device.
@@ -218,19 +213,7 @@ class ServerLink {
         }
     }
 
-    /**
-     * pops the top item off of musicList, Which should be the highest voted song.
-     * then calls removeSong passing along the top song. while removing it form itself.
-     * then returns the removed song's URI.
-     */
-    func pop()->String{
-        sortMusicList()
-        let uri:String = musicList.first!.objectForKey("uri") as! String
-        serverLink.removeSong(uri)
-        musicList.removeFirst()
-        PFAnalytics.trackEventInBackground("savequeue", dimensions: ["where":"host"], block: nil)
-        return uri
-    }
+
     
     
     /**
@@ -355,71 +338,4 @@ class ServerLink {
         }
     }
     
-    /**
-     * Changes songs from Spotify objects into Song objects.
-     * saves all the Song objects in serverLink.musicOptions.
-     */
-    func setMusicOptions(){
-        self.musicOptions = []
-        for track in self.searchList {
-            let song:Song = Song()
-            song.setURI(String(track.uri))
-            song.setTitle(track.name)
-            let str = String(track.artists.first)
-            
-            //Building artist name with parsing.
-            let strList = str.componentsSeparatedByString(" ")
-            var artistName:String = strList[2]
-            if(strList.count-1 > 3){
-                for i in 3...strList.count-2{
-                    artistName += " " + strList[i]
-                }
-            }
-            song.setArtist(artistName)
-            self.musicOptions.append(song)
-        }
     }
-	
-	func playlistToTracks(index: Int){
-		
-		//get the selected playlist URI from the list
-		let uri:NSURL = searchHandler.playlistData[index].1
-		let sessionHandler = SessionHandler()
-		let session = sessionHandler.getSession()
-		
-		//get playlist using URI
-		SPTPlaylistSnapshot.playlistWithURI(uri, session: session, callback: { (error:NSError!, result:AnyObject!) -> Void in
-			let snapshot = result as! SPTPlaylistSnapshot
-			
-			//get first 100 partial tracks from playlist
-			var trackListItems = snapshot.firstTrackPage.items
-			//var trackListFull:[String] = []
-			
-			//convert partial tracks to full tracks, and append full track URI to trackListFull
-			let count = trackListItems.count
-			for _ in 0...count-1 {
-				let partialTrack = trackListItems.removeFirst() as! SPTPartialTrack
-				
-				searchHandler.getURIwithPartial(String(partialTrack.playableUri)){
-					(result: String) in
-					self.playlistMusic.append(result)
-				}
-			}
-			self.shuffleArray(self.playlistMusic)
-			
-		})
-	}
-	
-	//copied method from http://iosdevelopertips.com/swift-code/swift-shuffle-array-type.html for shuffling arrays
-	func shuffleArray<T>(var array: Array<T>) -> Array<T> {
-		for var index = array.count - 1; index > 0; index-- {
-			// Random int from 0 to index-1
-			let j = Int(arc4random_uniform(UInt32(index-1)))
-			
-			// Swap two array elements
-			// Notice '&' required as swap uses 'inout' parameters
-			swap(&array[index], &array[j])
-		}
-		return array
-	}
-}

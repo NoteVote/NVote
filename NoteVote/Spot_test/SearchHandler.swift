@@ -31,7 +31,7 @@ class SearchHandler {
                     trackListItems.append(trackListPageItems.removeFirst() as! SPTPartialTrack)
                 }
             }
-            serverLink.searchList = trackListItems
+            spotifyPlayer.searchList = trackListItems
             completion(result: "done")
         })
     }

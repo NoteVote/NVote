@@ -9,9 +9,11 @@
 import UIKit
 import Parse
 
-class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMenuDelegate, UITableViewDataSource, UITableViewDelegate {
+class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var albumImage: UIImageView!
+    
+    
     @IBOutlet weak var trackTitle: UILabel!
     @IBOutlet weak var trackArtist: UILabel!
     @IBOutlet weak var playPauseButton: UIButton!
@@ -19,15 +21,12 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
     @IBOutlet weak var dropDownButton: UIButton!
     var dropDownViewIsDisplayed = false
     @IBOutlet weak var dropDownView: UIView!
-    private var player:SPTAudioStreamingController?
-    private let authController = SpotifyAuth()
+    
     
     @IBOutlet weak var tableView: UITableView!
     var refreshControl:UIRefreshControl!
     
-    
-    
-//----------Drop Down View Methods----------------
+   //----------Drop Down View Methods----------------
     
     @IBAction func dropDownButtonPressed(sender: UIButton) {
         if(dropDownViewIsDisplayed){
@@ -132,7 +131,6 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
     {
         serverLink.getQueue(){
             (result: [PFObject]) in
-            //serverLink.musicList = result
             PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"active"], block: nil)
             serverLink.sortMusicList()
             print(serverLink.musicList)
@@ -182,8 +180,8 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
 //----------Spotify/Music Playing in general----------------
     
     @IBAction func playPausePressed(sender: AnyObject) {
-        if (self.player!.isPlaying) {
-            self.player!.setIsPlaying(false, callback: { (error:NSError!) -> Void in
+        if (spotifyPlayer.player!.isPlaying) {
+            spotifyPlayer.player!.setIsPlaying(false, callback: { (error:NSError!) -> Void in
                 if error != nil {
                     print("Enabling playback got error \(error)")
                     return
@@ -192,7 +190,7 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
             playPauseButton.setBackgroundImage(UIImage(named:"PlayButton"), forState: UIControlState.Normal)
             
         } else {
-            self.player!.setIsPlaying(true, callback: { (error:NSError!) -> Void in
+            spotifyPlayer.player!.setIsPlaying(true, callback: { (error:NSError!) -> Void in
                 if error != nil {
                     print("Enabling playback got error \(error)")
                     return
@@ -203,110 +201,18 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
     }
     
     
-    func playUsingSession(sessionObj:SPTSession!){
-   
-        let kClientID = authController.getClientID()
-        
-        if player == nil {
-            player = SPTAudioStreamingController(clientId: kClientID)
-            player?.playbackDelegate = self
-        }
-        
-        player?.loginWithSession(sessionObj, callback: { (error:NSError!) -> Void in
-            if error != nil {
-                print("Enabling playback got error \(error)")
-                return
-            }
-            
-            serverLink.syncGetQueue()
-            PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"host"], block: nil)
-            var currentTrack:String = ""
-            if !serverLink.musicList.isEmpty {
-                //TODO dynamic track URI
-                currentTrack = serverLink.pop()
-              
-            } else {
-                if(!serverLink.playlistMusic.isEmpty){
-                    currentTrack = serverLink.playlistMusic.removeFirst()
-                    serverLink.playlistMusic.append(currentTrack)
-                }
-            }
-            if(currentTrack != ""){
-                self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
-                    if error != nil {
-                        print("Track lookup got error \(error)")
-                        return
-                    }
-                    
-                })
-            }
-            
-        })
-    }
     
     
-    //fires whenever the track changes
-    func audioStreaming(audioStreaming: SPTAudioStreamingController!, didChangeToTrack trackMetadata: [NSObject : AnyObject]!) {
-        if (trackMetadata == nil || trackMetadata["SPTAudioStreamingMetadataTrackURI"] as! String == serverLink.currentURI){
-            
-            //TODO: SELECT SONGS ON VOTES, SOMEHOW IMPLEMENT PLAYLIST INTEGRATION
-            serverLink.syncGetQueue()
-            PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"host"], block: nil)
-            
-            let currentTrack:String!
-            if (!serverLink.musicList.isEmpty) {
-                currentTrack = serverLink.pop()
-				
-            } else {
-                currentTrack = serverLink.playlistMusic.removeFirst()
-                serverLink.playlistMusic.append(currentTrack)
-            }
-            self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
-                if error != nil {
-                    print("Track lookup got error \(error)")
-                    return
-                }
-            })
-        } else {
-            let albumURI = trackMetadata["SPTAudioStreamingMetadataAlbumURI"] as! String
-            trackTitle.text! = trackMetadata["SPTAudioStreamingMetadataTrackName"] as! String
-            trackArtist.text! = trackMetadata["SPTAudioStreamingMetadataArtistName"] as! String
-			serverLink.currentURI = trackMetadata["SPTAudioStreamingMetadataTrackURI"] as! String
-            serverLink.trackTitle = trackTitle.text!
-            serverLink.artistName = trackArtist.text!
-            
-            SPTAlbum.albumWithURI(NSURL(string: albumURI), session: nil) { (error:NSError!, albumObj:AnyObject!) -> Void in
-                let album = albumObj as! SPTAlbum
-                
-                
-                //TODO: I dont understand this dispatch async thing
-                
-                if let imgURL = album.largestCover.imageURL as NSURL! {
-                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), { () -> Void in
-                        let error:NSError? = nil
-                        var coverImage = UIImage()
-                        
-                       if let imageData = NSData(contentsOfURL: imgURL){
-                            
-                            if error == nil {
-                                coverImage = UIImage(data: imageData)!
-                            }
-                        }
-                        
-                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                            self.albumImage.image = coverImage
-                            serverLink.albumArt = coverImage
-                        })
-                    })
-                }
-            }
-        }
-
-    }
     func startSession(){
         let sessionHandler = SessionHandler()
         let session = sessionHandler.getSession()
-        playUsingSession(session)
+        spotifyPlayer.playUsingSession(session)
+    }
+    
+    func handleMetadata() {
+        trackTitle.text = spotifyPlayer.trackTitle!
+        trackArtist.text = spotifyPlayer.trackArtist!
+        albumImage.image = spotifyPlayer.albumArt!
     }
     
     
@@ -317,10 +223,10 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
         super.viewWillAppear(true)
         let currentRoom = userDefaults.objectForKey("currentRoom") as! String
         self.title = currentRoom
-        if(serverLink.artistName != nil){
-            self.trackArtist.text = serverLink.artistName
-            self.trackTitle.text = serverLink.trackTitle
-            self.albumImage.image = serverLink.albumArt
+        if(spotifyPlayer.trackArtist != nil){
+            self.trackArtist.text = spotifyPlayer.trackArtist
+            self.trackTitle.text = spotifyPlayer.trackTitle
+            self.albumImage.image = spotifyPlayer.albumArt
         }
     }
     
@@ -346,5 +252,9 @@ class HostRoomVC: UIViewController, SPTAudioStreamingPlaybackDelegate, ENSideMen
         
         let width:CGFloat = self.dropDownView.frame.size.width
         self.dropDownView.frame = CGRectMake(0, self.view.bounds.height/2, width, self.view.bounds.height)
+    
+        //Notification observer for track metadata
+        let defaultCenter = NSNotificationCenter.defaultCenter()
+        defaultCenter.addObserver(self, selector: "handleMetadata", name: "MetadataChangeNotification", object: nil)
     }
 }

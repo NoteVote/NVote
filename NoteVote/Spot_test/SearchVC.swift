@@ -38,7 +38,7 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource, EN
     @IBOutlet weak var tableView: UITableView!
 
     @IBAction func BackButtonPressed(sender: UIBarButtonItem) {
-        serverLink.musicOptions = []
+        spotifyPlayer.musicOptions = []
         if(preView == "Host"){
             performSegueWithIdentifier("Search_Host", sender: nil)
         }
@@ -62,7 +62,7 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource, EN
 		if(searchBar.text! != ""){
 			searchHandler.Search(searchBar.text!){
 				(result: String) in
-				serverLink.setMusicOptions()
+				spotifyPlayer.setMusicOptions()
 
 				self.tableView.reloadData()
 			}
@@ -79,7 +79,7 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource, EN
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return serverLink.musicOptions.count
+        return spotifyPlayer.musicOptions.count
     }
 
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -92,7 +92,7 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource, EN
         let customColor = UIView()
         customColor.backgroundColor = UIColor.clearColor()
         cell.selectedBackgroundView = customColor
-        cell.songURI = serverLink.musicOptions[indexPath.row].URI
+        cell.songURI = spotifyPlayer.musicOptions[indexPath.row].URI
         if(serverLink.songsVoted.count > 0){
             if(serverLink.songsVoted[serverLink.partyObject.objectForKey("partyID") as! String]!.contains(cell.songURI)){
                 cell.QueueButton.setBackgroundImage(UIImage(named:"songAdded"), forState: UIControlState.Normal)
@@ -101,8 +101,8 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource, EN
                 cell.QueueButton.setBackgroundImage(UIImage(named:"addSong"), forState: UIControlState.Normal)
             }
         }
-        cell.songTitle.text! = serverLink.musicOptions[indexPath.row].Title
-        cell.artistLabel.text! = serverLink.musicOptions[indexPath.row].Artist
+        cell.songTitle.text! = spotifyPlayer.musicOptions[indexPath.row].Title
+        cell.artistLabel.text! = spotifyPlayer.musicOptions[indexPath.row].Artist
         return cell
     }
     

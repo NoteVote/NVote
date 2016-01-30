@@ -71,7 +71,7 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
 		
 		//Playlist Selection and Conversion
         if(!playlistNames.isEmpty){
-            serverLink.playlistToTracks(currentPickerRow)
+            spotifyPlayer.playlistToTracks(currentPickerRow)
         }
         self.performSegueWithIdentifier("CreateRoom_HostRoom", sender: nil)
         

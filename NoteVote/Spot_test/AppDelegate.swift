@@ -13,6 +13,7 @@ import Bolts
 let userDefaults = NSUserDefaults.standardUserDefaults()
 let serverLink = ServerLink()
 let searchHandler = SearchHandler()
+let spotifyPlayer = SpotifyPlayer()
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
