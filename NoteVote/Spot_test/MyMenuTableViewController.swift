@@ -95,6 +95,13 @@ class MyMenuTableViewController: UITableViewController {
 				destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("Home")
 				serverLink.deleteRoom()
 				spotifyPlayer.currentURI = ""
+				spotifyPlayer.player?.logout({ (error:NSError!) -> Void in
+					if error != nil {
+						print("Enabling playback got error \(error)")
+						return
+					}
+				})
+			
 			} else { //if equal to "Log out"
 				destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("Login")
 				userDefaults.removeObjectForKey("session")

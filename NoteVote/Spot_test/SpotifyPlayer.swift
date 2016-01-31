@@ -114,7 +114,9 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 						
 						dispatch_async(dispatch_get_main_queue(), { () -> Void in
 							self.albumArt = coverImage
-							
+							let notifier = NSNotificationCenter.defaultCenter()
+							notifier.postNotificationName("ArtNotification", object: nil, userInfo: nil)
+
 						})
 					})
 				}

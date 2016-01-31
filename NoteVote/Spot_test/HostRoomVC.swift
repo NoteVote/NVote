@@ -212,7 +212,12 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     func handleMetadata() {
         trackTitle.text = spotifyPlayer.trackTitle!
         trackArtist.text = spotifyPlayer.trackArtist!
-        albumImage.image = spotifyPlayer.albumArt!
+    }
+    
+    func handleArt() {
+        //if (spotifyPlayer.albumArt != nil) {
+            albumImage.image = spotifyPlayer.albumArt!
+        //}
     }
     
     
@@ -242,9 +247,10 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     override func viewDidLoad() {
         super.viewDidLoad()
         self.sideMenuController()?.sideMenu?.delegate = self;
-        //if !serverLink.musicList.isEmpty {
+        if (spotifyPlayer.player == nil) {
             startSession()
-        //}
+        }
+
         self.refreshControl = UIRefreshControl()
         self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         self.refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
@@ -256,5 +262,7 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
         //Notification observer for track metadata
         let defaultCenter = NSNotificationCenter.defaultCenter()
         defaultCenter.addObserver(self, selector: "handleMetadata", name: "MetadataChangeNotification", object: nil)
+        //Notification observer for album art
+        defaultCenter.addObserver(self, selector: "handleArt", name: "ArtNotification", object: nil)
     }
 }
