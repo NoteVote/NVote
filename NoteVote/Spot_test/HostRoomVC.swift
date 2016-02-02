@@ -247,9 +247,8 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     override func viewDidLoad() {
         super.viewDidLoad()
         self.sideMenuController()?.sideMenu?.delegate = self;
-        if (spotifyPlayer.player == nil) {
-            startSession()
-        }
+        startSession()
+        
 
         self.refreshControl = UIRefreshControl()
         self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")

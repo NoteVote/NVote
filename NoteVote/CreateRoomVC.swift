@@ -115,7 +115,8 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
 		//TODO: why are we setting current session?
         setCurrentSession(session!)
         self.playlistNames.removeAll()
-
+		searchHandler.playlistData.removeAll()
+		
 		searchHandler.getPlaylists(){
 			(result: String) in
 			
@@ -126,8 +127,6 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
 		}
 
     }
-	
-	
 	
 	
 }

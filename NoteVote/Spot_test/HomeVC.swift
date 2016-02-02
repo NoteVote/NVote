@@ -13,6 +13,7 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
     
     var roomsNearby:[PFObject] = []
     var refreshControl:UIRefreshControl!
+
     
     @IBOutlet weak var backgroundImage: UIImageView!
     @IBOutlet weak var menuButton: UIBarButtonItem!
@@ -50,13 +51,18 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
     }
     
     @IBAction func addButtonPressed(sender: UIBarButtonItem) {
-//        //if(session!.canonicalUsername (is not premium member)){
+		
+		let sessionHandler = SessionHandler()
+		let session = sessionHandler.getSession()
+//if(session!.canonicalUsername (is not premium member)){
 //            let alertController = UIAlertController(title: "Spotify Account", message:
 //                "To Create and Host your own room you must be a Premium member of Spotify", preferredStyle: UIAlertControllerStyle.Alert)
 //        alertController.addAction(UIAlertAction(title: "No Thanks", style: UIAlertActionStyle.Destructive,handler: nil))
 //            alertController.addAction(UIAlertAction(title: "Upgrage", style: UIAlertActionStyle.Default,handler: nil))
 //            self.presentViewController(alertController, animated: true, completion: nil)
 //        //}
+		
+		print(session?.isValid())
         performSegueWithIdentifier("Home_CreateRoom", sender: nil)
     }
     

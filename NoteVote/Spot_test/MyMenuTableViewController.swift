@@ -97,10 +97,22 @@ class MyMenuTableViewController: UITableViewController {
 				spotifyPlayer.currentURI = ""
 				spotifyPlayer.player?.logout({ (error:NSError!) -> Void in
 					if error != nil {
-						print("Enabling playback got error \(error)")
+						print("Enabling playback got logout error \(error)")
 						return
 					}
 				})
+				
+
+//				spotifyPlayer.player?.stop({ (error:NSError!) -> Void in
+//					if error != nil {
+//						print("Enabling playback got error \(error)")
+//						return
+//					}
+//				})
+
+//				spotifyPlayer.player = nil
+				spotifyPlayer.playlistMusic = []
+				
 			
 			} else { //if equal to "Log out"
 				destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("Login")

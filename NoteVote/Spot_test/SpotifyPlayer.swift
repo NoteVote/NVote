@@ -35,12 +35,58 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 			player?.playbackDelegate = self
 		}
 		
-		player?.loginWithSession(sessionObj, callback: { (error:NSError!) -> Void in
-			if error != nil {
-				print("Enabling playback got error \(error)")
-				return
-			}
+		if ((player?.loggedIn) == false) {
+			player?.loginWithSession(sessionObj, callback: { (error:NSError!) -> Void in
+				if error != nil {
+					print("Enabling playback got error \(error)")
+					return
+				}
+				
+				serverLink.syncGetQueue()
+				PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"host"], block: nil)
+				var currentTrack:String = ""
+				if !serverLink.musicList.isEmpty {
+					//TODO dynamic track URI
+					currentTrack = self.pop()
+					
+					if(currentTrack != ""){
+						self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
+							if error != nil {
+								print("Track lookup got error \(error)")
+								return
+							}
+						})
+					}
+					
+				} else {
+					if(!self.playlistMusic.isEmpty){
+						var currentTrack = ""
+						let temp = self.playlistMusic.removeFirst()
+						self.playlistMusic.append(temp)
+						searchHandler.getURIwithPartial(temp, completion: {(result: String) in
+							currentTrack = result
+							
+							self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
+								if error != nil {
+									print("Track lookup got error \(error)")
+									return
+								}
+							})
+						})
+					}
+				}
+//				if(currentTrack != ""){
+//					self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
+//						if error != nil {
+//							print("Track lookup got error \(error)")
+//							return
+//						}
+//					})
+//				}
+			})
 			
+			//play everything without login
+		} else {
 			serverLink.syncGetQueue()
 			PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"host"], block: nil)
 			var currentTrack:String = ""
@@ -62,7 +108,7 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 					}
 				})
 			}
-		})
+		}
 	}
 	
 	//fires whenever the track changes
@@ -77,16 +123,34 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 			if (!serverLink.musicList.isEmpty) {
 				currentTrack = self.pop()
 				
+				self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
+					if error != nil {
+						print("Track lookup got error \(error)")
+						return
+					}
+				})
+				
 			} else {
-				currentTrack = self.playlistMusic.removeFirst()
-				self.playlistMusic.append(currentTrack)
+				var currentTrack = ""
+				let temp = self.playlistMusic.removeFirst()
+				self.playlistMusic.append(temp)
+				searchHandler.getURIwithPartial(temp, completion: {(result: String) in
+					currentTrack = result
+					
+					self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
+						if error != nil {
+							print("Track lookup got error \(error)")
+							return
+						}
+					})
+				})
 			}
-			self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
-				if error != nil {
-					print("Track lookup got error \(error)")
-					return
-				}
-			})
+//			self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
+//				if error != nil {
+//					print("Track lookup got error \(error)")
+//					return
+//				}
+//			})
 		} else {
 			let albumURI = trackMetadata["SPTAudioStreamingMetadataAlbumURI"] as! String
 			trackTitle = trackMetadata["SPTAudioStreamingMetadataTrackName"] as! String
@@ -216,13 +280,14 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 			let count = trackListItems.count
 			for _ in 0...count-1 {
 				let partialTrack = trackListItems.removeFirst() as! SPTPartialTrack
-				
-				searchHandler.getURIwithPartial(String(partialTrack.playableUri)){
-					(result: String) in
-					self.playlistMusic.append(result)
-				}
+				self.playlistMusic.append(String(partialTrack.playableUri))
+//				searchHandler.getURIwithPartial(String(partialTrack.playableUri)){
+//					(result: String) in
+//					self.playlistMusic.append(result)
+//				}
 			}
 			self.shuffleArray(self.playlistMusic)
+			
 			
 		})
 	}
