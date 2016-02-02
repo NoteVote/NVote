@@ -75,39 +75,7 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 						})
 					}
 				}
-//				if(currentTrack != ""){
-//					self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
-//						if error != nil {
-//							print("Track lookup got error \(error)")
-//							return
-//						}
-//					})
-//				}
 			})
-			
-			//play everything without login
-		} else {
-			serverLink.syncGetQueue()
-			PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"host"], block: nil)
-			var currentTrack:String = ""
-			if !serverLink.musicList.isEmpty {
-				//TODO dynamic track URI
-				currentTrack = self.pop()
-				
-			} else {
-				if(!self.playlistMusic.isEmpty){
-					currentTrack = self.playlistMusic.removeFirst()
-					self.playlistMusic.append(currentTrack)
-				}
-			}
-			if(currentTrack != ""){
-				self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
-					if error != nil {
-						print("Track lookup got error \(error)")
-						return
-					}
-				})
-			}
 		}
 	}
 	

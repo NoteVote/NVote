@@ -21,7 +21,10 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     @IBOutlet weak var dropDownButton: UIButton!
     var dropDownViewIsDisplayed = false
     @IBOutlet weak var dropDownView: UIView!
+	@IBOutlet weak var progressView: UIView!
     
+	@IBOutlet weak var timeInLabel: UILabel!
+	@IBOutlet weak var timeLeftLabel: UILabel!
     
     @IBOutlet weak var tableView: UITableView!
     var refreshControl:UIRefreshControl!
@@ -215,10 +218,47 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     }
     
     func handleArt() {
-        //if (spotifyPlayer.albumArt != nil) {
-            albumImage.image = spotifyPlayer.albumArt!
-        //}
+    
+        albumImage.image = spotifyPlayer.albumArt!
     }
+	
+	func updateProgress() {
+        let length = (spotifyPlayer.player?.currentTrackDuration)! as Double
+        let position = (spotifyPlayer.player?.currentPlaybackPosition)! as Double
+		
+        
+        //if length is not zero, then calculate
+        if length != 0 {
+            
+            //find the value of the minute field
+            let lengthInMin = round((length-position)/60) % 60
+            
+            //display the minute field and the second field, rounded to integers
+            timeLeftLabel.text! = String(format: "-%1d:%02d", Int(lengthInMin), Int(round((length-position))%60))
+        
+        } else {
+            timeLeftLabel.text! = ("-0:00")
+        }
+        
+        //use position values to ensure that there is no NaN errors
+        if (position > 0 && position <= length) {
+            
+            //find the value of the minute field
+            let posInMin = round((position/60)) % 60
+            
+            //display the minute field and the second field, rounted to integers
+            timeInLabel.text! = String(format: "%1d:%02d-", Int(posInMin), Int(round(position)%60))
+            
+            //draw the progress bar
+            let width = position/length*((Double(self.view.bounds.width)-150.0) as Double)
+            self.progressView.frame = CGRectMake(75, self.view.bounds.height-107, CGFloat(width), 10)
+        
+        } else {
+            self.progressView.frame = CGRectMake(75, self.view.bounds.height-107, 0, 10)
+			timeInLabel.text! = "0:00-"
+			
+        }
+	}
     
     
     
@@ -249,6 +289,7 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
         self.sideMenuController()?.sideMenu?.delegate = self;
         startSession()
         
+        
 
         self.refreshControl = UIRefreshControl()
         self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
@@ -263,5 +304,9 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
         defaultCenter.addObserver(self, selector: "handleMetadata", name: "MetadataChangeNotification", object: nil)
         //Notification observer for album art
         defaultCenter.addObserver(self, selector: "handleArt", name: "ArtNotification", object: nil)
+		
+		//displaylink for progress bar
+		let displayLink = CADisplayLink(target: self, selector: "updateProgress")
+		displayLink.addToRunLoop(NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode)
     }
 }
