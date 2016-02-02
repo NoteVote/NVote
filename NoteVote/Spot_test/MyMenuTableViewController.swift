@@ -92,39 +92,39 @@ class MyMenuTableViewController: UITableViewController {
         switch (indexPath.row) {
         case 0:
 			if menuOptions[indexPath.row] == "Close Room" {
-				destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("Home")
-				serverLink.deleteRoom()
-				spotifyPlayer.currentURI = ""
-				spotifyPlayer.player?.logout({ (error:NSError!) -> Void in
-					if error != nil {
-						print("Enabling playback got logout error \(error)")
-						return
-					}
-				})
+                let alertController = UIAlertController(title: "Ending The Party", message: "Are you sure you want to end the party?", preferredStyle: UIAlertControllerStyle.Alert)
+                let no = UIAlertAction(title: "No", style: UIAlertActionStyle.Destructive){ alertAction in
+                    
+                }
+                let yes = UIAlertAction(title: "Yes", style: UIAlertActionStyle.Default){ alertAction in
+                    let destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("Home")
+                    serverLink.deleteRoom()
+                    spotifyPlayer.currentURI = ""
+                    spotifyPlayer.player?.logout({ (error:NSError!) -> Void in
+                        if error != nil {
+                            print("Enabling playback got logout error \(error)")
+                            return
+                        }
+                    })
+                    spotifyPlayer.playlistMusic = []
+                    self.sideMenuController()?.setContentViewController(destViewController)
+                }
+                alertController.addAction(yes)
+                alertController.addAction(no)
+                self.presentViewController(alertController, animated: true, completion: nil)
 				
-
-//				spotifyPlayer.player?.stop({ (error:NSError!) -> Void in
-//					if error != nil {
-//						print("Enabling playback got error \(error)")
-//						return
-//					}
-//				})
-
-//				spotifyPlayer.player = nil
-				spotifyPlayer.playlistMusic = []
-				
-			
 			} else { //if equal to "Log out"
 				destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("Login")
 				userDefaults.removeObjectForKey("session")
+                sideMenuController()?.setContentViewController(destViewController)
 			}
             break
 		default:
             destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("ViewController4") 
+            sideMenuController()?.setContentViewController(destViewController)
             break
         }
 		
-		sideMenuController()?.setContentViewController(destViewController)
     }
     
 

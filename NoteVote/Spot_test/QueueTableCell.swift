@@ -15,21 +15,23 @@ class QueueTableCell: UITableViewCell {
     var songURI:String!
     
     @IBAction func voteButtonPressed(sender: UIButton) {
-        serverLink.syncGetQueue()
+        //serverLink.syncGetQueue()
         PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"vote"], block: nil)
         if (serverLink.songsVoted[(serverLink.partyObject.objectForKey("partyID") as! String)]!.contains(songURI)){
             voteButton.setBackgroundImage(UIImage(named: "unvoted"), forState: UIControlState.Normal)
             voteButton.setTitleColor(UIColor(red: 125/255, green: 205/255, blue: 3/255, alpha: 1.0), forState: UIControlState.Normal)
             voteButton.setTitle(String(Int(voteButton.currentTitle!)!-1), forState: UIControlState.Normal)
-            serverLink.decrement(self.songURI)
-            serverLink.unvoteURI(songURI)
+            if(serverLink.decrement(self.songURI)){
+                serverLink.unvoteURI(songURI)
+            }
             
         } else {
             voteButton.setBackgroundImage(UIImage(named: "voted"), forState: UIControlState.Normal)
             voteButton.setTitleColor(UIColor(red: 23/255, green: 23/255, blue: 23/255, alpha: 1.0), forState: UIControlState.Normal)
             voteButton.setTitle(String(Int(voteButton.currentTitle!)!+1), forState: UIControlState.Normal)
-            serverLink.increment(self.songURI)
-            serverLink.voteURI(songURI)
+            if(serverLink.increment(self.songURI)){
+                serverLink.voteURI(songURI)
+            }
         }
         
 		PFAnalytics.trackEventInBackground("savequeue", dimensions: ["where":"vote"], block: nil)

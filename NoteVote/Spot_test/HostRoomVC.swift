@@ -12,6 +12,7 @@ import Parse
 class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var albumImage: UIImageView!
+    private var labelUpdateCounter = 0
     
     
     @IBOutlet weak var trackTitle: UILabel!
@@ -34,12 +35,10 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     @IBAction func dropDownButtonPressed(sender: UIButton) {
         if(dropDownViewIsDisplayed){
             self.dropDownViewIsDisplayed = false
-            //dropDownButton.setBackgroundImage(UIImage(named: "dropDown"), forState: UIControlState.Normal)
             hideDropDownView()
         }
         else{
             self.dropDownViewIsDisplayed = true
-            //dropDownButton.setBackgroundImage(UIImage(named: "dropUp"), forState: UIControlState.Normal)
             showDropDownView()
         }
     }
@@ -223,42 +222,60 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     }
 	
 	func updateProgress() {
+        
+        glClear(UInt32(GL_COLOR_BUFFER_BIT))
+        
         let length = (spotifyPlayer.player?.currentTrackDuration)! as Double
         let position = (spotifyPlayer.player?.currentPlaybackPosition)! as Double
-		
-        
-        //if length is not zero, then calculate
-        if length != 0 {
-            
-            //find the value of the minute field
-            let lengthInMin = round((length-position)/60) % 60
-            
-            //display the minute field and the second field, rounded to integers
-            timeLeftLabel.text! = String(format: "-%1d:%02d", Int(lengthInMin), Int(round((length-position))%60))
-        
-        } else {
-            timeLeftLabel.text! = ("-0:00")
-        }
         
         //use position values to ensure that there is no NaN errors
         if (position > 0 && position <= length) {
-            
-            //find the value of the minute field
-            let posInMin = round((position/60)) % 60
-            
-            //display the minute field and the second field, rounted to integers
-            timeInLabel.text! = String(format: "%1d:%02d-", Int(posInMin), Int(round(position)%60))
-            
-            //draw the progress bar
-            let width = position/length*((Double(self.view.bounds.width)-150.0) as Double)
-            self.progressView.frame = CGRectMake(75, self.view.bounds.height-107, CGFloat(width), 10)
-        
+            if (labelUpdateCounter == 60) {
+                //find the value of the minute field
+                let posInMin = (position/60) % 60
+                ///find the value of the minute field
+                let lengthInMin = (length-position)/60 % 60
+    
+                //display the minute field and the second field, rounted to integers
+                timeInLabel.text! = String(format: "%1d:%02d-", Int(posInMin), Int(position)%60)
+    
+                //display the minute field and the second field, rounded to integers
+                timeLeftLabel.text! = String(format: "-%1d:%02d", Int(lengthInMin), Int((length-position)%60))
+                labelUpdateCounter = 0
+            } else {
+                labelUpdateCounter++
+                //draw the progress bar
+                let width = position/length*((Double(self.view.bounds.width)-150.0) as Double)
+                self.progressView.backgroundColor = UIColor(red: 112/255, green: 205/255, blue: 3/255, alpha: 1.0)
+                self.progressView.frame = CGRectMake(75, self.view.bounds.height-107, CGFloat(width), 10)
+            }
         } else {
             self.progressView.frame = CGRectMake(75, self.view.bounds.height-107, 0, 10)
-			timeInLabel.text! = "0:00-"
 			
         }
 	}
+    
+    func updateProgressLabels() {
+//        let length = (spotifyPlayer.player?.currentTrackDuration)! as Double
+//        let position = (spotifyPlayer.player?.currentPlaybackPosition)! as Double
+//        
+//        if (position > 0 && position <= length) {
+//            //find the value of the minute field
+//            let posInMin = (position/60) % 60
+//            ///find the value of the minute field
+//            let lengthInMin = (length-position)/60 % 60
+//            
+//            //display the minute field and the second field, rounted to integers
+//            timeInLabel.text! = String(format: "%1d:%02d-", Int(posInMin), Int(position)%60)
+//            
+//            //display the minute field and the second field, rounded to integers
+//            timeLeftLabel.text! = String(format: "-%1d:%02d", Int(lengthInMin), Int((length-position)%60))
+//        } else {
+//            timeInLabel.text! = "0:00-"
+//            timeLeftLabel.text! = "-0:00"
+//        }
+
+    }
     
     
     
@@ -286,11 +303,10 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        serverLink.isHosting = true
         self.sideMenuController()?.sideMenu?.delegate = self;
         startSession()
         
-        
-
         self.refreshControl = UIRefreshControl()
         self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         self.refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
@@ -298,6 +314,8 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
         
         let width:CGFloat = self.dropDownView.frame.size.width
         self.dropDownView.frame = CGRectMake(0, self.view.bounds.height/2, width, self.view.bounds.height)
+        
+        
     
         //Notification observer for track metadata
         let defaultCenter = NSNotificationCenter.defaultCenter()
@@ -308,5 +326,8 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
 		//displaylink for progress bar
 		let displayLink = CADisplayLink(target: self, selector: "updateProgress")
 		displayLink.addToRunLoop(NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode)
+        
+        //timer for progress labels
+        //var timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "updateProgressLabels", userInfo: nil, repeats: true)
     }
 }

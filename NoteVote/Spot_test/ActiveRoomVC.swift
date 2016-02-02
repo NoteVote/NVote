@@ -50,6 +50,19 @@ class ActiveRoomVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     /*Number of rows of tableView*/
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if(serverLink.musicList.count == 0){
+            do{
+                try serverLink.partyObject.fetch()
+            }
+            catch{
+                let alertController = UIAlertController(title: "Party's Over!", message: "The Party has ended.", preferredStyle: UIAlertControllerStyle.Alert)
+                let okay = UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default){ alertAction in
+                    (self.performSegueWithIdentifier("activeRoom_Home", sender: nil))
+                }
+                alertController.addAction(okay)
+                self.presentViewController(alertController, animated: true, completion: nil)
+            }
+        }
         return serverLink.musicList.count
         
     }
@@ -102,7 +115,6 @@ class ActiveRoomVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     override func viewDidLoad() {
         super.viewDidLoad()
         self.sideMenuController()?.sideMenu?.delegate = self;
-        
         self.refreshControl = UIRefreshControl()
         self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         self.refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)

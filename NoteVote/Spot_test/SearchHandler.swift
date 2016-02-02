@@ -37,13 +37,11 @@ class SearchHandler {
     }
     
     func getURIwithPartial(uri:String,completion: (result:String) -> Void ){
-		let sessionHandler = SessionHandler()
-		let session = sessionHandler.getSession()
-        SPTRequest.requestItemAtURI(NSURL(string: uri), withSession: session, market: "US", callback: { (error:NSError!, result:AnyObject!) ->Void in
+        SPTRequest.requestItemAtURI(NSURL(string: uri), withSession: nil, market: "US", callback: { (error:NSError!, result:AnyObject!) ->Void in
             let track = result as! SPTPartialTrack
-            SPTRequest.requestItemFromPartialObject(track, withSession: session, callback: { (error:NSError!, result:AnyObject!) -> Void in
+            SPTRequest.requestItemFromPartialObject(track, withSession: nil, callback: { (error:NSError!, result:AnyObject!) -> Void in
                     let fullTrack = result as! SPTTrack
-                completion(result: String(fullTrack.uri))
+                    completion(result: String(fullTrack.playableUri))
                 })
         })
     }
@@ -54,7 +52,7 @@ class SearchHandler {
 		let sessionHandler = SessionHandler()
 		let session = sessionHandler.getSession()
 		SPTRequest.playlistsForUserInSession(session, callback: { (error:NSError!, result:AnyObject!) -> Void in
-			var playlistList = result as! SPTPlaylistList
+			let playlistList = result as! SPTPlaylistList
 			var playlistItems = playlistList.items
 			var playlistPartials:[SPTPartialPlaylist] = []
 			

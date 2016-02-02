@@ -23,10 +23,7 @@ class SearchTableCell: UITableViewCell {
         } else {
             QueueButton.setBackgroundImage(UIImage(named: "songAdded"), forState: UIControlState.Normal)
             queued = !queued
-            searchHandler.getURIwithPartial(songURI){
-                (result: String) in
-                serverLink.addSongToBatch(self.songTitle.text!, trackArtist: self.artistLabel.text!, uri: result)
-            }
+            serverLink.addSongToBatch(self.songTitle.text!, trackArtist: self.artistLabel.text!, uri: songURI)
         }
     }
     

@@ -14,7 +14,7 @@ class ServerLink {
 	//MARK: Variables
     //Needed for HostVC Refresh
 
-    
+    var isHosting:Bool = false
     var songBatch:[(String,String,String)] = []
     private var rooms:[PFObject] = []
     var partyObject:PFObject!
@@ -106,6 +106,7 @@ class ServerLink {
      * -takes in a String(roomID) -> hosts Spotify ID, used to find correct object for deletion.
      */
     func deleteRoom() {
+        self.isHosting = false
         let query = PFQuery(className: "PartyObject")
         query.whereKey("partyID", equalTo: partyObject.objectForKey("partyID") as! String)
         query.findObjectsInBackgroundWithBlock {
@@ -128,6 +129,22 @@ class ServerLink {
         }
     }
     
+    func deleteRoomNow(){
+        self.isHosting = false
+        let query = PFQuery(className: "SongLibrary")
+        query.whereKey("partyID", equalTo: partyObject.objectForKey("partyID") as! String)
+        do{
+            try serverLink.partyObject.delete()
+            let objects = try query.findObjects()
+            for object in objects{
+                try object.delete()
+            }
+        }
+        catch{
+            print("syncronise delete failed")
+        }
+    }
+
     /**
      * Adds a song to the parties subclass of SongLibrary.
      * -takes in a String(trackTitle) -> title of the song.
@@ -150,22 +167,21 @@ class ServerLink {
                 }
             }
             if(notin){
-                let trackObject = PFObject(className: "SongLibrary")
-                trackObject["trackTitle"] = song.0
-                trackObject["trackArtist"] = song.1
-                trackObject["uri"] = song.2
-                trackObject["votes"] = 1
-                trackObject["partyID"] = self.partyObject.objectForKey("partyID") as! String
-                voteURI(song.2)
-                trackObject.saveInBackground()
-                serverLink.musicList.append(trackObject)
+                searchHandler.getURIwithPartial(song.2){
+                    (result:String) in
+                    let trackObject = PFObject(className: "SongLibrary")
+                    trackObject["trackTitle"] = song.0
+                    trackObject["trackArtist"] = song.1
+                    trackObject["uri"] = result
+                    trackObject["votes"] = 1
+                    trackObject["partyID"] = self.partyObject.objectForKey("partyID") as! String
+                    self.voteURI(result)
+                    trackObject.saveInBackground()
+                    serverLink.musicList.append(trackObject)
+                }
             }
         }
         self.songBatch = []
-    }
-    
-    func addVote(uri:String){
-        
     }
     
     func voteURI(uri:String){
@@ -182,7 +198,8 @@ class ServerLink {
      * -takes in a String(songURI) -> the Spotify track URI for the song voted on.
      * uses that to find the correct song.
      */
-    func increment(songURI:String){
+    func increment(songURI:String) -> Bool{
+        var output = true
         let query = PFQuery(className: "SongLibrary")
         query.whereKey("partyID", equalTo: partyObject.objectForKey("partyID") as! String)
         query.whereKey("uri", equalTo: songURI)
@@ -192,7 +209,11 @@ class ServerLink {
                     objects![0].incrementKey("votes")
                     objects![0].saveInBackground()
                 }
+                else{
+                    output = false
+            }
         }
+        return output
     }
     
     /**
@@ -200,7 +221,8 @@ class ServerLink {
      * -takes in a String(songURI) -> the Spotify track URI for the song voted on.
      * uses that to find the correct song.
      */
-    func decrement(songURI:String){
+    func decrement(songURI:String) -> Bool{
+        var output = true
         let query = PFQuery(className: "SongLibrary")
         query.whereKey("partyID", equalTo: partyObject.objectForKey("partyID") as! String)
         query.whereKey("uri", equalTo: songURI)
@@ -210,7 +232,11 @@ class ServerLink {
                 objects![0].incrementKey("votes", byAmount: -1)
                 objects![0].saveInBackground()
             }
+            else{
+                output = false
+            }
         }
+        return output
     }
 
 

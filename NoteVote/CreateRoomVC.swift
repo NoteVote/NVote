@@ -9,7 +9,7 @@
 import UIKit
 import Parse
 
-class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource, UIPickerViewDelegate {
+class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate {
     
     let sessionHandler = SessionHandler()
 	private var currentPickerRow = 0
@@ -41,6 +41,17 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
     func sideMenuDidOpen() {
         print("sideMenuDidOpen")
     }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        roomName.resignFirstResponder()
+    }
+    
+    
     @IBAction func infoButtonPressed(sender: UIButton) {
         let alertController = UIAlertController(title: "Playlist Info", message:
             "Choosing a playlist to pull music from when no music is in your party queue. It keeps the party going.", preferredStyle: UIAlertControllerStyle.Alert)
