@@ -81,6 +81,17 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
     /*CurrentPlayer Selected and moves to next page*/
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         serverLink.setParty(self.roomsNearby[indexPath.row])
+        if(serverLink.partyObject.objectForKey("partyPrivate") as! Bool){
+//            let alertController = UIAlertController(title: "Ending The Party", message: "Are you sure you want to end the party?", preferredStyle: UIAlertControllerStyle.Alert)
+//            let no = UIAlertAction(title: "No", style: UIAlertActionStyle.Destructive){ alertAction in
+//                
+//            }
+//            let yes = UIAlertAction(title: "Yes", style: UIAlertActionStyle.Default){ alertAction in
+//            }
+//            alertController.addAction(yes)
+//            alertController.addAction(no)
+//            self.presentViewController(alertController, animated: true, completion: nil)
+        }
         self.performSegueWithIdentifier("Home_ActiveRoom", sender: nil)
         
     }
