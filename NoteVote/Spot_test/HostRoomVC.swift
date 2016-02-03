@@ -15,6 +15,7 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     private var labelUpdateCounter = 0
     
     
+    
     @IBOutlet weak var trackTitle: UILabel!
     @IBOutlet weak var trackArtist: UILabel!
     @IBOutlet weak var playPauseButton: UIButton!
@@ -23,6 +24,9 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     var dropDownViewIsDisplayed = false
     @IBOutlet weak var dropDownView: UIView!
 	@IBOutlet weak var progressView: UIView!
+	@IBOutlet weak var progressBar: UIProgressView!
+    
+    @IBOutlet var yConstraint: NSLayoutConstraint!
     
 	@IBOutlet weak var timeInLabel: UILabel!
 	@IBOutlet weak var timeLeftLabel: UILabel!
@@ -47,6 +51,7 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
         var frame:CGRect = self.dropDownView.frame
         frame.origin.y = -frame.size.height + 80
         self.animateDropDownToFrame(frame) {
+          
         }
     }
     
@@ -54,6 +59,7 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
         var frame:CGRect = self.dropDownView.frame
         frame.origin.y = 64
         self.animateDropDownToFrame(frame) {
+            
         }
         serverLink.getQueue(){
             (result: [PFObject]) in
@@ -69,10 +75,10 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
             self.dropDownView.frame = frame
             }, completion:  { finished in
 //                if(self.dropDownViewIsDisplayed){
-//                    self.dropDownButton.setBackgroundImage(UIImage(named: "dropUp"), forState: UIControlState.Normal)
+//                    self.yConstraint.constant = -frame.size.height
 //                }
 //                else{
-//                    self.dropDownButton.setBackgroundImage(UIImage(named: "dropDown"), forState: UIControlState.Normal)
+//                    self.yConstraint.constant = -14
 //                }
                 
             })
@@ -223,59 +229,31 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
 	
 	func updateProgress() {
         
-        glClear(UInt32(GL_COLOR_BUFFER_BIT))
-        
         let length = (spotifyPlayer.player?.currentTrackDuration)! as Double
         let position = (spotifyPlayer.player?.currentPlaybackPosition)! as Double
         
         //use position values to ensure that there is no NaN errors
         if (position > 0 && position <= length) {
-            if (labelUpdateCounter == 60) {
-                //find the value of the minute field
-                let posInMin = (position/60) % 60
-                ///find the value of the minute field
-                let lengthInMin = (length-position)/60 % 60
-    
-                //display the minute field and the second field, rounted to integers
-                timeInLabel.text! = String(format: "%1d:%02d-", Int(posInMin), Int(position)%60)
-    
-                //display the minute field and the second field, rounded to integers
-                timeLeftLabel.text! = String(format: "-%1d:%02d", Int(lengthInMin), Int((length-position)%60))
-                labelUpdateCounter = 0
-            } else {
-                labelUpdateCounter++
-                //draw the progress bar
-                let width = position/length*((Double(self.view.bounds.width)-150.0) as Double)
-                self.progressView.backgroundColor = UIColor(red: 112/255, green: 205/255, blue: 3/255, alpha: 1.0)
-                self.progressView.frame = CGRectMake(75, self.view.bounds.height-107, CGFloat(width), 10)
-            }
-        } else {
-            self.progressView.frame = CGRectMake(75, self.view.bounds.height-107, 0, 10)
 			
+            //find the value of the minute field
+            let posInMin = (position/60) % 60
+            ///find the value of the minute field
+            let lengthInMin = (length-position)/60 % 60
+
+            //display the minute field and the second field, rounted to integers
+            timeInLabel.text! = String(format: "%1d:%02d-", Int(posInMin), Int(position)%60)
+
+            //display the minute field and the second field, rounded to integers
+            timeLeftLabel.text! = String(format: "-%1d:%02d", Int(lengthInMin), Int((length-position)%60))
+       
+            //draw the progress bar
+			let width = position/length
+            progressBar.setProgress(Float(width),animated: true)
+
+            
         }
 	}
     
-    func updateProgressLabels() {
-//        let length = (spotifyPlayer.player?.currentTrackDuration)! as Double
-//        let position = (spotifyPlayer.player?.currentPlaybackPosition)! as Double
-//        
-//        if (position > 0 && position <= length) {
-//            //find the value of the minute field
-//            let posInMin = (position/60) % 60
-//            ///find the value of the minute field
-//            let lengthInMin = (length-position)/60 % 60
-//            
-//            //display the minute field and the second field, rounted to integers
-//            timeInLabel.text! = String(format: "%1d:%02d-", Int(posInMin), Int(position)%60)
-//            
-//            //display the minute field and the second field, rounded to integers
-//            timeLeftLabel.text! = String(format: "-%1d:%02d", Int(lengthInMin), Int((length-position)%60))
-//        } else {
-//            timeInLabel.text! = "0:00-"
-//            timeLeftLabel.text! = "-0:00"
-//        }
-
-    }
     
     
     
@@ -326,8 +304,10 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
 		//displaylink for progress bar
 		let displayLink = CADisplayLink(target: self, selector: "updateProgress")
 		displayLink.addToRunLoop(NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode)
-        
-        //timer for progress labels
-        //var timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "updateProgressLabels", userInfo: nil, repeats: true)
+		
+        //increase progress bar size
+		let transform = CGAffineTransformMakeScale(1.0, 3.0)
+		progressBar.transform = transform
+		
     }
 }
