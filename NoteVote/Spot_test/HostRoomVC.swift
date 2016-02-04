@@ -15,7 +15,7 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     private var labelUpdateCounter = 0
     
     
-    
+    private var isAnimating = false
     @IBOutlet weak var trackTitle: UILabel!
     @IBOutlet weak var trackArtist: UILabel!
     @IBOutlet weak var playPauseButton: UIButton!
@@ -39,10 +39,13 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     @IBAction func dropDownButtonPressed(sender: UIButton) {
         if(dropDownViewIsDisplayed){
             self.dropDownViewIsDisplayed = false
+            self.isAnimating = true
             hideDropDownView()
+            
         }
         else{
             self.dropDownViewIsDisplayed = true
+            self.isAnimating = true
             showDropDownView()
         }
     }
@@ -63,7 +66,6 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
         }
         serverLink.getQueue(){
             (result: [PFObject]) in
-            //serverLink.musicList = result
             PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"active"], block: nil)
             serverLink.sortMusicList()
             self.tableView.reloadData()
@@ -74,13 +76,13 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
         UIView.animateWithDuration(0.5, delay: 0.0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.8, options: [], animations: {
             self.dropDownView.frame = frame
             }, completion:  { finished in
-//                if(self.dropDownViewIsDisplayed){
-//                    self.yConstraint.constant = -frame.size.height
-//                }
-//                else{
-//                    self.yConstraint.constant = -14
-//                }
-                
+                if(self.dropDownViewIsDisplayed){
+                    self.yConstraint.constant = -frame.size.height
+                }
+                else{
+                    self.yConstraint.constant = -14
+                }
+                self.isAnimating = false
             })
     }
     
@@ -240,12 +242,14 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
             ///find the value of the minute field
             let lengthInMin = (length-position)/60 % 60
 
-            //display the minute field and the second field, rounted to integers
-            timeInLabel.text! = String(format: "%1d:%02d-", Int(posInMin), Int(position)%60)
-
-            //display the minute field and the second field, rounded to integers
-            timeLeftLabel.text! = String(format: "-%1d:%02d", Int(lengthInMin), Int((length-position)%60))
-       
+            //If drop down menu is showing don't update.
+            if(!isAnimating){
+                //display the minute field and the second field, rounted to integers
+                timeInLabel.text! = String(format: "%1d:%02d-", Int(posInMin), Int(position)%60)
+                
+                //display the minute field and the second field, rounded to integers
+                timeLeftLabel.text! = String(format: "-%1d:%02d", Int(lengthInMin), Int((length-position)%60))
+            }
             //draw the progress bar
 			let width = position/length
             progressBar.setProgress(Float(width),animated: true)

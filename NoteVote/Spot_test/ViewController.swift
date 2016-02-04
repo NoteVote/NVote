@@ -85,7 +85,20 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
             if (session!.isValid()) {
                 setSession(session!)
             } else {
-                print("reauthorize")
+                spotifyAuthenticator.renewSession(session, callback:{
+                    result in
+                    if(session != nil){
+                        self.setSession(session!)
+                        print("session refresh successful")
+                        if(session!.isValid()){
+                            self.performSegueWithIdentifier("segueOne", sender: nil)
+                        }
+                        
+                    }
+                    else{
+                        print("session refresh failed")
+                    }
+                })
             }
         }
     

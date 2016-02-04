@@ -81,7 +81,7 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 	
 	//fires whenever the track changes
 	func audioStreaming(audioStreaming: SPTAudioStreamingController!, didChangeToTrack trackMetadata: [NSObject : AnyObject]!) {
-		if (trackMetadata == nil || trackMetadata["SPTAudioStreamingMetadataTrackURI"] as! String == self.currentURI){
+		if (trackMetadata == nil || trackMetadata["SPTAudioStreamingMetadataTrackURI"] as? String == self.currentURI){
 			
 			//TODO: SELECT SONGS ON VOTES, SOMEHOW IMPLEMENT PLAYLIST INTEGRATION
 			serverLink.syncGetQueue()
@@ -121,12 +121,12 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 //			})
 		} else {
 			let albumURI = trackMetadata["SPTAudioStreamingMetadataAlbumURI"] as! String
-			trackTitle = trackMetadata["SPTAudioStreamingMetadataTrackName"] as! String
-			trackArtist = trackMetadata["SPTAudioStreamingMetadataArtistName"] as! String
+			trackTitle = trackMetadata["SPTAudioStreamingMetadataTrackName"] as? String
+			trackArtist = trackMetadata["SPTAudioStreamingMetadataArtistName"] as? String
 			currentURI = trackMetadata["SPTAudioStreamingMetadataTrackURI"] as? String
 			//serverLink.trackTime = trackMetadata["SPTAudioStreamingMetadataTrackDuration"] as! NSNumber
 			
-			SPTAlbum.albumWithURI(NSURL(string: albumURI), session: nil) { (error:NSError!, albumObj:AnyObject!) -> Void in
+			SPTAlbum.albumWithURI(NSURL(string: albumURI), accessToken: nil, market: "US") { (error:NSError!, albumObj:AnyObject!) -> Void in
 				let album = albumObj as! SPTAlbum
 				
 				

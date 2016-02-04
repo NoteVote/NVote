@@ -13,7 +13,7 @@ class SearchHandler {
 	var playlistData:[(String, NSURL)] = []
 	
     func Search(input:String, completion: (result: String) -> Void){
-        SPTRequest.performSearchWithQuery(input, queryType: SPTSearchQueryType.QueryTypeTrack, offset: 0, session: nil, callback: { (error:NSError!, result:AnyObject!) -> Void in
+        SPTSearch.performSearchWithQuery(input, queryType: SPTSearchQueryType.QueryTypeTrack, offset: 0, accessToken: nil, market: "US", callback: { (error:NSError!, result:AnyObject!) -> Void in
             var trackListItems:[SPTPartialTrack] = []
             let trackListPage = result as! SPTListPage
             var trackListPageItems = trackListPage.items
@@ -51,7 +51,7 @@ class SearchHandler {
 	func getPlaylists( completion: (result: String) -> Void){
 		let sessionHandler = SessionHandler()
 		let session = sessionHandler.getSession()
-		SPTRequest.playlistsForUserInSession(session, callback: { (error:NSError!, result:AnyObject!) -> Void in
+		SPTPlaylistList.playlistsForUserWithSession(session, callback: { (error:NSError!, result:AnyObject!) -> Void in
 			let playlistList = result as! SPTPlaylistList
 			var playlistItems = playlistList.items
 			var playlistPartials:[SPTPartialPlaylist] = []
