@@ -17,6 +17,7 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 	var trackTitle:String?
 	var trackArtist:String?
 	var currentURI:String?
+	var nextURI:String?
 	
 	var musicOptions:[Song] = []
 	var searchList:[SPTPartialTrack] = []
@@ -60,7 +61,6 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 					
 				} else {
 					if(!self.playlistMusic.isEmpty){
-						var currentTrack = ""
 						let temp = self.playlistMusic.removeFirst()
 						self.playlistMusic.append(temp)
 						searchHandler.getURIwithPartial(temp, completion: {(result: String) in
@@ -79,52 +79,57 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 		}
 	}
 	
-	//fires whenever the track changes
+	//fires whenever the track changes. on song change, this method fires 3 times. first time, trackMetadata is nil, 2nd time is is the last song played, and 3rd time
+	//it is the new song.
 	func audioStreaming(audioStreaming: SPTAudioStreamingController!, didChangeToTrack trackMetadata: [NSObject : AnyObject]!) {
-		if (trackMetadata == nil || trackMetadata["SPTAudioStreamingMetadataTrackURI"] as? String == self.currentURI){
+		if (trackMetadata == nil){
 			
 			//TODO: SELECT SONGS ON VOTES, SOMEHOW IMPLEMENT PLAYLIST INTEGRATION
 			serverLink.syncGetQueue()
 			PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"host"], block: nil)
 			
-			let currentTrack:String!
+			var currentTrack = ""
 			if (!serverLink.musicList.isEmpty) {
 				currentTrack = self.pop()
 				
-				self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
-					if error != nil {
-						print("Track lookup got error \(error)")
-						return
-					}
-				})
-				
-			} else {
-				var currentTrack = ""
-				let temp = self.playlistMusic.removeFirst()
-				self.playlistMusic.append(temp)
-				searchHandler.getURIwithPartial(temp, completion: {(result: String) in
-					currentTrack = result
-					
+				if (currentTrack != "") {
 					self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
 						if error != nil {
 							print("Track lookup got error \(error)")
 							return
 						}
 					})
+					//set next uri for method flow
+					self.nextURI = currentTrack
+				}
+				
+			} else {
+				let temp = self.playlistMusic.removeFirst()
+				self.playlistMusic.append(temp)
+				searchHandler.getURIwithPartial(temp, completion: {(result: String) in
+					currentTrack = result
+					
+					if (currentTrack != "") {
+						self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
+							if error != nil {
+								print("Track lookup got error \(error)")
+								return
+							}
+						})
+						//set next uri for method flow
+						self.nextURI = currentTrack
+					}
 				})
 			}
-//			self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
-//				if error != nil {
-//					print("Track lookup got error \(error)")
-//					return
-//				}
-//			})
+			
+			
+			
 		} else {
 			let albumURI = trackMetadata["SPTAudioStreamingMetadataAlbumURI"] as! String
 			trackTitle = trackMetadata["SPTAudioStreamingMetadataTrackName"] as? String
 			trackArtist = trackMetadata["SPTAudioStreamingMetadataArtistName"] as? String
 			currentURI = trackMetadata["SPTAudioStreamingMetadataTrackURI"] as? String
-			//serverLink.trackTime = trackMetadata["SPTAudioStreamingMetadataTrackDuration"] as! NSNumber
+			//currentURI = nextURI
 			
 			SPTAlbum.albumWithURI(NSURL(string: albumURI), accessToken: nil, market: "US") { (error:NSError!, albumObj:AnyObject!) -> Void in
 				let album = albumObj as! SPTAlbum

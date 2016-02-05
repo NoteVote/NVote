@@ -37,6 +37,7 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
     }
     
     func authenticationViewController(authenticationViewController: SPTAuthViewController!, didFailToLogin error: NSError!) {
+		print(error)
         print("login failed")
     }
     
@@ -87,7 +88,7 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
             } else {
                 spotifyAuthenticator.renewSession(session, callback:{
                     result in
-                    if(session != nil){
+                    if(result.0 == nil && result.1 != nil){
                         self.setSession(session!)
                         print("session refresh successful")
                         if(session!.isValid()){

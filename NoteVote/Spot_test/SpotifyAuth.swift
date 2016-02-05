@@ -14,8 +14,8 @@ class SpotifyAuth {
     private let kClientID = "ddf55f7bf8ec47e1a9a998c53207adb2"
     private let kCallbackURL = "notevote-login://callback"
     private let kTokenSwapURL = ""
-    private let kTokenRefreshURL = ""
-    
+	private let kTokenRefreshURL = ""
+	
     func setParameters(auth: SPTAuth){
         auth.clientID = kClientID
         auth.requestedScopes = []
