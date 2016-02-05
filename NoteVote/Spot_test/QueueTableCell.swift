@@ -15,7 +15,6 @@ class QueueTableCell: UITableViewCell {
     var songURI:String!
     
     @IBAction func voteButtonPressed(sender: UIButton) {
-        //serverLink.syncGetQueue()
         PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"vote"], block: nil)
         if (serverLink.songsVoted[(serverLink.partyObject.objectForKey("partyID") as! String)]!.contains(songURI)){
             voteButton.setBackgroundImage(UIImage(named: "unvoted"), forState: UIControlState.Normal)
