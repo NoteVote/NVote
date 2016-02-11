@@ -67,8 +67,7 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "segueOne"){
             sessionHandler.storeSession(currentSession!)
-			print(spotifyAuthenticator.hasTokenSwapService)
-			print(spotifyAuthenticator.hasTokenRefreshService)
+
         }
     }
     
@@ -88,10 +87,12 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
             if (session!.isValid()) {
                 setSession(session!)
             } else {
-				print(spotifyAuthenticator.hasTokenSwapService)
-                spotifyAuthenticator.renewSession(session, callback:{
-                    result in
-					if(result.0 == nil && result.1 != nil){
+				authController.setParameters(spotifyAuthenticator)
+				print(spotifyAuthenticator.hasTokenRefreshService)
+				spotifyAuthenticator.renewSession(session, callback:{
+					(error: NSError?, session:SPTSession?) -> Void in
+					
+					if(error == nil){
                         self.setSession(session!)
                         print("session refresh successful")
                         if(session!.isValid()){
