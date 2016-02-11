@@ -268,6 +268,9 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
         super.viewWillAppear(true)
         let currentRoom = userDefaults.objectForKey("currentRoom") as! String
         self.title = currentRoom
+        if(userDefaults.objectForKey("partyPin") as? String != nil){
+            self.pinLabel.text = userDefaults.objectForKey("partyPin") as? String
+        }
         if(spotifyPlayer.trackArtist != nil){
             self.trackArtist.text = spotifyPlayer.trackArtist
             self.trackTitle.text = spotifyPlayer.trackTitle
@@ -288,9 +291,6 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
         super.viewDidLoad()
         serverLink.isHosting = true
         self.sideMenuController()?.sideMenu?.delegate = self;
-        if(userDefaults.objectForKey("partyPin") as? String != nil){
-            self.pinLabel.text = userDefaults.objectForKey("partyPin") as? String
-        }
         self.refreshControl = UIRefreshControl()
         self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         self.refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
