@@ -84,7 +84,6 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 	func audioStreaming(audioStreaming: SPTAudioStreamingController!, didChangeToTrack trackMetadata: [NSObject : AnyObject]!) {
 		if (trackMetadata == nil){
 			
-			//TODO: SELECT SONGS ON VOTES, SOMEHOW IMPLEMENT PLAYLIST INTEGRATION
 			serverLink.syncGetQueue()
 			PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"host"], block: nil)
 			

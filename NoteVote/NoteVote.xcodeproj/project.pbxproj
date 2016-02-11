@@ -539,9 +539,10 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.NVote;
 				PRODUCT_NAME = NoteVote;
-				PROVISIONING_PROFILE = "6dd366e2-ba16-4a84-9539-1a6956646fe0";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Spot_test/Spot_test-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -562,8 +563,9 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.NVote;
 				PRODUCT_NAME = NoteVote;
-				PROVISIONING_PROFILE = "6dd366e2-ba16-4a84-9539-1a6956646fe0";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Spot_test/Spot_test-Bridging-Header.h";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

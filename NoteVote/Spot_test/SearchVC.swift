@@ -94,8 +94,9 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource, EN
         cell.selectedBackgroundView = customColor
         cell.songURI = spotifyPlayer.musicOptions[indexPath.row].URI
         if(serverLink.songsVoted.count > 0){
-            if(serverLink.songsVoted[serverLink.partyObject.objectForKey("partyID") as! String]!.contains(cell.songURI)){
+            if(serverLink.songsVoted[serverLink.partyObject.objectForKey("partyID") as! String]!.contains(cell.songURI) || serverLink.songsInBatch.contains(cell.songURI)){
                 cell.QueueButton.setBackgroundImage(UIImage(named:"songAdded"), forState: UIControlState.Normal)
+                cell.queued = true
             }
             else{
                 cell.QueueButton.setBackgroundImage(UIImage(named:"addSong"), forState: UIControlState.Normal)

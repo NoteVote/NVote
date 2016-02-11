@@ -20,6 +20,7 @@ class ServerLink {
     var partyObject:PFObject!
     var songsVoted:[String:[String]] = [:]
     var musicList:[PFObject] = []
+    var songsInBatch:[String] = []
 	
 	
 	//MARK: Internal Methods
@@ -342,6 +343,7 @@ class ServerLink {
             for i in 0...songBatch.count-1 {
                 if(songBatch[i].0 == songTitle && songBatch[i].1 == trackArtist){
                     songBatch.removeAtIndex(i)
+                    songsInBatch.removeAtIndex(i)
                     return
                 }
             }
@@ -351,6 +353,7 @@ class ServerLink {
     func addSongToBatch(songTitle:String, trackArtist:String, uri:String){
         let song:(String,String,String) = (songTitle,trackArtist,uri)
         self.songBatch.append(song)
+        self.songsInBatch.append(song.2)
     }
     
     
