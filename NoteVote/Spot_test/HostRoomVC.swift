@@ -14,7 +14,6 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     @IBOutlet weak var albumImage: UIImageView!
     private var labelUpdateCounter = 0
     
-    
     @IBOutlet weak var pinLabel: UILabel!
     private var isAnimating = false
     @IBOutlet weak var trackTitle: UILabel!
@@ -291,10 +290,12 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
         super.viewDidLoad()
         serverLink.isHosting = true
         self.sideMenuController()?.sideMenu?.delegate = self;
+        startSession()
         self.refreshControl = UIRefreshControl()
         self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         self.refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
         self.tableView.addSubview(refreshControl)
+        
         
         let width:CGFloat = self.dropDownView.frame.size.width
         self.dropDownView.frame = CGRectMake(0, self.view.bounds.height/2, width, self.view.bounds.height)

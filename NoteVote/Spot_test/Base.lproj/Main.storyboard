@@ -1560,7 +1560,7 @@
                         <outlet property="dropDownButton" destination="uDS-Pe-0xh" id="2EF-tv-kZJ"/>
                         <outlet property="dropDownView" destination="D98-3H-NhY" id="jTp-43-PjJ"/>
                         <outlet property="menuButton" destination="ehq-Fb-eUR" id="aCM-23-aNR"/>
-                        <outlet property="pinLabel" destination="6kr-KT-1bw" id="K0y-DJ-EtC"/>
+                        <outlet property="pinLabel" destination="6kr-KT-1bw" id="Hbq-aG-Z7n"/>
                         <outlet property="playPauseButton" destination="4AP-Gi-VcN" id="RAv-mN-VT4"/>
                         <outlet property="progressBar" destination="C6q-IY-VFG" id="jf0-Ca-bVg"/>
                         <outlet property="tableView" destination="thg-jj-ENP" id="ovD-Mv-vqZ"/>
