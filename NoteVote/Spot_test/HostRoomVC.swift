@@ -288,9 +288,9 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
         super.viewDidLoad()
         serverLink.isHosting = true
         self.sideMenuController()?.sideMenu?.delegate = self;
-        self.pinLabel.text = serverLink.partyObject.objectForKey("partyPin") as? String
-        startSession()
-        
+        if(userDefaults.objectForKey("partyPin") as? String != nil){
+            self.pinLabel.text = userDefaults.objectForKey("partyPin") as? String
+        }
         self.refreshControl = UIRefreshControl()
         self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         self.refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)

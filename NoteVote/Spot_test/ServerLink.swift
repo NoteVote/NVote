@@ -95,6 +95,8 @@ class ServerLink {
             partyPin += String(Int(arc4random_uniform(10)))
             partyPin += String(Int(arc4random_uniform(10)))
             partyObject["partyPin"] = partyPin
+            userDefaults.setObject(partyPin, forKey: "partyPin")
+            userDefaults.synchronize()
         }
         partyObject.saveInBackgroundWithBlock {
             (success: Bool, error: NSError?) -> Void in
@@ -117,6 +119,8 @@ class ServerLink {
     func deleteRoom() {
         self.isHosting = false
         let query = PFQuery(className: "PartyObject")
+        userDefaults.setObject("", forKey: "partyPin")
+        userDefaults.synchronize()
         query.whereKey("partyID", equalTo: partyObject.objectForKey("partyID") as! String)
         query.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
@@ -139,7 +143,10 @@ class ServerLink {
     }
     
     func deleteRoomNow(){
+        userDefaults.setObject("", forKey: "partyPin")
+        userDefaults.synchronize()
         self.isHosting = false
+        
         let query = PFQuery(className: "SongLibrary")
         query.whereKey("partyID", equalTo: partyObject.objectForKey("partyID") as! String)
         do{
