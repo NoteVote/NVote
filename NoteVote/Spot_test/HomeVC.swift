@@ -83,7 +83,7 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         serverLink.setParty(self.roomsNearby[indexPath.row])
         if(serverLink.partyObject.objectForKey("partyPrivate") as! Bool){
-            let alertController = UIAlertController(title: "Ending The Party", message: "Are you sure you want to end the party?", preferredStyle: UIAlertControllerStyle.Alert)
+            let alertController = UIAlertController(title: "This Party is Private", message: "Enter the 4 digit party pin below.", preferredStyle: UIAlertControllerStyle.Alert)
             let cancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel){ alertAction in
                 
             }

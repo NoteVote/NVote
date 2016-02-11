@@ -128,6 +128,7 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource, EN
 		self.navigationItem.rightBarButtonItem = rightNavBarButton
 		searchBars.placeholder = "Enter song name"
 		searchBars.delegate = self
+        searchBars.keyboardAppearance = UIKeyboardAppearance.Dark
     }
 
     override func viewWillAppear(animated: Bool) {
