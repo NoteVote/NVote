@@ -99,8 +99,7 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
                             print("session is valid")
                             self.performSegueWithIdentifier("segueOne", sender: nil)
                         }
-                        print("session is invalid")
-                        
+						
 					}
                     else{
                         print("session refresh failed")

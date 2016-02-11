@@ -24,6 +24,7 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 	var playlistMusic:[String] = []
 	var player:SPTAudioStreamingController?
 	private let authController = SpotifyAuth()
+	private let spotifyAuthenticator = SPTAuth.defaultInstance()
 	
 	//MARK: Player Methods
 	
@@ -91,6 +92,9 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 			if (!serverLink.musicList.isEmpty) {
 				currentTrack = self.pop()
 				
+				//return if session needs to be renewed
+				if (!validateSession(currentTrack)) { return }
+				
 				if (currentTrack != "") {
 					self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
 						if error != nil {
@@ -107,6 +111,9 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 				self.playlistMusic.append(temp)
 				searchHandler.getURIwithPartial(temp, completion: {(result: String) in
 					currentTrack = result
+					
+					//return if session needs to be renewed
+					if (!self.validateSession(currentTrack)) { return }
 					
 					if (currentTrack != "") {
 						self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
@@ -288,4 +295,38 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 		}
 		return array
 	}
+	
+	func validateSession(track: String) -> Bool {
+		let session = SessionHandler().getSession()
+		if (session!.isValid()) {
+			return true
+		} else {
+			authController.setParameters(spotifyAuthenticator)
+			
+			spotifyAuthenticator.renewSession(session, callback:{
+				(error: NSError?, session:SPTSession?) -> Void in
+				
+				if(error == nil){
+					SessionHandler().storeSession(session!)
+					print("session refresh successful")
+					
+			
+					self.player?.playURI(NSURL(string: track), callback: { (error:NSError!) -> Void in
+						if error != nil {
+							print("Track lookup got error \(error)")
+							return
+						}
+					})
+					
+					
+				}
+				else{
+					print("session refresh failed")
+				}
+			})
+			return false
+		}
+	}
 }
+
+	
