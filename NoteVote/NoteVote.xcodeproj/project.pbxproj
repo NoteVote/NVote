@@ -40,6 +40,7 @@
 		AD23D4C11BE2CA77000B9F14 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD23D4C01BE2CA77000B9F14 /* Accounts.framework */; };
 		AD23D4C31BE2CA7F000B9F14 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD23D4C21BE2CA7F000B9F14 /* Social.framework */; };
 		AD2483B21BE7E06400432200 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD2483B11BE7E06400432200 /* ParseUI.framework */; };
+		AD28EDF01C6CF90500461BE9 /* GeoLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD28EDEF1C6CF90500461BE9 /* GeoLocation.swift */; };
 		AD4349FC1C175DA3005104A9 /* SearchHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD4349FB1C175DA2005104A9 /* SearchHandler.swift */; };
 		AD631E231C502A28002A151B /* ServerLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD631E221C502A28002A151B /* ServerLink.swift */; };
 		AD631E251C502A88002A151B /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD631E241C502A88002A151B /* Song.swift */; };
@@ -98,6 +99,7 @@
 		AD23D4C01BE2CA77000B9F14 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		AD23D4C21BE2CA7F000B9F14 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		AD2483B11BE7E06400432200 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseUI.framework; sourceTree = "<group>"; };
+		AD28EDEF1C6CF90500461BE9 /* GeoLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeoLocation.swift; sourceTree = "<group>"; };
 		AD4349FB1C175DA2005104A9 /* SearchHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchHandler.swift; sourceTree = "<group>"; };
 		AD631E221C502A28002A151B /* ServerLink.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerLink.swift; sourceTree = "<group>"; };
 		AD631E241C502A88002A151B /* Song.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 		918A22BD1BB1BAFB00CE76AF /* Spot_test */ = {
 			isa = PBXGroup;
 			children = (
+				AD28EDF11C6CF92400461BE9 /* GeoLocation */,
 				ADDD8BDE1C0E271B002B0EC9 /* Menus */,
 				ADDD8BDC1C0E26D9002B0EC9 /* TableCells */,
 				ADDD8BDD1C0E26FD002B0EC9 /* Spotify */,
@@ -210,6 +213,14 @@
 			);
 			name = Frameworks;
 			path = "ios-sdk-beta-10";
+			sourceTree = "<group>";
+		};
+		AD28EDF11C6CF92400461BE9 /* GeoLocation */ = {
+			isa = PBXGroup;
+			children = (
+				AD28EDEF1C6CF90500461BE9 /* GeoLocation.swift */,
+			);
+			name = GeoLocation;
 			sourceTree = "<group>";
 		};
 		ADDD8BDC1C0E26D9002B0EC9 /* TableCells */ = {
@@ -396,6 +407,7 @@
 				AD6B9FD51BC7197D0079424F /* CreateRoomVC.swift in Sources */,
 				AD4349FC1C175DA3005104A9 /* SearchHandler.swift in Sources */,
 				CE7BF0031C5D22F1002257C7 /* SpotifyPlayer.swift in Sources */,
+				AD28EDF01C6CF90500461BE9 /* GeoLocation.swift in Sources */,
 				910808611C0DF5B000FBF037 /* SearchVC.swift in Sources */,
 				91E4FB2D1BEC069D0044762C /* HostRoomVC.swift in Sources */,
 			);

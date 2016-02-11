@@ -15,6 +15,7 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     private var labelUpdateCounter = 0
     
     
+    @IBOutlet weak var pinLabel: UILabel!
     private var isAnimating = false
     @IBOutlet weak var trackTitle: UILabel!
     @IBOutlet weak var trackArtist: UILabel!
@@ -287,6 +288,7 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
         super.viewDidLoad()
         serverLink.isHosting = true
         self.sideMenuController()?.sideMenu?.delegate = self;
+        self.pinLabel.text = serverLink.partyObject.objectForKey("partyPin") as? String
         startSession()
         
         self.refreshControl = UIRefreshControl()

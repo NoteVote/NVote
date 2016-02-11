@@ -13,6 +13,7 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
     
     var roomsNearby:[PFObject] = []
     var refreshControl:UIRefreshControl!
+    var password:UITextField!
 
     
     @IBOutlet weak var backgroundImage: UIImageView!
@@ -54,7 +55,7 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
 		
 		let sessionHandler = SessionHandler()
 		let session = sessionHandler.getSession()
-//if(session!.canonicalUsername (is not premium member)){
+//      if(session!.canonicalUsername (is not premium member)){
 //            let alertController = UIAlertController(title: "Spotify Account", message:
 //                "To Create and Host your own room you must be a Premium member of Spotify", preferredStyle: UIAlertControllerStyle.Alert)
 //        alertController.addAction(UIAlertAction(title: "No Thanks", style: UIAlertActionStyle.Destructive,handler: nil))
@@ -82,24 +83,29 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         serverLink.setParty(self.roomsNearby[indexPath.row])
         if(serverLink.partyObject.objectForKey("partyPrivate") as! Bool){
-//            let alertController = UIAlertController(title: "Ending The Party", message: "Are you sure you want to end the party?", preferredStyle: UIAlertControllerStyle.Alert)
-//            let cancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel){ alertAction in
-//                
-//            }
-//            let enter = UIAlertAction(title: "Enter", style: UIAlertActionStyle.Default){ alertAction in
-//                
-//            }
-//            alertController.addTextFieldWithConfigurationHandler { (textField: UITextField!) -> Void in
-//                textField.placeholder = "Input data..."
-//                textField.keyboardAppearance = UIKeyboardAppearance.Dark
-//                textField.keyboardType = UIKeyboardType.DecimalPad
-//            }
-//            alertController.addAction(cancel)
-//            alertController.addAction(enter)
-//            self.presentViewController(alertController, animated: true, completion: nil)
+            let alertController = UIAlertController(title: "Ending The Party", message: "Are you sure you want to end the party?", preferredStyle: UIAlertControllerStyle.Alert)
+            let cancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel){ alertAction in
+                
+            }
+            let enter = UIAlertAction(title: "Enter", style: UIAlertActionStyle.Default){ alertAction in
+                if(self.password.text! == serverLink.partyObject.objectForKey("partyPin") as! String){
+                    self.performSegueWithIdentifier("Home_ActiveRoom", sender: nil)
+                }
+            }
+            alertController.addTextFieldWithConfigurationHandler { (textField: UITextField!) -> Void in
+                textField.clearsOnBeginEditing = true
+                textField.placeholder = "Room Pin"
+                self.password = textField
+                textField.keyboardAppearance = UIKeyboardAppearance.Dark
+                textField.keyboardType = UIKeyboardType.DecimalPad
+            }
+            alertController.addAction(cancel)
+            alertController.addAction(enter)
+            self.presentViewController(alertController, animated: true, completion: nil)
         }
-        self.performSegueWithIdentifier("Home_ActiveRoom", sender: nil)
-        
+        else{
+            self.performSegueWithIdentifier("Home_ActiveRoom", sender: nil)
+        }
     }
     
     

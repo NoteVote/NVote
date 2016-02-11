@@ -88,6 +88,14 @@ class ServerLink {
         partyObject["partyName"] = partyName
         partyObject["partyID"] = partyID
         partyObject["partyPrivate"] = priv
+        if(priv){
+            var partyPin = ""
+            partyPin += String(Int(arc4random_uniform(10)))
+            partyPin += String(Int(arc4random_uniform(10)))
+            partyPin += String(Int(arc4random_uniform(10)))
+            partyPin += String(Int(arc4random_uniform(10)))
+            partyObject["partyPin"] = partyPin
+        }
         partyObject.saveInBackgroundWithBlock {
             (success: Bool, error: NSError?) -> Void in
             
