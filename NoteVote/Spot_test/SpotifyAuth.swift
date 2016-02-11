@@ -13,8 +13,10 @@ class SpotifyAuth {
     
     private let kClientID = "ddf55f7bf8ec47e1a9a998c53207adb2"
     private let kCallbackURL = "notevote-login://callback"
-    private let kTokenSwapURL = ""
-	private let kTokenRefreshURL = ""
+	private let kTokenSwapURL = "https://quiet-fortress-78046.herokuapp.com/swap"
+	private let kTokenRefreshURL = "https://quiet-fortress-78046.herokuapp.com/refresh"
+	//private let kTokenSwapURL = "https://QB414l5cQl9zLJ3j0RkFrWnmodlAx2EEmfH6Tkjo:javascript-key=ocacK5lQ4Ma6ilgfaaFPV0lDiSIBcCxlFchpCuDy@api.parse.com/1/functions/swap"
+	//private let kTokenRefreshURL = "https://api.parse.com/1/functions/refresh"
 	
     func setParameters(auth: SPTAuth){
         auth.clientID = kClientID
