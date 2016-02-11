@@ -231,6 +231,8 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
 	
 	func updateProgress() {
         
+        if (spotifyPlayer.player?.currentTrackDuration == nil) { return }
+        
         let length = (spotifyPlayer.player?.currentTrackDuration)! as Double
         let position = (spotifyPlayer.player?.currentPlaybackPosition)! as Double
         
