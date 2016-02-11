@@ -260,10 +260,7 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 			for _ in 0...count-1 {
 				let partialTrack = trackListItems.removeFirst() as! SPTPartialTrack
 				self.playlistMusic.append(String(partialTrack.playableUri))
-//				searchHandler.getURIwithPartial(String(partialTrack.playableUri)){
-//					(result: String) in
-//					self.playlistMusic.append(result)
-//				}
+
 			}
 			self.shuffleArray(self.playlistMusic)
 			
@@ -317,8 +314,6 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 							return
 						}
 					})
-					
-					
 				}
 				else{
 					print("session refresh failed")
