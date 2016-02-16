@@ -17,7 +17,6 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 	var trackTitle:String?
 	var trackArtist:String?
 	var currentURI:String?
-	var nextURI:String?
 	
 	var musicOptions:[Song] = []
 	var searchList:[SPTPartialTrack] = []
@@ -57,6 +56,8 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 								print("Track lookup got error \(error)")
 								return
 							}
+							print("play on login... musicList")
+
 						})
 					}
 					
@@ -72,6 +73,7 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 									print("Track lookup got error \(error)")
 									return
 								}
+								print("play on login... playlist")
 							})
 						})
 					}
@@ -101,9 +103,11 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 							print("Track lookup got error \(error)")
 							return
 						}
+						print("play from musicList")
+						print(serverLink.musicList)
 					})
 					//set next uri for method flow
-					self.nextURI = currentTrack
+					//self.nextURI = currentTrack
 				}
 				
 			} else {
@@ -121,9 +125,10 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 								print("Track lookup got error \(error)")
 								return
 							}
+							print("play from playlist")
 						})
 						//set next uri for method flow
-						self.nextURI = currentTrack
+						//self.nextURI = currentTrack
 					}
 				})
 			}
@@ -136,7 +141,7 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 			trackArtist = trackMetadata["SPTAudioStreamingMetadataArtistName"] as? String
 			currentURI = trackMetadata["SPTAudioStreamingMetadataTrackURI"] as? String
 			//currentURI = nextURI
-			
+			print("---------------------------------------------------------")
 			SPTAlbum.albumWithURI(NSURL(string: albumURI), accessToken: nil, market: "US") { (error:NSError!, albumObj:AnyObject!) -> Void in
 				let album = albumObj as! SPTAlbum
 				
@@ -187,9 +192,9 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 	*/
 	func pop()->String{
 		serverLink.sortMusicList()
-		let uri:String = serverLink.musicList.first!.objectForKey("uri") as! String
+		let uri:String = serverLink.musicList[0].objectForKey("uri") as! String
 		serverLink.removeSong(uri)
-		serverLink.musicList.removeFirst()
+		serverLink.musicList.removeAtIndex(0)
 		PFAnalytics.trackEventInBackground("savequeue", dimensions: ["where":"host"], block: nil)
 		return uri
 	}
@@ -313,6 +318,7 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 							print("Track lookup got error \(error)")
 							return
 						}
+						print("play music on refresh")
 					})
 				}
 				else{

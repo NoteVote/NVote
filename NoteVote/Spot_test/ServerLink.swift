@@ -172,6 +172,7 @@ class ServerLink {
         var notin:Bool = true
         for song in self.songBatch{
             notin = true
+			print(self.musicList.count)
             for track in self.musicList{
                 if(track.objectForKey("uri") as! String == song.2){
                     if(!self.songsVoted[self.partyObject.objectForKey("partyID") as! String]!.contains(song.2)){
@@ -269,7 +270,6 @@ class ServerLink {
         query.whereKey("uri", equalTo: uri)
         query.findObjectsInBackgroundWithBlock {
             (objects:[PFObject]?, error: NSError?) -> Void in
-            PFAnalytics.trackEventInBackground("deleteroom", block: nil)
             if(error == nil && objects != nil){
                 objects![0].deleteInBackground()
             }
@@ -317,6 +317,7 @@ class ServerLink {
         var temp:[PFObject] = []
         var voteChecker:[String] = []
         if !self.musicList.isEmpty {
+			
             for i in 0...self.musicList.count - 1 {
                 voteChecker.append(self.musicList[i].objectForKey("uri") as! String)
                 if temp.count == 0 {
