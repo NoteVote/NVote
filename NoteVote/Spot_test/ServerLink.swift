@@ -277,9 +277,10 @@ class ServerLink {
     }
     
     /**
-     * Synchronise way to get an updated list of music in the song queue.
+     * Synchronous way to get an updated list of music in the song queue.
      */
     func syncGetQueue(){
+		self.musicList = []
         let query = PFQuery(className: "SongLibrary")
         query.whereKey("partyID", equalTo: partyObject.objectForKey("partyID") as! String)
         do{
@@ -292,7 +293,7 @@ class ServerLink {
     }
     
     /**
-     * Asynchronise way to get an updated list of music in the song queue.
+     * Asynchronous way to get an updated list of music in the song queue.
      */
     func getQueue(completion: (result: [PFObject]) -> Void){
         self.musicList = []
