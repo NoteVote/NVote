@@ -282,6 +282,7 @@ class ServerLink {
     func syncGetQueue(){
 		self.musicList = []
         let query = PFQuery(className: "SongLibrary")
+        query.addAscendingOrder("CreatedAt")
         query.whereKey("partyID", equalTo: partyObject.objectForKey("partyID") as! String)
         do{
             let list =  try query.findObjects()
@@ -298,6 +299,7 @@ class ServerLink {
     func getQueue(completion: (result: [PFObject]) -> Void){
         self.musicList = []
         let query = PFQuery(className: "SongLibrary")
+        query.addAscendingOrder("CreatedAt")
         query.whereKey("partyID", equalTo: partyObject.objectForKey("partyID") as! String)
         query.findObjectsInBackgroundWithBlock {
             (objects:[PFObject]?, error: NSError?) -> Void in
