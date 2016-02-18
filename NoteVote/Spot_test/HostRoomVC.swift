@@ -13,7 +13,6 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     
     @IBOutlet weak var albumImage: UIImageView!
     private var labelUpdateCounter = 0
-    
     @IBOutlet weak var pinLabel: UILabel!
     private var isAnimating = false
     @IBOutlet weak var trackTitle: UILabel!
@@ -50,6 +49,7 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
         }
     }
     
+    
     func hideDropDownView() {
         var frame:CGRect = self.dropDownView.frame
         frame.origin.y = -frame.size.height + 80
@@ -67,6 +67,7 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
         serverLink.getQueue(){
             (result: [PFObject]) in
             PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"active"], block: nil)
+            self.tableView.setContentOffset(CGPoint.zero, animated: true)
             self.tableView.reloadData()
         }
     }
@@ -262,7 +263,6 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     
     
     
-    
 //----------Methods for enter/exit HostVC----------------
     
     override func viewWillAppear(animated: Bool) {
@@ -302,8 +302,6 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
         let width:CGFloat = self.dropDownView.frame.size.width
         self.dropDownView.frame = CGRectMake(0, self.view.bounds.height/2, width, self.view.bounds.height)
         
-        
-    
         //Notification observer for track metadata
         let defaultCenter = NSNotificationCenter.defaultCenter()
         defaultCenter.addObserver(self, selector: "handleMetadata", name: "MetadataChangeNotification", object: nil)

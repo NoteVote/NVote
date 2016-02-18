@@ -1404,6 +1404,7 @@
                         </subviews>
                         <color key="backgroundColor" red="0.1176470588" green="0.1176470588" blue="0.1176470588" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="4AP-Gi-VcN" firstAttribute="centerX" secondItem="mS7-Et-Kay" secondAttribute="centerX" id="2Dg-e5-6FS"/>
                             <constraint firstItem="nMq-0C-LZB" firstAttribute="top" secondItem="z3S-EE-6xH" secondAttribute="bottom" id="3iq-vT-goH"/>

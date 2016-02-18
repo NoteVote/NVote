@@ -160,6 +160,24 @@ class ServerLink {
             print("syncronise delete failed")
         }
     }
+    
+    func addSongToBatch(songTitle:String, trackArtist:String, uri:String){
+        let song:(String,String,String) = (songTitle,trackArtist,uri)
+        self.songBatch.append(song)
+        self.songsInBatch.append(song.2)
+    }
+    
+    func removeSongFromBatch(songTitle:String, trackArtist:String){
+        if(!self.songBatch.isEmpty){
+            for i in 0...songBatch.count-1 {
+                if(songBatch[i].0 == songTitle && songBatch[i].1 == trackArtist){
+                    songBatch.removeAtIndex(i)
+                    songsInBatch.removeAtIndex(i)
+                    return
+                }
+            }
+        }
+    }
 
     /**
      * Adds a song to the parties subclass of SongLibrary.
@@ -198,6 +216,7 @@ class ServerLink {
             }
         }
         self.songBatch = []
+        self.songsInBatch = []
     }
     
     func voteURI(uri:String){
@@ -323,24 +342,6 @@ class ServerLink {
             }
         }
         self.songsVoted[self.partyObject.objectForKey("partyID") as! String] = temp
-    }
-    
-    func removeSongFromBatch(songTitle:String, trackArtist:String){
-        if(!self.songBatch.isEmpty){
-            for i in 0...songBatch.count-1 {
-                if(songBatch[i].0 == songTitle && songBatch[i].1 == trackArtist){
-                    songBatch.removeAtIndex(i)
-                    songsInBatch.removeAtIndex(i)
-                    return
-                }
-            }
-        }
-    }
-    
-    func addSongToBatch(songTitle:String, trackArtist:String, uri:String){
-        let song:(String,String,String) = (songTitle,trackArtist,uri)
-        self.songBatch.append(song)
-        self.songsInBatch.append(song.2)
     }
     
     

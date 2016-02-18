@@ -161,9 +161,9 @@ public class ENSideMenu : NSObject, UIGestureRecognizerDelegate {
         animator = UIDynamicAnimator(referenceView:sourceView)
         animator.delegate = self
         
-        self.panRecognizer = UIPanGestureRecognizer(target: self, action: "handlePan:")
-        panRecognizer!.delegate = self
-        sourceView.addGestureRecognizer(panRecognizer!)
+//        self.panRecognizer = UIPanGestureRecognizer(target: self, action: "handlePan:")
+//        panRecognizer!.delegate = self
+//        sourceView.addGestureRecognizer(panRecognizer!)
         
         // Add right swipe gesture recognizer
         let rightSwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: "handleGesture:")
@@ -371,39 +371,39 @@ public class ENSideMenu : NSObject, UIGestureRecognizerDelegate {
                 }
             }
         }
-        else if gestureRecognizer.isEqual(panRecognizer) {
-            if allowPanGesture == false {
-                return false
-            }
-            animator.removeAllBehaviors()
-            let touchPosition = gestureRecognizer.locationOfTouch(0, inView: sourceView)
-            if menuPosition == .Left {
-                if isMenuOpen {
-                    if touchPosition.x < menuWidth {
-                        return true
-                    }
-                }
-                else {
-                    if touchPosition.x < 25 {
-                        return true
-                    }
-                }
-            }
-            else {
-                if isMenuOpen {
-                    if touchPosition.x > CGRectGetWidth(sourceView.frame) - menuWidth {
-                        return true
-                    }
-                }
-                else {
-                    if touchPosition.x > CGRectGetWidth(sourceView.frame)-25 {
-                        return true
-                    }
-                }
-            }
-            
-            return false
-        }
+//        else if gestureRecognizer.isEqual(panRecognizer) {
+//            if allowPanGesture == false {
+//                return false
+//            }
+//            animator.removeAllBehaviors()
+//            let touchPosition = gestureRecognizer.locationOfTouch(0, inView: sourceView)
+//            if menuPosition == .Left {
+//                if isMenuOpen {
+//                    if touchPosition.x < menuWidth {
+//                        return true
+//                    }
+//                }
+//                else {
+//                    if touchPosition.x < 25 {
+//                        return true
+//                    }
+//                }
+//            }
+//            else {
+//                if isMenuOpen {
+//                    if touchPosition.x > CGRectGetWidth(sourceView.frame) - menuWidth {
+//                        return true
+//                    }
+//                }
+//                else {
+//                    if touchPosition.x > CGRectGetWidth(sourceView.frame)-25 {
+//                        return true
+//                    }
+//                }
+//            }
+//            
+//            return false
+//        }
         return true
     }
     
@@ -412,42 +412,42 @@ public class ENSideMenu : NSObject, UIGestureRecognizerDelegate {
                 || (self.menuPosition == .Left && gesture.direction == .Right))
     }
     
-    internal func handlePan(recognizer : UIPanGestureRecognizer){
-        
-        let leftToRight = recognizer.velocityInView(recognizer.view).x > 0
-        
-        switch recognizer.state {
-        case .Began:
-            
-            break
-            
-        case .Changed:
-            
-            let translation = recognizer.translationInView(sourceView).x
-            let xPoint : CGFloat = sideMenuContainerView.center.x + translation + (menuPosition == .Left ? 1 : -1) * menuWidth / 2
-            
-            if menuPosition == .Left {
-                if xPoint <= 0 || xPoint > CGRectGetWidth(self.sideMenuContainerView.frame) {
-                    return
-                }
-            }else{
-                if xPoint <= sourceView.frame.size.width - menuWidth || xPoint >= sourceView.frame.size.width
-                {
-                    return
-                }
-            }
-            
-            sideMenuContainerView.center.x = sideMenuContainerView.center.x + translation
-            recognizer.setTranslation(CGPointZero, inView: sourceView)
-            
-        default:
-            
-            let shouldClose = menuPosition == .Left ? !leftToRight && CGRectGetMaxX(sideMenuContainerView.frame) < menuWidth : leftToRight && CGRectGetMinX(sideMenuContainerView.frame) >  (sourceView.frame.size.width - menuWidth)
-            
-            toggleMenu(!shouldClose)
-            
-        }
-    }
+//    internal func handlePan(recognizer : UIPanGestureRecognizer){
+//        
+//        let leftToRight = recognizer.velocityInView(recognizer.view).x > 0
+//        
+//        switch recognizer.state {
+//        case .Began:
+//            
+//            break
+//            
+//        case .Changed:
+//            
+//            let translation = recognizer.translationInView(sourceView).x
+//            let xPoint : CGFloat = sideMenuContainerView.center.x + translation + (menuPosition == .Left ? 1 : -1) * menuWidth / 2
+//            
+//            if menuPosition == .Left {
+//                if xPoint <= 0 || xPoint > CGRectGetWidth(self.sideMenuContainerView.frame) {
+//                    return
+//                }
+//            }else{
+//                if xPoint <= sourceView.frame.size.width - menuWidth || xPoint >= sourceView.frame.size.width
+//                {
+//                    return
+//                }
+//            }
+//            
+//            sideMenuContainerView.center.x = sideMenuContainerView.center.x + translation
+//            recognizer.setTranslation(CGPointZero, inView: sourceView)
+//            
+//        default:
+//            
+//            let shouldClose = menuPosition == .Left ? !leftToRight && CGRectGetMaxX(sideMenuContainerView.frame) < menuWidth : leftToRight && CGRectGetMinX(sideMenuContainerView.frame) >  (sourceView.frame.size.width - menuWidth)
+//            
+//            toggleMenu(!shouldClose)
+//            
+//        }
+//    }
     
     private func updateSideMenuApperanceIfNeeded () {
         if (needUpdateApperance) {

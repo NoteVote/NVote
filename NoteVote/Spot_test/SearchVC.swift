@@ -63,7 +63,7 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource, EN
 			searchHandler.Search(searchBar.text!){
 				(result: String) in
 				spotifyPlayer.setMusicOptions()
-
+                self.tableView.setContentOffset(CGPoint.zero, animated: true)
 				self.tableView.reloadData()
 			}
 		}
