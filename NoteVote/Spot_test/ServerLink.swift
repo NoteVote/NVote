@@ -282,6 +282,7 @@ class ServerLink {
 		self.musicList = []
         let query = PFQuery(className: "SongLibrary")
         query.addAscendingOrder("CreatedAt")
+        query.addDescendingOrder("voted")
         query.whereKey("partyID", equalTo: partyObject.objectForKey("partyID") as! String)
         do{
             let list =  try query.findObjects()
@@ -299,50 +300,18 @@ class ServerLink {
         self.musicList = []
         let query = PFQuery(className: "SongLibrary")
         query.addAscendingOrder("CreatedAt")
+        query.addDescendingOrder("votes")
         query.whereKey("partyID", equalTo: partyObject.objectForKey("partyID") as! String)
         query.findObjectsInBackgroundWithBlock {
             (objects:[PFObject]?, error: NSError?) -> Void in
             PFAnalytics.trackEventInBackground("deleteroom", block: nil)
             if(error == nil){
                 for object in objects!{
+                    print(object.objectForKey("trackTitle") as! String)
                     self.musicList.append(object)
                 }
                 completion(result: self.musicList)
             }
-        }
-    }
-    
-    /**
-     * Sorts musicList in serverLink, based upon votes, highest being the first element of the list.
-     */
-    func sortMusicList(){
-        var temp:[PFObject] = []
-        var voteChecker:[String] = []
-        if !self.musicList.isEmpty {
-			
-            for i in 0...self.musicList.count - 1 {
-                voteChecker.append(self.musicList[i].objectForKey("uri") as! String)
-                if temp.count == 0 {
-                    temp.append(self.musicList[i])
-                } else {
-                    for j in 0...temp.count-1 {
-                        
-                        //if its larger, insert in temp
-                        if self.musicList[i].objectForKey("votes") as! Int > temp[j].objectForKey("votes") as! Int {
-                            temp.insert(self.musicList[i], atIndex: j)
-                            break
-                        }
-                        
-                        //if its not larger than any element in temp
-                        if j == temp.count-1 {
-                            temp.append(self.musicList[i])
-                        }
-                    }
-                    
-                }
-            }
-            self.updateSongsVoted(voteChecker)
-            self.musicList = temp
         }
     }
     

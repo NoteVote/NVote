@@ -191,7 +191,6 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 	*	then returns the song's URI.
 	*/
 	func pop()->String{
-		serverLink.sortMusicList()
 		let uri:String = serverLink.musicList[0].objectForKey("uri") as! String
 		serverLink.removeSong(uri)
 		serverLink.musicList.removeAtIndex(0)

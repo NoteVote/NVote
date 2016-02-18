@@ -67,7 +67,6 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
         serverLink.getQueue(){
             (result: [PFObject]) in
             PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"active"], block: nil)
-            serverLink.sortMusicList()
             self.tableView.reloadData()
         }
     }
@@ -142,7 +141,6 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
         serverLink.getQueue(){
             (result: [PFObject]) in
             PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"active"], block: nil)
-            serverLink.sortMusicList()
             print(serverLink.musicList)
             self.tableView.reloadData()
         }
