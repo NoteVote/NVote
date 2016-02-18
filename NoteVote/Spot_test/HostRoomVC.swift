@@ -76,10 +76,12 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
             self.dropDownView.frame = frame
             }, completion:  { finished in
                 if(self.dropDownViewIsDisplayed){
+                    self.dropDownButton.setBackgroundImage(UIImage(named: "dropUp"), forState: UIControlState.Normal)
                     self.yConstraint.constant = -frame.size.height
                 }
                 else{
-                    self.yConstraint.constant = -14
+                    self.dropDownButton.setBackgroundImage(UIImage(named: "dropDown"), forState: UIControlState.Normal)
+                    self.yConstraint.constant = -16
                 }
                 self.isAnimating = false
             })

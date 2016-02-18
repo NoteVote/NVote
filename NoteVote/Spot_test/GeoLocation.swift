@@ -10,12 +10,11 @@ import Foundation
 import Parse
 
 class GeoLoaction {
-    
-    
-    
+//    
+//    
+//    
 //    func findLocation {
 //        let locatoinManager = CLLocationManager()
-//        
 //        
 //    }
 
