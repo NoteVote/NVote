@@ -18,14 +18,22 @@ class SpotifyAuth {
 	//private let kTokenSwapURL = "https://QB414l5cQl9zLJ3j0RkFrWnmodlAx2EEmfH6Tkjo:javascript-key=ocacK5lQ4Ma6ilgfaaFPV0lDiSIBcCxlFchpCuDy@api.parse.com/1/functions/swap"
 	//private let kTokenRefreshURL = "https://api.parse.com/1/functions/refresh"
 	
-    func setParameters(auth: SPTAuth){
+	func setParameters(auth: SPTAuth){
         auth.clientID = kClientID
-        auth.requestedScopes = []
+        auth.requestedScopes = [SPTAuthUserReadPrivateScope]
         auth.redirectURL = NSURL(string: kCallbackURL)
         auth.tokenSwapURL = NSURL(string: kTokenSwapURL)
         auth.tokenRefreshURL = NSURL(string: kTokenRefreshURL)
     }
-    
+	
+	func setPremiumParameters(auth: SPTAuth){
+		auth.clientID = kClientID
+		auth.requestedScopes = [SPTAuthUserReadPrivateScope, SPTAuthStreamingScope]
+		auth.redirectURL = NSURL(string: kCallbackURL)
+		auth.tokenSwapURL = NSURL(string: kTokenSwapURL)
+		auth.tokenRefreshURL = NSURL(string: kTokenRefreshURL)
+	}
+	
     func getClientID() -> String {
         return kClientID
     }

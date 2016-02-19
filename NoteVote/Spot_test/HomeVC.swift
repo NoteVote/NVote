@@ -1,17 +1,20 @@
 //
 //  HomeVC.swift
-//  NVBeta
 //
-//  Created by uics15 on 9/29/15.
-//  Copyright © 2015 uiowa. All rights reserved.
+//  Created by Aaron Kaplan on 9/29/15.
+//  Copyright © 2015 NoteVote. All rights reserved.
 //
 
 import UIKit
 import Parse
+import Crashlytics
 
 class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITableViewDelegate{
-    
-    var roomsNearby:[PFObject] = []
+	
+	private let authController = SpotifyAuth()
+	private let spotifyAuthenticator = SPTAuth.defaultInstance()
+	private var user:SPTUser? = nil
+	var roomsNearby:[PFObject] = []
     var refreshControl:UIRefreshControl!
     var password:UITextField!
 
@@ -45,7 +48,7 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
     func sideMenuDidOpen() {
         print("sideMenuDidOpen")
     }
-    
+	
 
     @IBAction func menuButtonPressed(sender: AnyObject) {
         toggleSideMenuView()
@@ -55,19 +58,49 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
 		
 		let sessionHandler = SessionHandler()
 		let session = sessionHandler.getSession()
-//      if(session!.canonicalUsername (is not premium member)){
-//            let alertController = UIAlertController(title: "Spotify Account", message:
-//                "To Create and Host your own room you must be a Premium member of Spotify", preferredStyle: UIAlertControllerStyle.Alert)
-//        alertController.addAction(UIAlertAction(title: "No Thanks", style: UIAlertActionStyle.Destructive,handler: nil))
-//            alertController.addAction(UIAlertAction(title: "Upgrage", style: UIAlertActionStyle.Default,handler: nil))
-//            self.presentViewController(alertController, animated: true, completion: nil)
-//        //}
 		
-		print(session?.isValid())
-        performSegueWithIdentifier("Home_CreateRoom", sender: nil)
+		if (user != nil) {
+			if (user!.product.rawValue == 2){
+				authController.setPremiumParameters(spotifyAuthenticator)
+				
+				spotifyAuthenticator.renewSession(session, callback:{
+					(error: NSError?, session:SPTSession?) -> Void in
+					
+					if(error == nil){
+						
+						sessionHandler.storeSession(session!)
+						if(session!.isValid()){
+							self.performSegueWithIdentifier("Home_CreateRoom", sender: nil)
+						}
+						
+					} else {
+						Answers.logCustomEventWithName("Authentication Error", customAttributes:["Code":error!])
+						
+						let alertController = UIAlertController(title: "Uh-oh!", message: "Looks like something went wrong. Please try again in a minute.", preferredStyle: UIAlertControllerStyle.Alert)
+						alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Destructive,handler: nil))
+						self.presentViewController(alertController, animated: true, completion: nil)
+
+					}
+				})
+				
+			} else {
+			
+				let alertController = UIAlertController(title: "Spotify Account", message:
+					"To Create and Host your own room you must be a Premium member of Spotify", preferredStyle: UIAlertControllerStyle.Alert)
+				alertController.addAction(UIAlertAction(title: "No Thanks", style: UIAlertActionStyle.Destructive,handler: nil))
+				alertController.addAction(UIAlertAction(title: "Upgrage", style: UIAlertActionStyle.Default) {
+					(action) in
+					print("Divert to spotify website")
+					Answers.logCustomEventWithName("Upgrade", customAttributes: nil)
+					})
+				
+				self.presentViewController(alertController, animated: true, completion: nil)
+			}
+		}
     }
-    
-    
+	
+	//MARK: TableView Delegate
+	
     //Table View Methods
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
@@ -135,7 +168,7 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
         self.refreshControl.endRefreshing()
     }
     
-    // _____ Default View Controller Methods _____
+    //MARK: Default Methods
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
@@ -150,7 +183,16 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+		let sessionHandler = SessionHandler()
+		let session = sessionHandler.getSession()
+		
+		//Get user data
+		SPTUser.requestCurrentUserWithAccessToken(session!.accessToken, callback: {
+			(error:NSError!, result:AnyObject!) -> Void in
+			
+			self.user = result as? SPTUser
+		})
+		
         //Checking to see if roomsNearby has all items in songsVoted keys
         self.sideMenuController()?.sideMenu?.delegate = self;
         
@@ -162,7 +204,6 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 	
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {

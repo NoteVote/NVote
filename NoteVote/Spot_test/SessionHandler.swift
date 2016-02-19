@@ -11,13 +11,12 @@
 import Foundation
 
 class SessionHandler {
-
-    //private let userDefaults = NSUserDefaults.standardUserDefaults()
     
     func storeSession(session:SPTSession) -> Bool {
         let sessionData = NSKeyedArchiver.archivedDataWithRootObject(session)
         userDefaults.setObject(sessionData, forKey: "session")
-        userDefaults.synchronize()
+		userDefaults.synchronize()
+		
         return true
     }
     
@@ -31,4 +30,6 @@ class SessionHandler {
         let session = NSKeyedUnarchiver.unarchiveObjectWithData(sessionData as! NSData) as! SPTSession
         return session
     }
+	
+	
 }

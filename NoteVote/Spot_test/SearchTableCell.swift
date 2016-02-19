@@ -1,9 +1,8 @@
 //
 //  SearchTableCell.swift
-//  NVBeta
 //
-//  Created by uics15 on 12/1/15.
-//  Copyright © 2015 uiowa. All rights reserved.
+//  Created by Dustin Jones on 12/1/15.
+//  Copyright © 2015 NoteVote. All rights reserved.
 //
 
 class SearchTableCell: UITableViewCell {

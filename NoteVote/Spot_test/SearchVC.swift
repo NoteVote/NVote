@@ -1,9 +1,8 @@
 //
 //  SearchVC.swift
-//  NVBeta
 //
-//  Created by uics15 on 12/1/15.
-//  Copyright © 2015 uiowa. All rights reserved.
+//  Created by Dustin Jones on 12/1/15.
+//  Copyright © 2015 NoteVote. All rights reserved.
 //
 
 import UIKit
@@ -12,7 +11,7 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource, EN
     lazy   var searchBars:UISearchBar = UISearchBar(frame: CGRectMake(0, 0, 250, 18))
     var preView:String?
     
-    // MARK: - ENSideMenu Delegate
+    // MARK: ENSideMenu Delegate
     func sideMenuWillOpen() {
         print("sideMenuWillOpen")
     }
@@ -47,7 +46,7 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource, EN
         }
     }
 	
-	//MARK: SearchBarDelegate
+	//MARK: SearchBar Delegate
 	func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
         searchBars.text! = ""
 	}
@@ -73,7 +72,7 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource, EN
 	func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
 	}
 
-	//MARK: TableViewDelegate
+	//MARK: TableView Delegate
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 60
     }
@@ -106,12 +105,14 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource, EN
         cell.artistLabel.text! = spotifyPlayer.musicOptions[indexPath.row].Artist
         return cell
     }
-    
+	
+	//MARK: SearchBar Delegate
     func searchBarShouldEndEditing(searchBar: UISearchBar) -> Bool {
         self.resignFirstResponder()
         return true
     }
-    
+	
+	//MARK: Default Methods
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         self.searchBars.endEditing(true)
         super.touchesBegan(touches, withEvent: event)

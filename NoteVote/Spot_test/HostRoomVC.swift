@@ -1,13 +1,15 @@
 //
 //  HostRoomVC.swift
-//  NVBeta
 //
-//  Created by uics15 on 11/5/15.
-//  Copyright © 2015 uiowa. All rights reserved.
+//  This class handles the view for the host while music is streaming.
+//
+//  Created by Aaron Kaplan on 11/5/15.
+//  Copyright © 2015 NoteVote. All rights reserved.
 //
 
 import UIKit
 import Parse
+import Crashlytics
 
 class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITableViewDelegate {
     
@@ -33,7 +35,7 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     @IBOutlet weak var tableView: UITableView!
     var refreshControl:UIRefreshControl!
     
-   //----------Drop Down View Methods----------------
+   //MARK: Dropdown View Methods
     
     @IBAction func dropDownButtonPressed(sender: UIButton) {
         if(dropDownViewIsDisplayed){
@@ -89,7 +91,7 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     }
     
     
-//----------Table View Methods----------------
+    //MARK: TableView Delegate
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 60
@@ -102,7 +104,6 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     
     /*Number of rows of tableView*/
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(String(serverLink.musicList.count) + " cells allowed")
         return serverLink.musicList.count
         
     }
@@ -120,7 +121,7 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
         cell.selectedBackgroundView = customColor
         
         if(!serverLink.musicList.isEmpty){
-            print(String(serverLink.musicList.count) + " cells to build")
+
             let object:PFObject = serverLink.musicList[indexPath.row]
             cell.artistLabel.text! = object.objectForKey("trackArtist") as! String
             cell.songTitle.text! = object.objectForKey("trackTitle") as! String
@@ -150,11 +151,6 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
         self.refreshControl.endRefreshing()
     }
     
-    
-    
-    
-    
-//----------Nav Bar / Side Menu Items----------------
     
     @IBAction func SearchButtonPressed(sender: UIBarButtonItem) {
         performSegueWithIdentifier("Host_Search", sender: nil)
@@ -188,13 +184,13 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     
     
     
-//----------Spotify/Music Playing in general----------------
+    //MARK: Spotify Playback Methods
     
     @IBAction func playPausePressed(sender: AnyObject) {
         if (spotifyPlayer.player!.isPlaying) {
             spotifyPlayer.player!.setIsPlaying(false, callback: { (error:NSError!) -> Void in
                 if error != nil {
-                    print("Enabling playback got error \(error)")
+                    Answers.logCustomEventWithName("Player Error", customAttributes:["Code":error!])
                     return
                 }
             })
@@ -203,7 +199,7 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
         } else {
             spotifyPlayer.player!.setIsPlaying(true, callback: { (error:NSError!) -> Void in
                 if error != nil {
-                    print("Enabling playback got error \(error)")
+                    Answers.logCustomEventWithName("Player Error", customAttributes:["Code":error!])
                     return
                 }
             })
@@ -261,9 +257,9 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
         }
 	}
     
+
     
-    
-//----------Methods for enter/exit HostVC----------------
+    //MARK: Default Methods
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)

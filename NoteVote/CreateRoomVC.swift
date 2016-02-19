@@ -1,9 +1,8 @@
 //
 //  CreateRoomVC.swift
-//  NVBeta
 //
 //  Created by Dustin Jones on 10/8/15.
-//  Copyright © 2015 uiowa. All rights reserved.
+//  Copyright © 2015 NoteVote. All rights reserved.
 //
 
 import UIKit
@@ -22,7 +21,8 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
     
     var privateParty:Bool = false
     var playlistNames:[String] = []
-    // MARK: - ENSideMenu Delegate
+	
+	// MARK: ENSideMenu Delegate
     func sideMenuWillOpen() {
         print("sideMenuWillOpen")
     }
@@ -53,7 +53,8 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
         roomName.resignFirstResponder()
     }
     
-    
+	//MARK: Page Options
+	
     @IBAction func infoButtonPressed(sender: UIButton) {
         let alertController = UIAlertController(title: "Playlist Info", message:
             "Choosing a playlist to pull music from when no music is in your party queue. It keeps the party going.", preferredStyle: UIAlertControllerStyle.Alert)
@@ -68,14 +69,13 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
     @IBAction func cancelButtonPressed(sender: UIBarButtonItem) {
         performSegueWithIdentifier("CreateRoom_Home", sender: nil)
     }
-    
-    func noThanks(){
-        
-    }
-    
-    //TODO: Still need to add slide button for private Switch.
+    	
     @IBAction func doneButtonPressed(sender: UIBarButtonItem) {
-        serverLink.musicList = []
+		
+		//TODO: Delete any existing rooms. (Doesn't work because PartyID is nil)
+		//serverLink.deleteRoomNow()
+		
+		serverLink.musicList = []
         serverLink.songsVoted[session!.canonicalUsername] = []
         serverLink.addParty(roomName.text!, partyID: session!.canonicalUsername, priv: privateParty)
         userDefaults.setObject(roomName.text!, forKey: "currentRoom")
@@ -86,7 +86,10 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
         if(!playlistNames.isEmpty){
             spotifyPlayer.playlistToTracks(currentPickerRow)
         }
-		Answers.logCustomEventWithName("Room Created", customAttributes: nil)
+		
+		//log who created a room
+		Answers.logCustomEventWithName("Room Created", customAttributes: ["user":session!.canonicalUsername])
+		
         self.performSegueWithIdentifier("CreateRoom_HostRoom", sender: nil)
         
     }
@@ -95,7 +98,7 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
         self.session = session
     }
     
-//------------Picker View Methods-----------------
+	//MARK: PickerView Delegate
     
     func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return self.playlistNames.count
@@ -119,13 +122,15 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
 		currentPickerRow = row
 	}
     
-    
+	
+	//MARK: Default Methods
 	
     override func viewDidLoad() {
         super.viewDidLoad()
         self.sideMenuController()?.sideMenu?.delegate = self;
         let sessionHandler = SessionHandler()
         let session = sessionHandler.getSession()
+		
 		//TODO: why are we setting current session?
         setCurrentSession(session!)
         self.playlistNames.removeAll()

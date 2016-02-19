@@ -1,13 +1,13 @@
 //
 //  ActiveRoomVC.swift
-//  NVBeta
 //
 //  Created by Dustin Jones on 10/8/15.
-//  Copyright © 2015 uiowa. All rights reserved.
+//  Copyright © 2015 NoteVote. All rights reserved.
 //
 
 import UIKit
 import Parse
+import Crashlytics
 
 class ActiveRoomVC: UIViewController, UITableViewDelegate, UITableViewDataSource, ENSideMenuDelegate {
 
@@ -16,7 +16,7 @@ class ActiveRoomVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     var refreshControl:UIRefreshControl!
 
     
-    // MARK: - ENSideMenu Delegate
+    // MARK: ENSideMenu Delegate
     func sideMenuWillOpen() {
         print("sideMenuWillOpen")
     }
@@ -38,6 +38,8 @@ class ActiveRoomVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     @IBAction func searchButtonPressed(sender: UIBarButtonItem) {
         performSegueWithIdentifier("ActiveRoom_Search", sender: nil)
     }
+	
+	//MARK: TableView Delegate
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 60
@@ -84,7 +86,8 @@ class ActiveRoomVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             cell.songTitle.text! = object.objectForKey("trackTitle") as! String
             cell.songURI = object.objectForKey("uri") as! String
             cell.voteButton.setTitle(String(object.objectForKey("votes") as! Int), forState: UIControlState.Normal)
-            //initializing cells to voted state or unvoted state.
+			
+			//initializing cells to voted state or unvoted state.
             let votes = serverLink.songsVoted[(serverLink.partyObject.objectForKey("partyID") as! String)]
             if(votes != nil){
                 if (votes!.contains(cell.songURI)){
@@ -95,8 +98,7 @@ class ActiveRoomVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 }
             }
         }
-        
-        //TODO: somehow link to prototype cell QueueTableCell.swift
+		
         return cell
     }
     
@@ -110,7 +112,9 @@ class ActiveRoomVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         }
         self.refreshControl.endRefreshing()
     }
-    
+	
+	//MARK: Default Methods
+	
     override func viewDidLoad() {
         super.viewDidLoad()
         self.sideMenuController()?.sideMenu?.delegate = self;

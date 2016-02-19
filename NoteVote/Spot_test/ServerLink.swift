@@ -8,6 +8,7 @@
 
 import Foundation
 import Parse
+import Crashlytics
 
 class ServerLink {
 	
@@ -32,25 +33,21 @@ class ServerLink {
     func findRooms(completion: (result: [PFObject]) -> Void){
         self.rooms = []
         let query = PFQuery(className: "PartyObject")
-        
-        // NEED TO FIX THIS BEFORE RELEASEING
-        // will search within certain distance to phone's location.
+		
+        //TODO: will search within certain distance to phone's location.
         query.whereKey("partyID", notEqualTo: "0")
         query.findObjectsInBackgroundWithBlock{
             (objects: [PFObject]?, error: NSError?) -> Void in
             PFAnalytics.trackEventInBackground("getrooms", block: nil)
             if error == nil {
-                // The find succeeded.
-                print("Successfully retrieved \(objects!.count) scores.")
-                // Do something with the found objects
+
                 if let objects = objects as [PFObject]! {
                     for object in objects {
                         serverLink.rooms.append(object)
                     }
                 }
             } else {
-                // Log details of the failure
-                print("Error: \(error!) \(error!.userInfo)")
+                Answers.logCustomEventWithName("Parse Error", customAttributes:["Code":error!])
             }
             completion(result: serverLink.rooms)
         }
@@ -104,10 +101,11 @@ class ServerLink {
             PFAnalytics.trackEventInBackground("createroom", block: nil)
             if (success) {
                 self.partyObject = partyObject
-                // The object has been saved.
                 
             } else {
-                // There was a problem, check error.description
+				if (error != nil) {
+					Answers.logCustomEventWithName("Parse Error", customAttributes:["Code":error!])
+				}
             }
         }
     }
@@ -128,8 +126,11 @@ class ServerLink {
             PFAnalytics.trackEventInBackground("deleteroom", block: nil)
             if(error == nil && objects != nil){
                 objects![0].deleteInBackground()
-            }
+			} else {
+				Answers.logCustomEventWithName("Parse Error", customAttributes:["Code":error!])
+			}
         }
+		
         let query2 = PFQuery(className: "SongLibrary")
         query2.whereKey("partyID", equalTo: partyObject.objectForKey("partyID") as! String)
         query2.findObjectsInBackgroundWithBlock {
@@ -138,7 +139,9 @@ class ServerLink {
                 for object in objects!{
                     object.deleteInBackground()
                 }
-            }
+			} else {
+				Answers.logCustomEventWithName("Parse Error", customAttributes:["Code":error!])
+			}
         }
     }
     
@@ -157,7 +160,7 @@ class ServerLink {
             }
         }
         catch{
-            print("syncronise delete failed")
+            Answers.logCustomEventWithName("Parse Error", customAttributes:["Type":"Syncronous Delete"])
         }
     }
     
@@ -246,6 +249,7 @@ class ServerLink {
                 }
                 else{
                     output = false
+					Answers.logCustomEventWithName("Parse Error", customAttributes:["Code":error!])
             }
         }
         return output
@@ -269,6 +273,7 @@ class ServerLink {
             }
             else{
                 output = false
+				Answers.logCustomEventWithName("Parse Error", customAttributes:["Code":error!])
             }
         }
         return output
@@ -290,7 +295,11 @@ class ServerLink {
             (objects:[PFObject]?, error: NSError?) -> Void in
             if(error == nil && objects != nil){
                 objects![0].deleteInBackground()
-            }
+			} else {
+				if (error != nil) {
+					Answers.logCustomEventWithName("Parse Error", customAttributes:["Code":error!])
+				}
+			}
         }
     }
     
@@ -308,8 +317,9 @@ class ServerLink {
             for object in list {
                 self.musicList.append(object)
             }
-        }
-        catch{ print("synchronise query failed" ) }
+        } catch {
+			Answers.logCustomEventWithName("Parse Error", customAttributes:["Type":"Synchronous getQueue"])
+		}
     }
     
     /**
@@ -323,14 +333,19 @@ class ServerLink {
         query.whereKey("partyID", equalTo: partyObject.objectForKey("partyID") as! String)
         query.findObjectsInBackgroundWithBlock {
             (objects:[PFObject]?, error: NSError?) -> Void in
-            PFAnalytics.trackEventInBackground("deleteroom", block: nil)
-            if(error == nil){
+			
+			PFAnalytics.trackEventInBackground("deleteroom", block: nil)
+			
+			if(error == nil){
                 for object in objects!{
                     print(object.objectForKey("trackTitle") as! String)
                     self.musicList.append(object)
                 }
                 completion(result: self.musicList)
-            }
+			
+			} else {
+				Answers.logCustomEventWithName("Parse Error", customAttributes:["Code":error!])
+			}
         }
     }
     
@@ -354,5 +369,5 @@ class ServerLink {
             songsVoted[(partyObject.objectForKey("partyID") as! String)] = []
         }
     }
-    
-    }
+
+}

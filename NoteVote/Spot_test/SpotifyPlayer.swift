@@ -1,17 +1,15 @@
 //
 //  SpotifyPlayer.swift
-//  NoteVote
 //
-//  Created by User on 1/30/16.
-//  Copyright © 2016 uiowa. All rights reserved.
+//  Created by Aaron Kaplan on 1/30/16.
+//  Copyright © 2016 NoteVote. All rights reserved.
 //
 
 import Foundation
 import Parse
+import Crashlytics
 
 class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
-	
-	//MARK: Variables
 	
 	var albumArt:UIImage?
 	var trackTitle:String?
@@ -39,7 +37,7 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 		if ((player?.loggedIn) == false) {
 			player?.loginWithSession(sessionObj, callback: { (error:NSError!) -> Void in
 				if error != nil {
-					print("Enabling playback got error \(error)")
+					Answers.logCustomEventWithName("Player Error", customAttributes:["Code":error!])
 					return
 				}
 				
@@ -47,13 +45,12 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 				PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"host"], block: nil)
 				var currentTrack:String = ""
 				if !serverLink.musicList.isEmpty {
-					//TODO dynamic track URI
 					currentTrack = self.pop()
 					
 					if(currentTrack != ""){
 						self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
 							if error != nil {
-								print("Track lookup got error \(error)")
+								Answers.logCustomEventWithName("Player Error", customAttributes:["Code":error!])
 								return
 							}
 							print("play on login... musicList")
@@ -70,10 +67,9 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 							
 							self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
 								if error != nil {
-									print("Track lookup got error \(error)")
+									Answers.logCustomEventWithName("Player Error", customAttributes:["Code":error!])
 									return
 								}
-								print("play on login... playlist")
 							})
 						})
 					}
@@ -81,6 +77,8 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 			})
 		}
 	}
+	
+	//MARK: AudioStreaming Delegate
 	
 	//fires whenever the track changes. on song change, this method fires 3 times. first time, trackMetadata is nil, 2nd time is is the last song played, and 3rd time
 	//it is the new song.
@@ -100,14 +98,10 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 				if (currentTrack != "") {
 					self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
 						if error != nil {
-							print("Track lookup got error \(error)")
+							Answers.logCustomEventWithName("Player Error", customAttributes:["Code":error!])
 							return
 						}
-						print("play from musicList")
-						print(serverLink.musicList)
 					})
-					//set next uri for method flow
-					//self.nextURI = currentTrack
 				}
 				
 			} else {
@@ -122,13 +116,10 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 					if (currentTrack != "") {
 						self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
 							if error != nil {
-								print("Track lookup got error \(error)")
+								Answers.logCustomEventWithName("Player Error", customAttributes:["Code":error!])
 								return
 							}
-							print("play from playlist")
 						})
-						//set next uri for method flow
-						//self.nextURI = currentTrack
 					}
 				})
 			}
@@ -140,13 +131,9 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 			trackTitle = trackMetadata["SPTAudioStreamingMetadataTrackName"] as? String
 			trackArtist = trackMetadata["SPTAudioStreamingMetadataArtistName"] as? String
 			currentURI = trackMetadata["SPTAudioStreamingMetadataTrackURI"] as? String
-			//currentURI = nextURI
-			print("---------------------------------------------------------")
+
 			SPTAlbum.albumWithURI(NSURL(string: albumURI), accessToken: nil, market: "US") { (error:NSError!, albumObj:AnyObject!) -> Void in
 				let album = albumObj as! SPTAlbum
-				
-				
-				//TODO: I dont understand this dispatch async thing
 				
 				if let imgURL = album.largestCover.imageURL as NSURL! {
 					dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), { () -> Void in
@@ -192,8 +179,13 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 	*/
 	func pop()->String{
 		let uri:String = serverLink.musicList[0].objectForKey("uri") as! String
+		
+		//log song name and vote count
+		Answers.logCustomEventWithName("Song Popped", customAttributes: ["Title":serverLink.musicList[0].objectForKey("trackTitle") as! String, "Votes":serverLink.musicList[0].objectForKey("votes") as! Int])
+		
 		serverLink.removeSong(uri)
 		serverLink.musicList.removeAtIndex(0)
+		
 		PFAnalytics.trackEventInBackground("savequeue", dimensions: ["where":"host"], block: nil)
 		return uri
 	}
@@ -264,7 +256,7 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 			for _ in 0...count-1 {
 				let partialTrack = trackListItems.removeFirst() as! SPTPartialTrack
 				self.playlistMusic.append(String(partialTrack.playableUri))
-
+				
 			}
 			self.shuffleArray(self.playlistMusic)
 			
@@ -302,26 +294,23 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 		if (session!.isValid()) {
 			return true
 		} else {
-			authController.setParameters(spotifyAuthenticator)
+			authController.setPremiumParameters(spotifyAuthenticator)
 			
 			spotifyAuthenticator.renewSession(session, callback:{
 				(error: NSError?, session:SPTSession?) -> Void in
 				
 				if(error == nil){
 					SessionHandler().storeSession(session!)
-					print("session refresh successful")
-					
 			
 					self.player?.playURI(NSURL(string: track), callback: { (error:NSError!) -> Void in
 						if error != nil {
-							print("Track lookup got error \(error)")
+							Answers.logCustomEventWithName("Player Error", customAttributes:["Code":error!])
 							return
 						}
-						print("play music on refresh")
 					})
 				}
 				else{
-					print("session refresh failed")
+					Answers.logCustomEventWithName("Authentication Error", customAttributes:["Code":error!])
 				}
 			})
 			return false

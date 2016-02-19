@@ -1,6 +1,5 @@
 //
 //  SearchHandler.swift
-//  NVBeta
 //
 //  Created by Dustin Jones on 12/8/15.
 //  Copyright © 2015 uiowa. All rights reserved.
@@ -47,10 +46,10 @@ class SearchHandler {
     }
 	
 	
-	//TODO: clean up variable names
 	func getPlaylists( completion: (result: String) -> Void){
 		let sessionHandler = SessionHandler()
 		let session = sessionHandler.getSession()
+		
 		SPTPlaylistList.playlistsForUserWithSession(session, callback: { (error:NSError!, result:AnyObject!) -> Void in
 			let playlistList = result as! SPTPlaylistList
 			var playlistItems = playlistList.items
@@ -71,7 +70,5 @@ class SearchHandler {
 			completion(result: "Done" )
 		})
 	}
-    
-    
-    
+	
 }

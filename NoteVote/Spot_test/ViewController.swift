@@ -8,11 +8,10 @@
 //
 
 import UIKit
+import Crashlytics
 
 class ViewController: UIViewController, SPTAuthViewDelegate {
-
-    // _____ Declarations _____
-    
+	
     private let sessionHandler = SessionHandler()
     private let authController = SpotifyAuth()
     private let spotifyAuthenticator = SPTAuth.defaultInstance()
@@ -24,25 +23,24 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
     @IBOutlet weak var registerLabel: UILabel!
     
     
-    // _____ SPTAuthViewDelegate Methods _____
+    //MARK: SPTAuthView Delegate
     
     func authenticationViewController(authenticationViewController: SPTAuthViewController!, didLoginWithSession session: SPTSession!) {
-        print("Login Successful")
+
         setSession(session)
         performSegueWithIdentifier("segueOne", sender: nil)
     }
     
     func authenticationViewControllerDidCancelLogin(authenticationViewController: SPTAuthViewController!) {
-        print("login cancelled")
+
     }
     
     func authenticationViewController(authenticationViewController: SPTAuthViewController!, didFailToLogin error: NSError!) {
-		print(error)
-        print("login failed")
+		Answers.logCustomEventWithName("Authentication Error", customAttributes:["Code":error!])
     }
     
     
-    // _____ GUI Actions _____
+    //MARK: GUI Actions
     
     @IBAction func loginWithSpotify(sender: AnyObject) {
         
@@ -57,12 +55,13 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
 
     @IBAction func registerButtonPressed(sender: UIButton) {
         //hyperlink to spotify register page and open in safari
-        print("register pressed")
+
+		Answers.logCustomEventWithName("Register", customAttributes: nil)
         UIApplication.sharedApplication().openURL(NSURL(string: "http://www.spotify.com")!)
     }
     
     
-    // _____ Additional Methods _____
+    //MARK: Additional Methods
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "segueOne"){
@@ -76,7 +75,7 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
     }
 
 
-    // _____ Default View Controller Methods _____
+    //MARK: Default Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -88,21 +87,20 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
                 setSession(session!)
             } else {
 				authController.setParameters(spotifyAuthenticator)
-				print(spotifyAuthenticator.hasTokenRefreshService)
+
 				spotifyAuthenticator.renewSession(session, callback:{
 					(error: NSError?, session:SPTSession?) -> Void in
 					
 					if(error == nil){
                         self.setSession(session!)
-                        print("session refresh successful")
+						
                         if(session!.isValid()){
-                            print("session is valid")
+                      
                             self.performSegueWithIdentifier("segueOne", sender: nil)
                         }
 						
-					}
-                    else{
-                        print("session refresh failed")
+					} else {
+                        Answers.logCustomEventWithName("Authentication Error", customAttributes:["Code":error!])
                     }
                 })
             }
