@@ -47,6 +47,8 @@
 		AD69DCCE1C587FBF0054C1EC /* HostTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD69DCCD1C587FBF0054C1EC /* HostTableCell.swift */; };
 		AD6B9FD51BC7197D0079424F /* CreateRoomVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6B9FD41BC7197D0079424F /* CreateRoomVC.swift */; };
 		AD6B9FD71BC71F9E0079424F /* ActiveRoomVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6B9FD61BC71F9E0079424F /* ActiveRoomVC.swift */; };
+		CE03BF891C7695B700802254 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE03BF871C7695B700802254 /* Fabric.framework */; };
+		CE03BF8A1C7695B700802254 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE03BF881C7695B700802254 /* Crashlytics.framework */; };
 		CE7BF0031C5D22F1002257C7 /* SpotifyPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7BF0021C5D22F1002257C7 /* SpotifyPlayer.swift */; };
 /* End PBXBuildFile section */
 
@@ -106,6 +108,8 @@
 		AD69DCCD1C587FBF0054C1EC /* HostTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HostTableCell.swift; path = ../HostTableCell.swift; sourceTree = "<group>"; };
 		AD6B9FD41BC7197D0079424F /* CreateRoomVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CreateRoomVC.swift; path = ../CreateRoomVC.swift; sourceTree = "<group>"; };
 		AD6B9FD61BC71F9E0079424F /* ActiveRoomVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveRoomVC.swift; sourceTree = "<group>"; };
+		CE03BF871C7695B700802254 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = SOURCE_ROOT; };
+		CE03BF881C7695B700802254 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = SOURCE_ROOT; };
 		CE7BF0021C5D22F1002257C7 /* SpotifyPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotifyPlayer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -124,11 +128,13 @@
 				AD23D4B51BE2CA1B000B9F14 /* CoreLocation.framework in Frameworks */,
 				AD2483B21BE7E06400432200 /* ParseUI.framework in Frameworks */,
 				AD23D4B31BE2CA13000B9F14 /* CoreGraphics.framework in Frameworks */,
+				CE03BF8A1C7695B700802254 /* Crashlytics.framework in Frameworks */,
 				AD23D4B11BE2CA03000B9F14 /* CFNetwork.framework in Frameworks */,
 				AD23D4AF1BE2C9FB000B9F14 /* AudioToolbox.framework in Frameworks */,
 				918A22E21BB1BBAF00CE76AF /* AVFoundation.framework in Frameworks */,
 				918A22E01BB1BB8200CE76AF /* Spotify.framework in Frameworks */,
 				AD23D4AB1BE2C9A7000B9F14 /* Bolts.framework in Frameworks */,
+				CE03BF891C7695B700802254 /* Fabric.framework in Frameworks */,
 				AD23D4AD1BE2C9B9000B9F14 /* Parse.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -194,6 +200,8 @@
 		918A22DE1BB1BB8200CE76AF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CE03BF881C7695B700802254 /* Crashlytics.framework */,
+				CE03BF871C7695B700802254 /* Fabric.framework */,
 				AD2483B11BE7E06400432200 /* ParseUI.framework */,
 				AD23D4C21BE2CA7F000B9F14 /* Social.framework */,
 				AD23D4C01BE2CA77000B9F14 /* Accounts.framework */,
@@ -286,6 +294,7 @@
 				918A22B71BB1BAFB00CE76AF /* Sources */,
 				918A22B81BB1BAFB00CE76AF /* Frameworks */,
 				918A22B91BB1BAFB00CE76AF /* Resources */,
+				CE03BF861C76958000802254 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -383,6 +392,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		CE03BF861C76958000802254 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Fabric.framework/run d136c96031a99390f6b6451d029541a72790bbfb f69babb8c0f4c86f81fcb9d4638b0de30b94917ec08ef4467e535159c2678a24";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		918A22B71BB1BAFB00CE76AF /* Sources */ = {
@@ -545,6 +570,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ios-sdk-beta-10",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = Spot_test/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -569,6 +595,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ios-sdk-beta-10",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = Spot_test/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

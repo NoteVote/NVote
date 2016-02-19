@@ -9,6 +9,8 @@
 import UIKit
 import Parse
 import Bolts
+import Fabric
+import Crashlytics
 
 let userDefaults = NSUserDefaults.standardUserDefaults()
 let serverLink = ServerLink()
@@ -34,6 +36,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // [Optional] Track statistics around application opens.
         PFAnalytics.trackAppOpenedWithLaunchOptions(launchOptions)
+		
+		// Fabric Crashlytics
+		Fabric.with([Crashlytics.self])
 		
         return true
     }

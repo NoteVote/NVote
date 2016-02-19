@@ -8,6 +8,8 @@
 
 import UIKit
 import Parse
+import Crashlytics
+
 
 class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate {
     
@@ -84,6 +86,7 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
         if(!playlistNames.isEmpty){
             spotifyPlayer.playlistToTracks(currentPickerRow)
         }
+		Answers.logCustomEventWithName("Room Created", customAttributes: nil)
         self.performSegueWithIdentifier("CreateRoom_HostRoom", sender: nil)
         
     }
