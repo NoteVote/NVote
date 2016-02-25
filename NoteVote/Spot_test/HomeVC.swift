@@ -8,8 +8,9 @@
 import UIKit
 import Parse
 import Crashlytics
+import CoreLocation
 
-class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITableViewDelegate{
+class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate {
 	
 	private let authController = SpotifyAuth()
 	private let spotifyAuthenticator = SPTAuth.defaultInstance()
@@ -17,6 +18,7 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
 	var roomsNearby:[PFObject] = []
     var refreshControl:UIRefreshControl!
     var password:UITextField!
+    var locationManager = CLLocationManager()
 
     
     @IBOutlet weak var backgroundImage: UIImageView!
@@ -108,8 +110,29 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
     
     /*Number of rows of tableView*/
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return roomsNearby.count
-        //TODO: needs to return the number of rooms in the area.
+        if(roomsNearby.count < 1 && serverLink.currentLocation != nil){
+            let alertController = UIAlertController(title: "No Parties Nearby", message: "There are no parites near you. Would you like to look again?", preferredStyle: UIAlertControllerStyle.Alert)
+            let no = UIAlertAction(title: "No", style: UIAlertActionStyle.Cancel){ alertAction in
+                
+            }
+            let yes = UIAlertAction(title: "Yes", style: UIAlertActionStyle.Default){ alertAction in
+                if(serverLink.currentLocation != nil){
+                    serverLink.findRooms(){
+                        (result: [PFObject]) in
+                        self.roomsNearby = result
+                        self.tableView.reloadData()
+                    }
+                    self.refreshControl.endRefreshing()
+                }
+            }
+            alertController.addAction(no)
+            alertController.addAction(yes)
+            self.presentViewController(alertController, animated: true, completion: nil)
+            return 0
+        }
+        else{
+            return self.roomsNearby.count
+        }
     }
     
     /*CurrentPlayer Selected and moves to next page*/
@@ -142,38 +165,58 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
     }
     
     
-    
     /*Creating tableview cells*/
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as! HomeTableCell
         
         let customColor = UIView()
         customColor.backgroundColor = UIColor.clearColor()
         cell.selectedBackgroundView = customColor
-        
-        cell.textLabel!.textColor = UIColor(red: 125/255, green: 205/255, blue: 3/255, alpha: 1.0)
-        cell.textLabel?.text = roomsNearby[indexPath.row].objectForKey("partyName") as? String
-        cell.textLabel?.font = UIFont.systemFontOfSize(30)
-        //TODO: set cell atributes.
+        cell.roomName.text = roomsNearby[indexPath.row].objectForKey("partyName") as? String
+        let distance:Double = serverLink.currentLocation!.distanceInMilesTo(roomsNearby[indexPath.row].objectForKey("geoLocation") as? PFGeoPoint)
+        print("Distance " + String(distance))
+        let distanceString = NSString(format: "%.2f", distance)
+        cell.roomDistance.text = String(distanceString) + " mi"
         return cell
     }
     
-    func refresh(sender:AnyObject)
-    {
-        serverLink.findRooms(){
-            (result: [PFObject]) in
-            self.roomsNearby = result
-            self.tableView.reloadData()
+    func refresh(sender:AnyObject){
+        if(serverLink.currentLocation != nil){
+            serverLink.findRooms(){
+                (result: [PFObject]) in
+                self.roomsNearby = result
+                self.tableView.reloadData()
+            }
+            self.refreshControl.endRefreshing()
         }
-        self.refreshControl.endRefreshing()
     }
     
+    //MARK: CLLocation Delegate Methods
+    
+    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+        print("Errors with Location: " + error.localizedDescription)
+    }
+    
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let location = locations.last
+        if(location != nil){
+            let currentLocation:PFGeoPoint = PFGeoPoint(latitude: Double(location!.coordinate.latitude), longitude: Double(location!.coordinate.longitude))
+            if(serverLink.currentLocation == nil){
+                serverLink.currentLocation = currentLocation
+                serverLink.findRooms(){
+                    (result: [PFObject]) in
+                    self.roomsNearby = result
+                    self.tableView.reloadData()
+                }
+            }
+            serverLink.currentLocation = currentLocation
+        }
+    }
+
     //MARK: Default Methods
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
-
-        //Handles result from completion handler.
         serverLink.findRooms(){
             (result: [PFObject]) in
             self.roomsNearby = result
@@ -185,6 +228,12 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
         super.viewDidLoad()
 		let sessionHandler = SessionHandler()
 		let session = sessionHandler.getSession()
+        
+        //Geolocation
+        self.locationManager.delegate = self
+        self.locationManager.requestWhenInUseAuthorization()
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        self.locationManager.startUpdatingLocation()
 		
 		//Get user data
 		SPTUser.requestCurrentUserWithAccessToken(session!.accessToken, callback: {
@@ -208,5 +257,6 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
 	
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 		hideSideMenuView()
+        self.locationManager.stopUpdatingLocation()
 	}
 }

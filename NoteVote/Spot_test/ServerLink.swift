@@ -22,6 +22,7 @@ class ServerLink {
     var songsVoted:[String:[String]] = [:]
     var musicList:[PFObject] = []
     var songsInBatch:[String] = []
+    var currentLocation:PFGeoPoint?
 	
 	
 	//MARK: Internal Methods
@@ -31,25 +32,27 @@ class ServerLink {
     * Will append results to rooms variable -- as a list of PFObjects.
     */
     func findRooms(completion: (result: [PFObject]) -> Void){
-        self.rooms = []
-        let query = PFQuery(className: "PartyObject")
-		
-        //TODO: will search within certain distance to phone's location.
-        query.whereKey("partyID", notEqualTo: "0")
-        query.findObjectsInBackgroundWithBlock{
-            (objects: [PFObject]?, error: NSError?) -> Void in
-            PFAnalytics.trackEventInBackground("getrooms", block: nil)
-            if error == nil {
-
-                if let objects = objects as [PFObject]! {
-                    for object in objects {
-                        serverLink.rooms.append(object)
+        if(self.currentLocation != nil){
+            self.rooms = []
+            let query = PFQuery(className: "PartyObject")
+            print(self.currentLocation)
+            //TODO: will search within certain distance to phone's location.
+            query.whereKey("partyID", notEqualTo: "0")
+            query.findObjectsInBackgroundWithBlock{
+                (objects: [PFObject]?, error: NSError?) -> Void in
+                PFAnalytics.trackEventInBackground("getrooms", block: nil)
+                if error == nil {
+                    
+                    if let objects = objects as [PFObject]! {
+                        for object in objects {
+                            serverLink.rooms.append(object)
+                        }
                     }
+                } else {
+                    Answers.logCustomEventWithName("Parse Error", customAttributes:["Code":error!])
                 }
-            } else {
-                Answers.logCustomEventWithName("Parse Error", customAttributes:["Code":error!])
+                completion(result: serverLink.rooms)
             }
-            completion(result: serverLink.rooms)
         }
     }
     /**
@@ -85,6 +88,7 @@ class ServerLink {
         partyObject["partyName"] = partyName
         partyObject["partyID"] = partyID
         partyObject["partyPrivate"] = priv
+        partyObject["geoLocation"] = self.currentLocation!
         if(priv){
             var partyPin = ""
             partyPin += String(Int(arc4random_uniform(10)))

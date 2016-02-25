@@ -27,7 +27,6 @@
 		91E4FB2B1BE967C70044762C /* QueueTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91E4FB2A1BE967C70044762C /* QueueTableCell.swift */; };
 		91E4FB2D1BEC069D0044762C /* HostRoomVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91E4FB2C1BEC069D0044762C /* HostRoomVC.swift */; };
 		91EFD91B1BBB163200818FA7 /* SpotifyAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91EFD91A1BBB163200818FA7 /* SpotifyAuth.swift */; };
-		AD0026D41C75186700544688 /* GeoLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0026D31C75186700544688 /* GeoLocation.swift */; };
 		AD23D4AB1BE2C9A7000B9F14 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD23D4AA1BE2C9A7000B9F14 /* Bolts.framework */; };
 		AD23D4AD1BE2C9B9000B9F14 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD23D4AC1BE2C9B9000B9F14 /* Parse.framework */; };
 		AD23D4AF1BE2C9FB000B9F14 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD23D4AE1BE2C9FB000B9F14 /* AudioToolbox.framework */; };
@@ -47,6 +46,7 @@
 		AD69DCCE1C587FBF0054C1EC /* HostTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD69DCCD1C587FBF0054C1EC /* HostTableCell.swift */; };
 		AD6B9FD51BC7197D0079424F /* CreateRoomVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6B9FD41BC7197D0079424F /* CreateRoomVC.swift */; };
 		AD6B9FD71BC71F9E0079424F /* ActiveRoomVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6B9FD61BC71F9E0079424F /* ActiveRoomVC.swift */; };
+		ADC076AC1C7DF0160098245D /* HomeTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADC076AB1C7DF0160098245D /* HomeTableCell.swift */; };
 		CE03BF891C7695B700802254 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE03BF871C7695B700802254 /* Fabric.framework */; };
 		CE03BF8A1C7695B700802254 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE03BF881C7695B700802254 /* Crashlytics.framework */; };
 		CE7BF0031C5D22F1002257C7 /* SpotifyPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7BF0021C5D22F1002257C7 /* SpotifyPlayer.swift */; };
@@ -88,7 +88,6 @@
 		91E4FB2A1BE967C70044762C /* QueueTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueTableCell.swift; sourceTree = "<group>"; };
 		91E4FB2C1BEC069D0044762C /* HostRoomVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HostRoomVC.swift; sourceTree = "<group>"; usesTabs = 0; };
 		91EFD91A1BBB163200818FA7 /* SpotifyAuth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotifyAuth.swift; sourceTree = "<group>"; };
-		AD0026D31C75186700544688 /* GeoLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeoLocation.swift; sourceTree = "<group>"; };
 		AD23D4AA1BE2C9A7000B9F14 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		AD23D4AC1BE2C9B9000B9F14 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		AD23D4AE1BE2C9FB000B9F14 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -108,6 +107,7 @@
 		AD69DCCD1C587FBF0054C1EC /* HostTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HostTableCell.swift; path = ../HostTableCell.swift; sourceTree = "<group>"; };
 		AD6B9FD41BC7197D0079424F /* CreateRoomVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CreateRoomVC.swift; path = ../CreateRoomVC.swift; sourceTree = "<group>"; };
 		AD6B9FD61BC71F9E0079424F /* ActiveRoomVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveRoomVC.swift; sourceTree = "<group>"; };
+		ADC076AB1C7DF0160098245D /* HomeTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeTableCell.swift; sourceTree = "<group>"; };
 		CE03BF871C7695B700802254 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = SOURCE_ROOT; };
 		CE03BF881C7695B700802254 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = SOURCE_ROOT; };
 		CE7BF0021C5D22F1002257C7 /* SpotifyPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotifyPlayer.swift; sourceTree = "<group>"; };
@@ -171,7 +171,6 @@
 		918A22BD1BB1BAFB00CE76AF /* Spot_test */ = {
 			isa = PBXGroup;
 			children = (
-				AD28EDF11C6CF92400461BE9 /* GeoLocation */,
 				ADDD8BDE1C0E271B002B0EC9 /* Menus */,
 				ADDD8BDC1C0E26D9002B0EC9 /* TableCells */,
 				ADDD8BDD1C0E26FD002B0EC9 /* Spotify */,
@@ -223,18 +222,11 @@
 			path = "ios-sdk-beta-10";
 			sourceTree = "<group>";
 		};
-		AD28EDF11C6CF92400461BE9 /* GeoLocation */ = {
-			isa = PBXGroup;
-			children = (
-				AD0026D31C75186700544688 /* GeoLocation.swift */,
-			);
-			name = GeoLocation;
-			sourceTree = "<group>";
-		};
 		ADDD8BDC1C0E26D9002B0EC9 /* TableCells */ = {
 			isa = PBXGroup;
 			children = (
 				AD69DCCD1C587FBF0054C1EC /* HostTableCell.swift */,
+				ADC076AB1C7DF0160098245D /* HomeTableCell.swift */,
 				91E4FB2A1BE967C70044762C /* QueueTableCell.swift */,
 				910808621C0DF9CB00FBF037 /* SearchTableCell.swift */,
 			);
@@ -425,6 +417,7 @@
 				9118BF8C1BBDE80700893CF8 /* ENSideMenuNavigationController.swift in Sources */,
 				9118BF8D1BBDE80700893CF8 /* MyMenuTableViewController.swift in Sources */,
 				AD6B9FD71BC71F9E0079424F /* ActiveRoomVC.swift in Sources */,
+				ADC076AC1C7DF0160098245D /* HomeTableCell.swift in Sources */,
 				91E4FB2B1BE967C70044762C /* QueueTableCell.swift in Sources */,
 				9118BF841BBB1F9900893CF8 /* SessionHandler.swift in Sources */,
 				918A22C11BB1BAFB00CE76AF /* ViewController.swift in Sources */,
@@ -432,7 +425,6 @@
 				AD6B9FD51BC7197D0079424F /* CreateRoomVC.swift in Sources */,
 				AD4349FC1C175DA3005104A9 /* SearchHandler.swift in Sources */,
 				CE7BF0031C5D22F1002257C7 /* SpotifyPlayer.swift in Sources */,
-				AD0026D41C75186700544688 /* GeoLocation.swift in Sources */,
 				910808611C0DF5B000FBF037 /* SearchVC.swift in Sources */,
 				91E4FB2D1BEC069D0044762C /* HostRoomVC.swift in Sources */,
 			);
