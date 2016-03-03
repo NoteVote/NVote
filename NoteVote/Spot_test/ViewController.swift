@@ -17,6 +17,8 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
     private let spotifyAuthenticator = SPTAuth.defaultInstance()
     private var currentSession: SPTSession? = nil
     
+    @IBOutlet weak var LogInLabel: UILabel!
+    @IBOutlet weak var activityRunning: UIActivityIndicatorView!
     @IBOutlet weak var backgroundImage: UIImageView!
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var registerButton: UIButton!
@@ -86,6 +88,10 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
             if (session!.isValid()) {
                 setSession(session!)
             } else {
+                self.LogInLabel.hidden = false
+                self.loginButton.hidden = true
+                self.activityRunning.hidesWhenStopped = true
+                self.activityRunning.startAnimating()
 				authController.setParameters(spotifyAuthenticator)
 
 				spotifyAuthenticator.renewSession(session, callback:{
@@ -95,7 +101,9 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
                         self.setSession(session!)
 						
                         if(session!.isValid()){
-                      
+                            self.activityRunning.stopAnimating()
+                            self.LogInLabel.hidden = true
+                            self.loginButton.hidden = false
                             self.performSegueWithIdentifier("segueOne", sender: nil)
                         }
 						

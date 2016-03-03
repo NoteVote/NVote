@@ -173,10 +173,12 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
         customColor.backgroundColor = UIColor.clearColor()
         cell.selectedBackgroundView = customColor
         cell.roomName.text = roomsNearby[indexPath.row].objectForKey("partyName") as? String
-        let distance:Double = serverLink.currentLocation!.distanceInMilesTo(roomsNearby[indexPath.row].objectForKey("geoLocation") as? PFGeoPoint)
-        print("Distance " + String(distance))
-        let distanceString = NSString(format: "%.2f", distance)
-        cell.roomDistance.text = String(distanceString) + " mi"
+        let roomLocation = roomsNearby[indexPath.row].objectForKey("geoLocation") as? PFGeoPoint
+        if(roomLocation != nil){
+            let distance:Double = serverLink.currentLocation!.distanceInMilesTo(roomLocation!)
+            let distanceString = NSString(format: "%.2f", distance)
+            cell.roomDistance.text = String(distanceString) + " mi"
+        }
         return cell
     }
     

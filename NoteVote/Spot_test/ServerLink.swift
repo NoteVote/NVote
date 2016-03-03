@@ -30,14 +30,16 @@ class ServerLink {
     /**
     * Finds rooms based on a geolocation point of the current device.
     * Will append results to rooms variable -- as a list of PFObjects.
+    * Finds rooms within 2.0 miles.
     */
     func findRooms(completion: (result: [PFObject]) -> Void){
         if(self.currentLocation != nil){
             self.rooms = []
             let query = PFQuery(className: "PartyObject")
             print(self.currentLocation)
-            //TODO: will search within certain distance to phone's location.
-            query.whereKey("partyID", notEqualTo: "0")
+            
+            //Change the double withinMiles: to change how far the radius search is.
+            query.whereKey("geoLocation", nearGeoPoint: self.currentLocation!, withinMiles: 2.0)
             query.findObjectsInBackgroundWithBlock{
                 (objects: [PFObject]?, error: NSError?) -> Void in
                 PFAnalytics.trackEventInBackground("getrooms", block: nil)
