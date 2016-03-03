@@ -195,12 +195,18 @@ class ServerLink {
      * -takes in a String(uri) -> Spotify track URI of the song.
      * uses these variables to create a song object in Parse.
      */
-    func addSongBatch(){
+    func addSongBatch(completion:(result:String)->Void){
         for song in self.songBatch{
             var alreadyIn:Bool = false
 			print(self.musicList.count)
             searchHandler.getURIwithPartial(song.2){
                 (result:String) in
+                if(result == "fail"){
+                    self.songBatch = []
+                    self.songsInBatch = []
+                    completion(result: "fail")
+                    return
+                }
                 for track in self.musicList{
                     if(track.objectForKey("uri") as! String == result){
                         if(!self.songsVoted[self.partyObject.objectForKey("partyID") as! String]!.contains(result)){
@@ -226,6 +232,7 @@ class ServerLink {
         }
         self.songBatch = []
         self.songsInBatch = []
+        completion(result: "Done")
     }
     
     func voteURI(uri:String){

@@ -78,6 +78,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             serverLink.deleteRoomNow()
         }
     }
-
+    
 }
 

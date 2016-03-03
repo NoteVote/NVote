@@ -20,6 +20,8 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
     var password:UITextField!
     var locationManager = CLLocationManager()
 
+    @IBOutlet weak var activityRunningLabel: UILabel!
+    @IBOutlet weak var activityRunning: UIActivityIndicatorView!
     
     @IBOutlet weak var backgroundImage: UIImageView!
     @IBOutlet weak var menuButton: UIBarButtonItem!
@@ -57,6 +59,10 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
     }
     
     @IBAction func addButtonPressed(sender: UIBarButtonItem) {
+        
+        self.tableView.hidden = true
+        self.activityRunningLabel.hidden = false
+        self.activityRunning.startAnimating()
 		
 		let sessionHandler = SessionHandler()
 		let session = sessionHandler.getSession()
@@ -72,12 +78,18 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
 						
 						sessionHandler.storeSession(session!)
 						if(session!.isValid()){
+                            self.tableView.hidden = false
+                            self.activityRunning.stopAnimating()
+                            self.activityRunningLabel.hidden = true
 							self.performSegueWithIdentifier("Home_CreateRoom", sender: nil)
 						}
 						
 					} else {
 						Answers.logCustomEventWithName("Authentication Error", customAttributes:["Code":error!])
-						
+                        
+                        self.tableView.hidden = false
+                        self.activityRunning.stopAnimating()
+                        self.activityRunningLabel.hidden = true
 						let alertController = UIAlertController(title: "Uh-oh!", message: "Looks like something went wrong. Please try again in a minute.", preferredStyle: UIAlertControllerStyle.Alert)
 						alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Destructive,handler: nil))
 						self.presentViewController(alertController, animated: true, completion: nil)
@@ -86,7 +98,9 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
 				})
 				
 			} else {
-			
+                self.tableView.hidden = false
+                self.activityRunning.stopAnimating()
+                self.activityRunningLabel.hidden = true
 				let alertController = UIAlertController(title: "Spotify Account", message:
 					"To Create and Host your own room you must be a Premium member of Spotify", preferredStyle: UIAlertControllerStyle.Alert)
 				alertController.addAction(UIAlertAction(title: "No Thanks", style: UIAlertActionStyle.Destructive,handler: nil))

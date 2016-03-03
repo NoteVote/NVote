@@ -13,6 +13,10 @@ class SearchHandler {
 	
     func Search(input:String, completion: (result: String) -> Void){
         SPTSearch.performSearchWithQuery(input, queryType: SPTSearchQueryType.QueryTypeTrack, offset: 0, accessToken: nil, market: "US", callback: { (error:NSError!, result:AnyObject!) -> Void in
+            if(error != nil){
+                completion(result: "fail")
+                return
+            }
             var trackListItems:[SPTPartialTrack] = []
             let trackListPage = result as! SPTListPage
             var trackListPageItems = trackListPage.items
@@ -37,6 +41,10 @@ class SearchHandler {
     
     func getURIwithPartial(uri:String,completion: (result:String) -> Void ){
         SPTRequest.requestItemAtURI(NSURL(string: uri), withSession: nil, market: "US", callback: { (error:NSError!, result:AnyObject!) ->Void in
+            if(error != nil){
+                completion(result: "fail")
+                return
+            }
             let track = result as! SPTPartialTrack
             SPTRequest.requestItemFromPartialObject(track, withSession: nil, callback: { (error:NSError!, result:AnyObject!) -> Void in
                     let fullTrack = result as! SPTTrack

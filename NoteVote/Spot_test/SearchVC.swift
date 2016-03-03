@@ -61,9 +61,16 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource, EN
 		if(searchBar.text! != ""){
 			searchHandler.Search(searchBar.text!){
 				(result: String) in
-				spotifyPlayer.setMusicOptions()
-                self.tableView.setContentOffset(CGPoint.zero, animated: true)
-				self.tableView.reloadData()
+                if(result != "fail"){
+                    spotifyPlayer.setMusicOptions()
+                    self.tableView.setContentOffset(CGPoint.zero, animated: true)
+                    self.tableView.reloadData()
+                }
+                else{
+                    let alertController = UIAlertController(title: "Uh-oh!", message: "Looks like something went wrong. Try searching for songs again later.", preferredStyle: UIAlertControllerStyle.Alert)
+                    alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Destructive,handler: nil))
+                    self.presentViewController(alertController, animated: true, completion: nil)
+                }
 			}
 		}
 		searchBar.resignFirstResponder()
@@ -119,7 +126,14 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource, EN
     }
     
     override func viewWillDisappear(animated: Bool) {
-        serverLink.addSongBatch()
+        serverLink.addSongBatch(){
+            (result:String) in
+            if(result == "fail"){
+                let alertController = UIAlertController(title: "Uh-oh!", message: "Looks like something went wrong. Song(s) were not added to party.", preferredStyle: UIAlertControllerStyle.Alert)
+                alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Destructive,handler: nil))
+                self.presentViewController(alertController, animated: true, completion: nil)
+            }
+        }
     }
 
     override func viewDidLoad() {
