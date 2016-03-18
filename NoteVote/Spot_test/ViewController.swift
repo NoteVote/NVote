@@ -90,7 +90,6 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
             } else {
                 self.LogInLabel.hidden = false
                 self.loginButton.hidden = true
-                self.activityRunning.hidesWhenStopped = true
                 self.activityRunning.startAnimating()
 				authController.setParameters(spotifyAuthenticator)
 

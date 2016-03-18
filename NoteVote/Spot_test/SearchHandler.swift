@@ -47,9 +47,13 @@ class SearchHandler {
             }
             let track = result as! SPTPartialTrack
             SPTRequest.requestItemFromPartialObject(track, withSession: nil, callback: { (error:NSError!, result:AnyObject!) -> Void in
-                    let fullTrack = result as! SPTTrack
-                    completion(result: String(fullTrack.playableUri))
-                })
+                if(error != nil){
+                    completion(result: "fail")
+                    return
+                }
+                let fullTrack = result as! SPTTrack
+                completion(result: String(fullTrack.playableUri))
+            })
         })
     }
 	

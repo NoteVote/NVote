@@ -207,26 +207,28 @@ class ServerLink {
                     completion(result: "fail")
                     return
                 }
-                for track in self.musicList{
-                    if(track.objectForKey("uri") as! String == result){
-                        if(!self.songsVoted[self.partyObject.objectForKey("partyID") as! String]!.contains(result)){
-                            self.increment(result)
-                            self.voteURI(result)
-                            alreadyIn = true
-                            break
+                else{
+                    for track in self.musicList{
+                        if(track.objectForKey("uri") as! String == result){
+                            if(!self.songsVoted[self.partyObject.objectForKey("partyID") as! String]!.contains(result)){
+                                self.increment(result)
+                                self.voteURI(result)
+                                alreadyIn = true
+                                break
+                            }
                         }
                     }
-                }
-                if(!alreadyIn){
-                    let trackObject = PFObject(className: "SongLibrary")
-                    trackObject["trackTitle"] = song.0
-                    trackObject["trackArtist"] = song.1
-                    trackObject["uri"] = result
-                    trackObject["votes"] = 1
-                    trackObject["partyID"] = self.partyObject.objectForKey("partyID") as! String
-                    self.voteURI(result)
-                    trackObject.saveInBackground()
-                    serverLink.musicList.append(trackObject)
+                    if(!alreadyIn){
+                        let trackObject = PFObject(className: "SongLibrary")
+                        trackObject["trackTitle"] = song.0
+                        trackObject["trackArtist"] = song.1
+                        trackObject["uri"] = result
+                        trackObject["votes"] = 1
+                        trackObject["partyID"] = self.partyObject.objectForKey("partyID") as! String
+                        self.voteURI(result)
+                        trackObject.saveInBackground()
+                        serverLink.musicList.append(trackObject)
+                    }
                 }
             }
         }
