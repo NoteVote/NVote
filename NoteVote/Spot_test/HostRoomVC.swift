@@ -145,7 +145,6 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
         serverLink.getQueue(){
             (result: [PFObject]) in
             PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"active"], block: nil)
-            print(serverLink.musicList)
             self.tableView.reloadData()
         }
         self.refreshControl.endRefreshing()

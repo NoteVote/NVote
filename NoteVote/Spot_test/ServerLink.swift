@@ -18,8 +18,10 @@ class ServerLink {
     var isHosting:Bool = false
     var songBatch:[(String,String,String)] = []
     private var rooms:[PFObject] = []
+    var cleanUp:Bool = false
     var partyObject:PFObject!
     var songsVoted:[String:[String]] = [:]
+    var songCleanup:[String:Int] = [:]
     var musicList:[PFObject] = []
     var songsInBatch:[String] = []
     var currentLocation:PFGeoPoint?
@@ -122,6 +124,7 @@ class ServerLink {
      */
     func deleteRoom() {
         self.isHosting = false
+        self.songCleanup = [:]
         let query = PFQuery(className: "PartyObject")
         userDefaults.setObject("", forKey: "partyPin")
         userDefaults.synchronize()
@@ -293,8 +296,44 @@ class ServerLink {
         }
         return output
     }
-
-
+    
+    func songClean(){
+        if(self.cleanUp){
+            for song in musicList {
+                
+                let songuri = song.objectForKey("uri") as! String
+            
+                //if song votes are less than 2
+                if (song.objectForKey("votes") as! Int) <= 1 {
+                    
+                    //if song uri is already in songCleanup
+                    if(  songCleanup.keys.contains(songuri) ){
+                        
+                        //if song uri has been through cleanup more than 4 times.
+                        //remove song from server and from songCleanup.
+                        if(songCleanup[songuri]! >= 4){
+                            removeSong(songuri)
+                            songCleanup.removeValueForKey(songuri)
+                        }
+                        else{
+                            songCleanup[songuri]! += 1
+                        }
+                    }
+                        
+                    //if song not in songCleanup add it with a counter of 1.
+                    else{
+                        songCleanup[songuri] = 1
+                    }
+                }
+                    //if song vote higher than 2 and still in songcleanup. remove from cleanup.
+                else{
+                    if(songCleanup.keys.contains(songuri)){
+                        songCleanup.removeValueForKey(songuri)
+                    }
+                }
+            }
+        }
+    }
     
     
     /**

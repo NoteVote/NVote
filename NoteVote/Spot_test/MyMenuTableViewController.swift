@@ -109,8 +109,8 @@ class MyMenuTableViewController: UITableViewController {
                     spotifyPlayer.playlistMusic = []
                     self.sideMenuController()?.setContentViewController(destViewController)
                 }
-                alertController.addAction(yes)
                 alertController.addAction(no)
+                alertController.addAction(yes)
                 self.presentViewController(alertController, animated: true, completion: nil)
 				
 			} else { //if equal to "Log out"

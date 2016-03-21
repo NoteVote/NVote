@@ -133,6 +133,7 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 			currentURI = trackMetadata["SPTAudioStreamingMetadataTrackURI"] as? String
 
 			SPTAlbum.albumWithURI(NSURL(string: albumURI), accessToken: nil, market: "US") { (error:NSError!, albumObj:AnyObject!) -> Void in
+                
 				let album = albumObj as! SPTAlbum
 				
 				if let imgURL = album.largestCover.imageURL as NSURL! {
@@ -185,7 +186,11 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 		
 		serverLink.removeSong(uri)
 		serverLink.musicList.removeAtIndex(0)
-		
+        
+        //Call clean.
+        serverLink.songClean()
+        print(serverLink.songCleanup)
+        
 		PFAnalytics.trackEventInBackground("savequeue", dimensions: ["where":"host"], block: nil)
 		return uri
 	}

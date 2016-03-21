@@ -16,7 +16,6 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
 	private var currentPickerRow = 0
     var session:SPTSession? = nil
     @IBOutlet weak var roomName: UITextField!
-    @IBOutlet weak var infoButton: UIButton!
     @IBOutlet weak var pickerView: UIPickerView!
     
     var privateParty:Bool = false
@@ -54,14 +53,29 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
     }
     
 	//MARK: Page Options
+    
+    
+    
+    
 	
-    @IBAction func infoButtonPressed(sender: UIButton) {
+    @IBAction func infoButtonPressedPlaylist(sender: UIButton) {
         let alertController = UIAlertController(title: "Playlist Info", message:
             "Choosing a playlist to pull music from when no music is in your party queue. It keeps the party going.", preferredStyle: UIAlertControllerStyle.Alert)
         alertController.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default,handler: nil))
         self.presentViewController(alertController, animated: true, completion: nil)
     }
+    
+    @IBAction func infoButtonPressedCleanup(sender: UIButton) {
+        let alertController = UIAlertController(title: "Cleanup Info", message:
+            "This cleans up a parties' playlist by removing songs that have only 1 vote for more than 5 song plays. This keeps unwanted songs off the queue.", preferredStyle: UIAlertControllerStyle.Alert)
+        alertController.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default,handler: nil))
+        self.presentViewController(alertController, animated: true, completion: nil)
+    }
+    
 
+    @IBAction func roomCleanupSwitchSwitched(sender: UISwitch) {
+        serverLink.cleanUp = !serverLink.cleanUp
+    }
     @IBAction func privateSwitchSwitched(sender: UISwitch) {
         self.privateParty = !self.privateParty
     }
@@ -74,24 +88,30 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
 		
 		//TODO: Delete any existing rooms. (Doesn't work because PartyID is nil)
 		//serverLink.deleteRoomNow()
-		
-		serverLink.musicList = []
-        serverLink.songsVoted[session!.canonicalUsername] = []
-        serverLink.addParty(roomName.text!, partyID: session!.canonicalUsername, priv: privateParty)
-        userDefaults.setObject(roomName.text!, forKey: "currentRoom")
-        userDefaults.setObject(session!.canonicalUsername, forKey: "roomID")
-        userDefaults.synchronize()
-		
-		//Playlist Selection and Conversion
-        if(!playlistNames.isEmpty){
-            spotifyPlayer.playlistToTracks(currentPickerRow)
+        if(roomName.text! == ""){
+            let alertController = UIAlertController(title: "Missing Info", message:
+                "You have to input a room name. It is needed so others know its your party.", preferredStyle: UIAlertControllerStyle.Alert)
+            alertController.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default,handler: nil))
+            self.presentViewController(alertController, animated: true, completion: nil)
         }
-		
-		//log who created a room
-		Answers.logCustomEventWithName("Room Created", customAttributes: ["user":session!.canonicalUsername])
-		
-        self.performSegueWithIdentifier("CreateRoom_HostRoom", sender: nil)
-        
+        else{
+            serverLink.musicList = []
+            serverLink.songsVoted[session!.canonicalUsername] = []
+            serverLink.addParty(roomName.text!, partyID: session!.canonicalUsername, priv: privateParty)
+            userDefaults.setObject(roomName.text!, forKey: "currentRoom")
+            userDefaults.setObject(session!.canonicalUsername, forKey: "roomID")
+            userDefaults.synchronize()
+            
+            //Playlist Selection and Conversion
+            if(!playlistNames.isEmpty){
+                spotifyPlayer.playlistToTracks(currentPickerRow)
+            }
+            
+            //log who created a room
+            Answers.logCustomEventWithName("Room Created", customAttributes: ["user":session!.canonicalUsername])
+            
+            self.performSegueWithIdentifier("CreateRoom_HostRoom", sender: nil)
+        }
     }
     
     func setCurrentSession(session: SPTSession) {

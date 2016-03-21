@@ -126,7 +126,7 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if(roomsNearby.count < 1 && serverLink.currentLocation != nil){
             let alertController = UIAlertController(title: "No Parties Nearby", message: "There are no parites near you. Would you like to look again?", preferredStyle: UIAlertControllerStyle.Alert)
-            let no = UIAlertAction(title: "No", style: UIAlertActionStyle.Cancel){ alertAction in
+            let no = UIAlertAction(title: "No", style: UIAlertActionStyle.Destructive){ alertAction in
                 
             }
             let yes = UIAlertAction(title: "Yes", style: UIAlertActionStyle.Default){ alertAction in
@@ -154,7 +154,7 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
         serverLink.setParty(self.roomsNearby[indexPath.row])
         if(serverLink.partyObject.objectForKey("partyPrivate") as! Bool){
             let alertController = UIAlertController(title: "This Party is Private", message: "Enter the 4 digit party pin below.", preferredStyle: UIAlertControllerStyle.Alert)
-            let cancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel){ alertAction in
+            let cancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Destructive){ alertAction in
                 
             }
             let enter = UIAlertAction(title: "Enter", style: UIAlertActionStyle.Default){ alertAction in
