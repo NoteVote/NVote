@@ -60,14 +60,14 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
 	
     @IBAction func infoButtonPressedPlaylist(sender: UIButton) {
         let alertController = UIAlertController(title: "Playlist Info", message:
-            "Choosing a playlist to pull music from when no music is in your party queue. It keeps the party going.", preferredStyle: UIAlertControllerStyle.Alert)
+            "Choose a playlist to pull music from when no music is in your party queue. It keeps the party going.", preferredStyle: UIAlertControllerStyle.Alert)
         alertController.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default,handler: nil))
         self.presentViewController(alertController, animated: true, completion: nil)
     }
     
     @IBAction func infoButtonPressedCleanup(sender: UIButton) {
         let alertController = UIAlertController(title: "Cleanup Info", message:
-            "This cleans up a parties' playlist by removing songs that have only 1 vote for more than 5 song plays. This keeps unwanted songs off the queue.", preferredStyle: UIAlertControllerStyle.Alert)
+            "This cleans up a party's playlist by removing songs that have only 1 vote for more than 5 song plays. This keeps unwanted songs off the queue.", preferredStyle: UIAlertControllerStyle.Alert)
         alertController.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default,handler: nil))
         self.presentViewController(alertController, animated: true, completion: nil)
     }
