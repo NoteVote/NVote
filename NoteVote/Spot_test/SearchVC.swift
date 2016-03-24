@@ -8,7 +8,8 @@
 import UIKit
 
 class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource, ENSideMenuDelegate, UISearchBarDelegate {
-    lazy   var searchBars:UISearchBar = UISearchBar(frame: CGRectMake(0, 0, 250, 18))
+
+    lazy var searchBars:UISearchBar = UISearchBar(frame: CGRectMake(0, 0, 280, 18))
     var preView:String?
     
     // MARK: ENSideMenu Delegate
@@ -98,6 +99,9 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource, EN
         let customColor = UIView()
         customColor.backgroundColor = UIColor.clearColor()
         cell.selectedBackgroundView = customColor
+        
+        cell.backgroundColor = cell.contentView.backgroundColor!
+        
         cell.songURI = spotifyPlayer.musicOptions[indexPath.row].URI
         if(serverLink.songsVoted.count > 0){
             if(serverLink.songsVoted[serverLink.partyObject.objectForKey("partyID") as! String]!.contains(cell.songURI) || serverLink.songsInBatch.contains(cell.songURI)){
@@ -138,10 +142,12 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource, EN
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        searchBars = UISearchBar(frame: CGRectMake(0, 0, (self.view.bounds.width * 0.75), 18))
         self.sideMenuController()?.sideMenu?.delegate = self;
 		let rightNavBarButton = UIBarButtonItem(customView: searchBars)
 		self.navigationItem.rightBarButtonItem = rightNavBarButton
 		searchBars.placeholder = "Enter song name"
+        searchBars.contentScaleFactor = 2
 		searchBars.delegate = self
         searchBars.keyboardAppearance = UIKeyboardAppearance.Dark
     }

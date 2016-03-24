@@ -54,7 +54,7 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
         spotifyAuthenticationViewController.definesPresentationContext = true
         presentViewController(spotifyAuthenticationViewController, animated: false, completion: nil)
     }
-
+    
     @IBAction func registerButtonPressed(sender: UIButton) {
         //hyperlink to spotify register page and open in safari
 

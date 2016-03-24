@@ -92,6 +92,7 @@ class MyMenuTableViewController: UITableViewController {
         switch (indexPath.row) {
         case 0:
 			if menuOptions[indexPath.row] == "Close Room" {
+                serverLink.currentLocation = nil
                 let alertController = UIAlertController(title: "Ending The Party", message: "Are you sure you want to end the party?", preferredStyle: UIAlertControllerStyle.Alert)
                 let no = UIAlertAction(title: "No", style: UIAlertActionStyle.Destructive){ alertAction in
                     

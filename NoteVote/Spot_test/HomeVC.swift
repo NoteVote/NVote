@@ -122,6 +122,10 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
         return 1
     }
     
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 60
+    }
+    
     /*Number of rows of tableView*/
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if(roomsNearby.count < 1 && serverLink.currentLocation != nil){
@@ -186,6 +190,9 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
         let customColor = UIView()
         customColor.backgroundColor = UIColor.clearColor()
         cell.selectedBackgroundView = customColor
+        
+        cell.backgroundColor = cell.contentView.backgroundColor
+        
         cell.roomName.text = roomsNearby[indexPath.row].objectForKey("partyName") as? String
         let roomLocation = roomsNearby[indexPath.row].objectForKey("geoLocation") as? PFGeoPoint
         if(roomLocation != nil){

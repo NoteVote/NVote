@@ -27,7 +27,8 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
 	@IBOutlet weak var progressView: UIView!
 	@IBOutlet weak var progressBar: UIProgressView!
     
-    @IBOutlet var yConstraint: NSLayoutConstraint!
+    @IBOutlet weak var backgroundImage: UIImageView!
+    @IBOutlet weak var YConstraint: NSLayoutConstraint!
     
 	@IBOutlet weak var timeInLabel: UILabel!
 	@IBOutlet weak var timeLeftLabel: UILabel!
@@ -35,6 +36,7 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     @IBOutlet weak var tableView: UITableView!
     var refreshControl:UIRefreshControl!
     
+    @IBOutlet weak var ProgressWidth: NSLayoutConstraint!
    //MARK: Dropdown View Methods
     
     @IBAction func dropDownButtonPressed(sender: UIButton) {
@@ -80,11 +82,11 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
             }, completion:  { finished in
                 if(self.dropDownViewIsDisplayed){
                     self.dropDownButton.setBackgroundImage(UIImage(named: "dropUp"), forState: UIControlState.Normal)
-                    self.yConstraint.constant = -frame.size.height
+                    self.YConstraint.constant = -frame.size.height
                 }
                 else{
                     self.dropDownButton.setBackgroundImage(UIImage(named: "dropDown"), forState: UIControlState.Normal)
-                    self.yConstraint.constant = -16
+                    self.YConstraint.constant = -16
                 }
                 self.isAnimating = false
             })
@@ -119,6 +121,8 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
         let customColor = UIView()
         customColor.backgroundColor = UIColor.clearColor()
         cell.selectedBackgroundView = customColor
+        
+        cell.backgroundColor = cell.contentView.backgroundColor!
         
         if(!serverLink.musicList.isEmpty){
 
@@ -285,6 +289,7 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.ProgressWidth.constant = (self.view.bounds.width * 0.55)
         serverLink.isHosting = true
         self.sideMenuController()?.sideMenu?.delegate = self;
         startSession()

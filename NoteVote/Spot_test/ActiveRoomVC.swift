@@ -80,6 +80,9 @@ class ActiveRoomVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         let customColor = UIView()
         customColor.backgroundColor = UIColor.clearColor()
         cell.selectedBackgroundView = customColor
+        
+        cell.backgroundColor = cell.contentView.backgroundColor!
+        
         if(!serverLink.musicList.isEmpty){
             let object:PFObject = serverLink.musicList[indexPath.row]
             cell.artistLabel.text! = object.objectForKey("trackArtist") as! String
@@ -98,12 +101,10 @@ class ActiveRoomVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 }
             }
         }
-		
         return cell
     }
     
-    func refresh(sender:AnyObject)
-    {
+    func refresh(sender:AnyObject){
         serverLink.getQueue(){
             (result: [PFObject]) in
             serverLink.musicList = result
@@ -142,6 +143,7 @@ class ActiveRoomVC: UIViewController, UITableViewDelegate, UITableViewDataSource
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
+        serverLink.currentLocation = nil
         serverLink.musicList = []
         serverLink.songsVotedCheck()
         self.title = serverLink.partyObject.objectForKey("partyName") as? String

@@ -81,6 +81,7 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
     }
     
     @IBAction func cancelButtonPressed(sender: UIBarButtonItem) {
+        serverLink.currentLocation = nil
         performSegueWithIdentifier("CreateRoom_Home", sender: nil)
     }
     	
