@@ -56,15 +56,14 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     
     func hideDropDownView() {
         var frame:CGRect = self.dropDownView.frame
-        frame.origin.y = -frame.size.height + 80
+        frame.origin.y = -frame.size.height + 16
         self.animateDropDownToFrame(frame) {
-          
         }
     }
     
     func showDropDownView() {
         var frame:CGRect = self.dropDownView.frame
-        frame.origin.y = 64
+        frame.origin.y = 0
         self.animateDropDownToFrame(frame) {
             
         }
@@ -77,7 +76,9 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     }
     
     func animateDropDownToFrame(frame: CGRect, completion:() -> Void) {
-        UIView.animateWithDuration(0.5, delay: 0.0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.8, options: [], animations: {
+        UIView.animateWithDuration(0.5, delay: 0.0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.8, options: [],
+            animations: {
+                
             self.dropDownView.frame = frame
             }, completion:  { finished in
                 if(self.dropDownViewIsDisplayed){

@@ -96,6 +96,7 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
             self.presentViewController(alertController, animated: true, completion: nil)
         }
         else{
+            
             serverLink.musicList = []
             serverLink.songsVoted[session!.canonicalUsername] = []
             serverLink.addParty(roomName.text!, partyID: session!.canonicalUsername, priv: privateParty)

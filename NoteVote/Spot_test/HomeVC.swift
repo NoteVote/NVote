@@ -23,6 +23,7 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
     @IBOutlet weak var activityRunningLabel: UILabel!
     @IBOutlet weak var activityRunning: UIActivityIndicatorView!
     
+    @IBOutlet weak var createRoomButton: UIBarButtonItem!
     @IBOutlet weak var backgroundImage: UIImageView!
     @IBOutlet weak var menuButton: UIBarButtonItem!
     @IBOutlet weak var tableView: UITableView!
@@ -60,6 +61,7 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
     
     @IBAction func addButtonPressed(sender: UIBarButtonItem) {
         
+        self.createRoomButton.enabled = false
         self.tableView.hidden = true
         self.activityRunningLabel.hidden = false
         self.activityRunning.startAnimating()
@@ -78,6 +80,7 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
 						
 						sessionHandler.storeSession(session!)
 						if(session!.isValid()){
+                            self.createRoomButton.enabled = true
                             self.tableView.hidden = false
                             self.activityRunning.stopAnimating()
                             self.activityRunningLabel.hidden = true
@@ -85,6 +88,7 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
 						}
 						
 					} else {
+                        self.createRoomButton.enabled = true
 						Answers.logCustomEventWithName("Authentication Error", customAttributes:["Code":error!])
                         
                         self.tableView.hidden = false
@@ -98,6 +102,7 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
 				})
 				
 			} else {
+                self.createRoomButton.enabled = true
                 self.tableView.hidden = false
                 self.activityRunning.stopAnimating()
                 self.activityRunningLabel.hidden = true
