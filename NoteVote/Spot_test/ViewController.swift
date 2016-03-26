@@ -21,8 +21,6 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
     @IBOutlet weak var activityRunning: UIActivityIndicatorView!
     @IBOutlet weak var backgroundImage: UIImageView!
     @IBOutlet weak var loginButton: UIButton!
-    @IBOutlet weak var registerButton: UIButton!
-    @IBOutlet weak var registerLabel: UILabel!
     
     
     //MARK: SPTAuthView Delegate
@@ -53,13 +51,6 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
         spotifyAuthenticationViewController.modalPresentationStyle = UIModalPresentationStyle.OverCurrentContext
         spotifyAuthenticationViewController.definesPresentationContext = true
         presentViewController(spotifyAuthenticationViewController, animated: false, completion: nil)
-    }
-    
-    @IBAction func registerButtonPressed(sender: UIButton) {
-        //hyperlink to spotify register page and open in safari
-
-		Answers.logCustomEventWithName("Register", customAttributes: nil)
-        UIApplication.sharedApplication().openURL(NSURL(string: "http://www.spotify.com")!)
     }
     
     
