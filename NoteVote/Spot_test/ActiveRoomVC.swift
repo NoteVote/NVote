@@ -121,7 +121,7 @@ class ActiveRoomVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.sideMenuController()?.sideMenu?.delegate = self;
         self.refreshControl = UIRefreshControl()
         self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-        self.refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
+        self.refreshControl.addTarget(self, action: #selector(ActiveRoomVC.refresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
         self.tableView.addSubview(refreshControl)
     }
 

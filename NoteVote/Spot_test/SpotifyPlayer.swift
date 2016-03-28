@@ -284,7 +284,7 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 	*	for shuffling arrays
 	*/
 	func shuffleArray<T>(var array: Array<T>) -> Array<T> {
-		for var index = array.count - 1; index > 0; index-- {
+		for var index = array.count - 1; index > 0; index -= 1 {
 			// Random int from 0 to index-1
 			let j = Int(arc4random_uniform(UInt32(index-1)))
 			

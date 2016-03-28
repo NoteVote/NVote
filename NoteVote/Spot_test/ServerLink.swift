@@ -364,7 +364,7 @@ class ServerLink {
 		self.musicList = []
         let query = PFQuery(className: "SongLibrary")
         query.addAscendingOrder("CreatedAt")
-        query.addDescendingOrder("voted")
+        query.addDescendingOrder("votes")
         query.whereKey("partyID", equalTo: partyObject.objectForKey("partyID") as! String)
         do{
             let list =  try query.findObjects()
