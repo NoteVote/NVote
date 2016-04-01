@@ -99,20 +99,30 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
             
             serverLink.musicList = []
             serverLink.songsVoted[session!.canonicalUsername] = []
-            serverLink.addParty(roomName.text!, partyID: session!.canonicalUsername, priv: privateParty)
-            userDefaults.setObject(roomName.text!, forKey: "currentRoom")
-            userDefaults.setObject(session!.canonicalUsername, forKey: "roomID")
-            userDefaults.synchronize()
-            
-            //Playlist Selection and Conversion
-            if(!playlistNames.isEmpty){
-                spotifyPlayer.playlistToTracks(currentPickerRow)
+            serverLink.addParty(roomName.text!, partyID: session!.canonicalUsername, priv: privateParty){
+                (result:String) in
+                if(result == "good"){
+                    userDefaults.setObject(self.roomName.text!, forKey: "currentRoom")
+                    userDefaults.setObject(self.session!.canonicalUsername, forKey: "roomID")
+                    userDefaults.synchronize()
+                    
+                    //Playlist Selection and Conversion
+                    if(!self.playlistNames.isEmpty){
+                        spotifyPlayer.playlistToTracks(self.currentPickerRow)
+                    }
+                    
+                    //log who created a room
+                    Answers.logCustomEventWithName("Room Created", customAttributes: ["user":self.session!.canonicalUsername])
+                    
+                    self.performSegueWithIdentifier("CreateRoom_HostRoom", sender: nil)
+                }
+                else{
+                    let alertController = UIAlertController(title: "Connection Problem", message:
+                        "Could not create room. Please try again later.", preferredStyle: UIAlertControllerStyle.Alert)
+                    alertController.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default,handler: nil))
+                    self.presentViewController(alertController, animated: true, completion: nil)
+                }
             }
-            
-            //log who created a room
-            Answers.logCustomEventWithName("Room Created", customAttributes: ["user":session!.canonicalUsername])
-            
-            self.performSegueWithIdentifier("CreateRoom_HostRoom", sender: nil)
         }
     }
     

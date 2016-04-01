@@ -87,7 +87,7 @@ class ServerLink {
      * -takes in a String(partyID) -> used to set the partiesID to the hosts Spotify ID.
      * -takes in a Bool(priv) -> used to set the room as private or not.
      */
-    func addParty(partyName:String, partyID:String, priv:Bool) {
+    func addParty(partyName:String, partyID:String, priv:Bool, completion:(result: String) -> Void) {
         let partyObject = PFObject(className:"PartyObject")
         partyObject["partyName"] = partyName
         partyObject["partyID"] = partyID
@@ -109,8 +109,9 @@ class ServerLink {
             PFAnalytics.trackEventInBackground("createroom", block: nil)
             if (success) {
                 self.partyObject = partyObject
-                
+                completion(result: "good")
             } else {
+                completion(result: "fail")
 				if (error != nil) {
 					Answers.logCustomEventWithName("Parse Error", customAttributes:["Code":error!])
 				}
