@@ -12,49 +12,57 @@ class SearchHandler {
 	var playlistData:[(String, NSURL)] = []
 	
     func Search(input:String, completion: (result: String) -> Void){
-        SPTSearch.performSearchWithQuery(input, queryType: SPTSearchQueryType.QueryTypeTrack, offset: 0, accessToken: nil, market: "US", callback: { (error:NSError!, result:AnyObject!) -> Void in
-            if(error != nil){
-                completion(result: "fail")
-                return
-            }
-            var trackListItems:[SPTPartialTrack] = []
-            let trackListPage = result as! SPTListPage
-            var trackListPageItems = trackListPage.items
-            if(trackListPage.items == nil){
-                return
-            }
-            if(trackListPage.items.count < 20){
-                let count = trackListPageItems.count
-                while(trackListItems.count < count){
-                    trackListItems.append(trackListPageItems.removeFirst() as! SPTPartialTrack)
+        if Reachability.isConnectedToNetwork(){
+            SPTSearch.performSearchWithQuery(input, queryType: SPTSearchQueryType.QueryTypeTrack, offset: 0, accessToken: nil, market: "US", callback: { (error:NSError!, result:AnyObject!) -> Void in
+                var trackListItems:[SPTPartialTrack] = []
+                let trackListPage = result as! SPTListPage
+                var trackListPageItems = trackListPage.items
+                if(trackListPage.items == nil){
+                    return
                 }
-            }
-            else{
-                while(trackListItems.count < 20) {
-                    trackListItems.append(trackListPageItems.removeFirst() as! SPTPartialTrack)
+                if(trackListPage.items.count < 20){
+                    let count = trackListPageItems.count
+                    while(trackListItems.count < count){
+                        trackListItems.append(trackListPageItems.removeFirst() as! SPTPartialTrack)
+                    }
                 }
-            }
-            spotifyPlayer.searchList = trackListItems
-            completion(result: "done")
-        })
+                else{
+                    while(trackListItems.count < 20) {
+                        trackListItems.append(trackListPageItems.removeFirst() as! SPTPartialTrack)
+                    }
+                }
+                spotifyPlayer.searchList = trackListItems
+                completion(result: "done")
+            })
+        }
+        else{
+            completion(result: "connect_fail")
+            return
+        }
     }
     
     func getURIwithPartial(uri:String,completion: (result:String) -> Void ){
-        SPTRequest.requestItemAtURI(NSURL(string: uri), withSession: nil, market: "US", callback: { (error:NSError!, result:AnyObject!) ->Void in
-            if(error != nil){
-                completion(result: "fail")
-                return
-            }
-            let track = result as! SPTPartialTrack
-            SPTRequest.requestItemFromPartialObject(track, withSession: nil, callback: { (error:NSError!, result:AnyObject!) -> Void in
-                if(error != nil){
+        if Reachability.isConnectedToNetwork(){
+            SPTRequest.requestItemAtURI(NSURL(string: uri), withSession: nil, market: "US", callback: { (error:NSError!, result:AnyObject!) ->Void in
+                if(error != nil || result == nil){
                     completion(result: "fail")
                     return
                 }
-                let fullTrack = result as! SPTTrack
-                completion(result: String(fullTrack.playableUri))
+                let track = result as! SPTPartialTrack
+                SPTRequest.requestItemFromPartialObject(track, withSession: nil, callback: { (error:NSError!, result:AnyObject!) -> Void in
+                    if(error != nil){
+                        completion(result: "fail")
+                        return
+                    }
+                    let fullTrack = result as! SPTTrack
+                    completion(result: String(fullTrack.playableUri))
+                })
             })
-        })
+        }
+        else{
+            completion(result: "connect_fail")
+            return
+        }
     }
 	
 	

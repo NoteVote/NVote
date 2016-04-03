@@ -200,45 +200,54 @@ class ServerLink {
      * uses these variables to create a song object in Parse.
      */
     func addSongBatch(completion:(result:String)->Void){
-        for song in self.songBatch{
-            var alreadyIn:Bool = false
-			print(self.musicList.count)
-            searchHandler.getURIwithPartial(song.2){
-                (result:String) in
-                if(result == "fail"){
-                    self.songBatch = []
-                    self.songsInBatch = []
-                    completion(result: "fail")
-                    return
-                }
-                else{
-                    for track in self.musicList{
-                        if(track.objectForKey("uri") as! String == result){
-                            if(!self.songsVoted[self.partyObject.objectForKey("partyID") as! String]!.contains(result)){
-                                self.increment(result)
-                                self.voteURI(result)
-                                alreadyIn = true
-                                break
+        if Reachability.isConnectedToNetwork(){
+            for song in self.songBatch{
+                var alreadyIn:Bool = false
+                print(self.musicList.count)
+                searchHandler.getURIwithPartial(song.2){
+                    (result:String) in
+                    if(result == "fail"){
+                        self.songBatch = []
+                        self.songsInBatch = []
+                        completion(result: "fail")
+                        return
+                    }
+                    else{
+                        for track in self.musicList{
+                            if(track.objectForKey("uri") as! String == result){
+                                if(!self.songsVoted[self.partyObject.objectForKey("partyID") as! String]!.contains(result)){
+                                    self.increment(result)
+                                    self.voteURI(result)
+                                    alreadyIn = true
+                                    break
+                                }
                             }
                         }
-                    }
-                    if(!alreadyIn){
-                        let trackObject = PFObject(className: "SongLibrary")
-                        trackObject["trackTitle"] = song.0
-                        trackObject["trackArtist"] = song.1
-                        trackObject["uri"] = result
-                        trackObject["votes"] = 1
-                        trackObject["partyID"] = self.partyObject.objectForKey("partyID") as! String
-                        self.voteURI(result)
-                        trackObject.saveInBackground()
-                        serverLink.musicList.append(trackObject)
+                        if(!alreadyIn){
+                            let trackObject = PFObject(className: "SongLibrary")
+                            trackObject["trackTitle"] = song.0
+                            trackObject["trackArtist"] = song.1
+                            trackObject["uri"] = result
+                            trackObject["votes"] = 1
+                            trackObject["partyID"] = self.partyObject.objectForKey("partyID") as! String
+                            self.voteURI(result)
+                            trackObject.saveInBackground()
+                            serverLink.musicList.append(trackObject)
+                        }
                     }
                 }
             }
+            self.songBatch = []
+            self.songsInBatch = []
+            completion(result: "Done")
+            return
         }
-        self.songBatch = []
-        self.songsInBatch = []
-        completion(result: "Done")
+        else{
+            self.songBatch = []
+            self.songsInBatch = []
+            completion(result: "connect_fail")
+            return
+        }
     }
     
     func voteURI(uri:String){
@@ -381,26 +390,32 @@ class ServerLink {
      * Asynchronous way to get an updated list of music in the song queue.
      */
     func getQueue(completion: (result: [PFObject]) -> Void){
-        self.musicList = []
-        let query = PFQuery(className: "SongLibrary")
-        query.addAscendingOrder("CreatedAt")
-        query.addDescendingOrder("votes")
-        query.whereKey("partyID", equalTo: partyObject.objectForKey("partyID") as! String)
-        query.findObjectsInBackgroundWithBlock {
-            (objects:[PFObject]?, error: NSError?) -> Void in
-			
-			PFAnalytics.trackEventInBackground("deleteroom", block: nil)
-			
-			if(error == nil){
-                for object in objects!{
-                    print(object.objectForKey("trackTitle") as! String)
-                    self.musicList.append(object)
+        if Reachability.isConnectedToNetwork(){
+            self.musicList = []
+            let query = PFQuery(className: "SongLibrary")
+            query.addAscendingOrder("CreatedAt")
+            query.addDescendingOrder("votes")
+            query.whereKey("partyID", equalTo: partyObject.objectForKey("partyID") as! String)
+            query.findObjectsInBackgroundWithBlock {
+                (objects:[PFObject]?, error: NSError?) -> Void in
+                
+                PFAnalytics.trackEventInBackground("deleteroom", block: nil)
+                
+                if(error == nil){
+                    for object in objects!{
+                        print(object.objectForKey("trackTitle") as! String)
+                        self.musicList.append(object)
+                    }
+                    completion(result: self.musicList)
+                    
+                } else {
+                    Answers.logCustomEventWithName("Parse Error", customAttributes:["Code":error!])
                 }
-                completion(result: self.musicList)
-			
-			} else {
-				Answers.logCustomEventWithName("Parse Error", customAttributes:["Code":error!])
-			}
+            }
+        }
+        else{
+            completion(result: [])
+            return
         }
     }
     

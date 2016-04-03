@@ -150,11 +150,13 @@ class ActiveRoomVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.SingleLine
         self.tableView.separatorColor = UIColor.lightGrayColor()
-        serverLink.getQueue(){
-            (result: [PFObject]) in
-            serverLink.musicList = result
-			PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"active"], block: nil)
-            self.tableView.reloadData()
+        if Reachability.isConnectedToNetwork(){
+            serverLink.getQueue(){
+                (result: [PFObject]) in
+                serverLink.musicList = result
+                PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"active"], block: nil)
+                self.tableView.reloadData()
+            }
         }
         
     }

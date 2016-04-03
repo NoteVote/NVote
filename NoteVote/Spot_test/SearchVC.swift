@@ -67,8 +67,8 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource, EN
                     self.tableView.setContentOffset(CGPoint.zero, animated: true)
                     self.tableView.reloadData()
                 }
-                else{
-                    let alertController = UIAlertController(title: "Uh-oh!", message: "Looks like something went wrong. Try searching for songs again later.", preferredStyle: UIAlertControllerStyle.Alert)
+                else if result == "connect_fail"{
+                    let alertController = UIAlertController(title: "Connection Fail", message: "Internet connection was lost. Try searching for songs again later.", preferredStyle: UIAlertControllerStyle.Alert)
                     alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Destructive,handler: nil))
                     self.presentViewController(alertController, animated: true, completion: nil)
                 }
@@ -134,6 +134,11 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource, EN
             (result:String) in
             if(result == "fail"){
                 let alertController = UIAlertController(title: "Uh-oh!", message: "Looks like something went wrong. Song(s) were not added to party.", preferredStyle: UIAlertControllerStyle.Alert)
+                alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Destructive,handler: nil))
+                self.presentViewController(alertController, animated: true, completion: nil)
+            }
+            else if result == "connect_fail" {
+                let alertController = UIAlertController(title: "Connection Fail", message: "Internet connection was lost. Song(s) were not added to party. Please try again.", preferredStyle: UIAlertControllerStyle.Alert)
                 alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Destructive,handler: nil))
                 self.presentViewController(alertController, animated: true, completion: nil)
             }
