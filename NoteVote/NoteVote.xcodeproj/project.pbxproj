@@ -173,13 +173,13 @@
 		918A22BD1BB1BAFB00CE76AF /* Spot_test */ = {
 			isa = PBXGroup;
 			children = (
-				AD8D50431CB19CA300E2B9F4 /* Reachability.swift */,
 				ADDD8BDE1C0E271B002B0EC9 /* Menus */,
 				ADDD8BDC1C0E26D9002B0EC9 /* TableCells */,
 				ADDD8BDD1C0E26FD002B0EC9 /* Spotify */,
 				CE7BF0011C5D2298002257C7 /* Global Classes */,
 				CE7BF0041C5D2311002257C7 /* View Controllers */,
 				918A22BE1BB1BAFB00CE76AF /* AppDelegate.swift */,
+				AD8D50431CB19CA300E2B9F4 /* Reachability.swift */,
 				9118BF8A1BBDE80700893CF8 /* MyNavigationController.swift */,
 				918A22C21BB1BAFB00CE76AF /* Main.storyboard */,
 				AD631E241C502A88002A151B /* Song.swift */,

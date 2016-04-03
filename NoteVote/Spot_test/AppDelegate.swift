@@ -16,7 +16,6 @@ let userDefaults = NSUserDefaults.standardUserDefaults()
 let serverLink = ServerLink()
 let searchHandler = SearchHandler()
 let spotifyPlayer = SpotifyPlayer()
-let reachability = Reachability()
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

@@ -68,8 +68,13 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
 		
 		let sessionHandler = SessionHandler()
 		let session = sessionHandler.getSession()
+        if !Reachability.isConnectedToNetwork(){
+            let alertController = UIAlertController(title: "Connection Lost", message: "Internet conneciton lost. Please try again in a minute.", preferredStyle: UIAlertControllerStyle.Alert)
+            alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Destructive,handler: nil))
+            self.presentViewController(alertController, animated: true, completion: nil)
+        }
 		
-		if (user != nil) {
+		else if (user != nil) {
 			if (user!.product.rawValue == 2){
 				authController.setPremiumParameters(spotifyAuthenticator)
 				
@@ -101,7 +106,8 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
 					}
 				})
 				
-			} else {
+			}
+            else {
                 self.createRoomButton.enabled = true
                 self.tableView.hidden = false
                 self.activityRunning.stopAnimating()
