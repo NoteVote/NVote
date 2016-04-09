@@ -27,6 +27,8 @@
 		91E4FB2B1BE967C70044762C /* QueueTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91E4FB2A1BE967C70044762C /* QueueTableCell.swift */; };
 		91E4FB2D1BEC069D0044762C /* HostRoomVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91E4FB2C1BEC069D0044762C /* HostRoomVC.swift */; };
 		91EFD91B1BBB163200818FA7 /* SpotifyAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91EFD91A1BBB163200818FA7 /* SpotifyAuth.swift */; };
+		AD01A6B51CB9593700423346 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD01A6B41CB9593700423346 /* Foundation.framework */; };
+		AD01A6B71CB95A2200423346 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD01A6B61CB95A2200423346 /* Reachability.swift */; };
 		AD23D4AB1BE2C9A7000B9F14 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD23D4AA1BE2C9A7000B9F14 /* Bolts.framework */; };
 		AD23D4AD1BE2C9B9000B9F14 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD23D4AC1BE2C9B9000B9F14 /* Parse.framework */; };
 		AD23D4AF1BE2C9FB000B9F14 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD23D4AE1BE2C9FB000B9F14 /* AudioToolbox.framework */; };
@@ -46,7 +48,6 @@
 		AD69DCCE1C587FBF0054C1EC /* HostTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD69DCCD1C587FBF0054C1EC /* HostTableCell.swift */; };
 		AD6B9FD51BC7197D0079424F /* CreateRoomVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6B9FD41BC7197D0079424F /* CreateRoomVC.swift */; };
 		AD6B9FD71BC71F9E0079424F /* ActiveRoomVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6B9FD61BC71F9E0079424F /* ActiveRoomVC.swift */; };
-		AD8D50441CB19CA300E2B9F4 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8D50431CB19CA300E2B9F4 /* Reachability.swift */; };
 		ADC076AC1C7DF0160098245D /* HomeTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADC076AB1C7DF0160098245D /* HomeTableCell.swift */; };
 		CE03BF891C7695B700802254 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE03BF871C7695B700802254 /* Fabric.framework */; };
 		CE03BF8A1C7695B700802254 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE03BF881C7695B700802254 /* Crashlytics.framework */; };
@@ -89,6 +90,8 @@
 		91E4FB2A1BE967C70044762C /* QueueTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueTableCell.swift; sourceTree = "<group>"; };
 		91E4FB2C1BEC069D0044762C /* HostRoomVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HostRoomVC.swift; sourceTree = "<group>"; usesTabs = 0; };
 		91EFD91A1BBB163200818FA7 /* SpotifyAuth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotifyAuth.swift; sourceTree = "<group>"; };
+		AD01A6B41CB9593700423346 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		AD01A6B61CB95A2200423346 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		AD23D4AA1BE2C9A7000B9F14 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		AD23D4AC1BE2C9B9000B9F14 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		AD23D4AE1BE2C9FB000B9F14 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -108,7 +111,6 @@
 		AD69DCCD1C587FBF0054C1EC /* HostTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HostTableCell.swift; path = ../HostTableCell.swift; sourceTree = "<group>"; };
 		AD6B9FD41BC7197D0079424F /* CreateRoomVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CreateRoomVC.swift; path = ../CreateRoomVC.swift; sourceTree = "<group>"; };
 		AD6B9FD61BC71F9E0079424F /* ActiveRoomVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveRoomVC.swift; sourceTree = "<group>"; };
-		AD8D50431CB19CA300E2B9F4 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		ADC076AB1C7DF0160098245D /* HomeTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeTableCell.swift; sourceTree = "<group>"; };
 		CE03BF871C7695B700802254 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = SOURCE_ROOT; };
 		CE03BF881C7695B700802254 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = SOURCE_ROOT; };
@@ -120,6 +122,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD01A6B51CB9593700423346 /* Foundation.framework in Frameworks */,
 				AD23D4C31BE2CA7F000B9F14 /* Social.framework in Frameworks */,
 				AD23D4C11BE2CA77000B9F14 /* Accounts.framework in Frameworks */,
 				AD23D4BF1BE2CA54000B9F14 /* libsqlite3.tbd in Frameworks */,
@@ -179,7 +182,7 @@
 				CE7BF0011C5D2298002257C7 /* Global Classes */,
 				CE7BF0041C5D2311002257C7 /* View Controllers */,
 				918A22BE1BB1BAFB00CE76AF /* AppDelegate.swift */,
-				AD8D50431CB19CA300E2B9F4 /* Reachability.swift */,
+				AD01A6B61CB95A2200423346 /* Reachability.swift */,
 				9118BF8A1BBDE80700893CF8 /* MyNavigationController.swift */,
 				918A22C21BB1BAFB00CE76AF /* Main.storyboard */,
 				AD631E241C502A88002A151B /* Song.swift */,
@@ -202,6 +205,7 @@
 		918A22DE1BB1BB8200CE76AF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AD01A6B41CB9593700423346 /* Foundation.framework */,
 				CE03BF881C7695B700802254 /* Crashlytics.framework */,
 				CE03BF871C7695B700802254 /* Fabric.framework */,
 				AD2483B11BE7E06400432200 /* ParseUI.framework */,
@@ -427,7 +431,7 @@
 				918A22BF1BB1BAFB00CE76AF /* AppDelegate.swift in Sources */,
 				AD6B9FD51BC7197D0079424F /* CreateRoomVC.swift in Sources */,
 				AD4349FC1C175DA3005104A9 /* SearchHandler.swift in Sources */,
-				AD8D50441CB19CA300E2B9F4 /* Reachability.swift in Sources */,
+				AD01A6B71CB95A2200423346 /* Reachability.swift in Sources */,
 				CE7BF0031C5D22F1002257C7 /* SpotifyPlayer.swift in Sources */,
 				910808611C0DF5B000FBF037 /* SearchVC.swift in Sources */,
 				91E4FB2D1BEC069D0044762C /* HostRoomVC.swift in Sources */,

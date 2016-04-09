@@ -6,13 +6,22 @@
 //
 
 import Foundation
+import Crashlytics
 
 class SearchHandler {
 	
 	var playlistData:[(String, NSURL)] = []
 	
     func Search(input:String, completion: (result: String) -> Void){
-        if Reachability.isConnectedToNetwork(){
+        let reachability: Reachability
+        do {
+            reachability = try Reachability.reachabilityForInternetConnection()
+        } catch {
+            completion(result: "connect_fail")
+            Answers.logCustomEventWithName("Reachability Error", customAttributes: nil)
+            return
+        }
+        if reachability.isReachable(){
             SPTSearch.performSearchWithQuery(input, queryType: SPTSearchQueryType.QueryTypeTrack, offset: 0, accessToken: nil, market: "US", callback: { (error:NSError!, result:AnyObject!) -> Void in
                 var trackListItems:[SPTPartialTrack] = []
                 let trackListPage = result as! SPTListPage
@@ -42,16 +51,24 @@ class SearchHandler {
     }
     
     func getURIwithPartial(uri:String,completion: (result:String) -> Void ){
-        if Reachability.isConnectedToNetwork(){
+        let reachability: Reachability
+        do {
+            reachability = try Reachability.reachabilityForInternetConnection()
+        } catch {
+            completion(result: "connect_fail")
+            Answers.logCustomEventWithName("Reachability Error", customAttributes: nil)
+            return
+        }
+        if reachability.isReachable(){
             SPTRequest.requestItemAtURI(NSURL(string: uri), withSession: nil, market: "US", callback: { (error:NSError!, result:AnyObject!) ->Void in
                 if(error != nil || result == nil){
-                    completion(result: "fail")
+                    completion(result: "connect_fail")
                     return
                 }
                 let track = result as! SPTPartialTrack
                 SPTRequest.requestItemFromPartialObject(track, withSession: nil, callback: { (error:NSError!, result:AnyObject!) -> Void in
                     if(error != nil){
-                        completion(result: "fail")
+                        completion(result: "connect_fail")
                         return
                     }
                     let fullTrack = result as! SPTTrack

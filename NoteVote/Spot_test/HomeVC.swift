@@ -19,6 +19,7 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
     var refreshControl:UIRefreshControl!
     var password:UITextField!
     var locationManager = CLLocationManager()
+    var reachability: Reachability?
 
     @IBOutlet weak var activityRunningLabel: UILabel!
     @IBOutlet weak var activityRunning: UIActivityIndicatorView!
@@ -68,10 +69,27 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
 		
 		let sessionHandler = SessionHandler()
 		let session = sessionHandler.getSession()
-        if !Reachability.isConnectedToNetwork(){
+        
+        if reachability == nil {
+            self.createRoomButton.enabled = true
+            self.tableView.hidden = false
+            self.activityRunningLabel.hidden = true
+            self.activityRunning.stopAnimating()
+            let alertController = UIAlertController(title: "Uh-Oh", message: "Something went wrong. Please try again in a minute.", preferredStyle: UIAlertControllerStyle.Alert)
+            alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Destructive,handler: nil))
+            self.presentViewController(alertController, animated: true, completion: nil)
+            return
+        }
+        
+        if !reachability!.isReachable() {
             let alertController = UIAlertController(title: "Connection Lost", message: "Internet conneciton lost. Please try again in a minute.", preferredStyle: UIAlertControllerStyle.Alert)
             alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Destructive,handler: nil))
             self.presentViewController(alertController, animated: true, completion: nil)
+            
+            self.createRoomButton.enabled = true
+            self.tableView.hidden = false
+            self.activityRunningLabel.hidden = true
+            self.activityRunning.stopAnimating()
         }
 		
 		else if (user != nil) {
@@ -262,6 +280,13 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
         super.viewDidLoad()
 		let sessionHandler = SessionHandler()
 		let session = sessionHandler.getSession()
+
+        do {
+            reachability = try Reachability.reachabilityForInternetConnection()
+        } catch {
+            Answers.logCustomEventWithName("Reachability Error", customAttributes: nil)
+            reachability = nil
+        }
         
         //Geolocation
         self.locationManager.delegate = self

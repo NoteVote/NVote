@@ -36,7 +36,7 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
     }
     
     func authenticationViewController(authenticationViewController: SPTAuthViewController!, didFailToLogin error: NSError!) {
-		Answers.logCustomEventWithName("Authentication Error", customAttributes:["Code":error!])
+		Answers.logCustomEventWithName("Authentication Fail", customAttributes:["Code":error!])
     }
     
     

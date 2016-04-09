@@ -63,8 +63,12 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 						let temp = self.playlistMusic.removeFirst()
 						self.playlistMusic.append(temp)
 						searchHandler.getURIwithPartial(temp, completion: {(result: String) in
-							currentTrack = result
-							
+                            if(result != "connect_fail"){
+                                currentTrack = result
+                            }
+                            else{
+                                return
+                            }
 							self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
 								if error != nil {
 									Answers.logCustomEventWithName("Player Error", customAttributes:["Code":error!])
@@ -108,8 +112,12 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 				let temp = self.playlistMusic.removeFirst()
 				self.playlistMusic.append(temp)
 				searchHandler.getURIwithPartial(temp, completion: {(result: String) in
-					currentTrack = result
-					
+                    if(result != "connect_fail" ){
+                        currentTrack = result
+                    }
+                    else{
+                        return
+                    }
 					//return if session needs to be renewed
 					if (!self.validateSession(currentTrack)) { return }
 					

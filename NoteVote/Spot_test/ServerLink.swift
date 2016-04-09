@@ -26,7 +26,6 @@ class ServerLink {
     var songsInBatch:[String] = []
     var currentLocation:PFGeoPoint?
 	
-	
 	//MARK: Internal Methods
     
     /**
@@ -67,10 +66,16 @@ class ServerLink {
         partyObject = rooms[objectNum]
     }
     
+    /**
+     * Sets the party PFObject to the partyObject for hosting.
+     */
     func setParty(party:PFObject){
         self.partyObject = party
     }
     
+    /**
+     * Gets a list of voted songs from the songsVoted dictionary if the room has been entered before.
+     */
     func getSongsVoted() -> [String]{
         let voted = self.songsVoted[self.partyObject.objectForKey("partyID") as! String]
         if(voted != nil){
@@ -78,6 +83,17 @@ class ServerLink {
         }
         else {
             return []
+        }
+    }
+    
+    
+    /**
+     * On party entry it checks to see if the user has voted on any songs in the party
+     *      if they have it sets songsVoted to that list of song titles.
+     */
+    func songsVotedCheck(){
+        if(!songsVoted.keys.contains(partyObject.objectForKey("partyID") as! String)){
+            songsVoted[(partyObject.objectForKey("partyID") as! String)] = []
         }
     }
     
@@ -121,7 +137,7 @@ class ServerLink {
     
     /**
      * deletes a party object from the Parse PartyObject class.
-     * -takes in a String(roomID) -> hosts Spotify ID, used to find correct object for deletion.
+     * ASync
      */
     func deleteRoom() {
         self.isHosting = false
@@ -155,6 +171,11 @@ class ServerLink {
         }
     }
     
+    
+    /**
+     * Delets a party object from the Parse PartyObject class.
+     * Sync
+     */
     func deleteRoomNow(){
         userDefaults.setObject("", forKey: "partyPin")
         userDefaults.synchronize()
@@ -174,12 +195,21 @@ class ServerLink {
         }
     }
     
+    /**
+     * First Creates a song object from given input.
+     * Then adds that song object to songBatch.
+     * Used when poeple are clicking on songs in Search
+     */
     func addSongToBatch(songTitle:String, trackArtist:String, uri:String){
         let song:(String,String,String) = (songTitle,trackArtist,uri)
         self.songBatch.append(song)
         self.songsInBatch.append(song.2)
     }
     
+    /**
+     * Removes a song from songBatch
+     * Used when people are unclicking songs on Search
+     */
     func removeSongFromBatch(songTitle:String, trackArtist:String){
         if(!self.songBatch.isEmpty){
             for i in 0...songBatch.count-1 {
@@ -193,14 +223,20 @@ class ServerLink {
     }
 
     /**
-     * Adds a song to the parties subclass of SongLibrary.
-     * -takes in a String(trackTitle) -> title of the song.
-     * -takes in a String(trackArtist) -> artist of the song.
-     * -takes in a String(uri) -> Spotify track URI of the song.
-     * uses these variables to create a song object in Parse.
+     * Adds songs to the parties subclass of SongLibrary.
+     * uses songBatch and adds its songs SongLibrary on Parse.
+     * ASync
      */
     func addSongBatch(completion:(result:String)->Void){
-        if Reachability.isConnectedToNetwork(){
+        let reachability: Reachability
+        do {
+            reachability = try Reachability.reachabilityForInternetConnection()
+        } catch {
+            Answers.logCustomEventWithName("Reachability Error", customAttributes: nil)
+            completion(result: "fail")
+            return
+        }
+        if reachability.isReachable(){
             for song in self.songBatch{
                 var alreadyIn:Bool = false
                 print(self.musicList.count)
@@ -250,10 +286,18 @@ class ServerLink {
         }
     }
     
+    /**
+     * Adds a uri of a song voted on into songsVoted.
+     * Used to know which songs are voted on in a party already by a user.
+     */
     func voteURI(uri:String){
         self.songsVoted[self.partyObject.objectForKey("partyID") as! String]?.append(uri)
     }
     
+    /**
+     * Removes a uri of a song voted on into songsVoted.
+     * Used to know which songs are voted on in a party already by a user.
+     */
     func unvoteURI(uri:String){
         let index = self.songsVoted[self.partyObject.objectForKey("partyID") as! String]?.indexOf(uri)
         self.songsVoted[self.partyObject.objectForKey("partyID") as! String]?.removeAtIndex(index!)
@@ -307,6 +351,11 @@ class ServerLink {
         return output
     }
     
+    /**
+     * This is a function that can be activated by the user in createRoom
+     * This will remove songs from songLibrary on Parse if
+     * the song has note been voted above 1 vote for 5 consecutive songs played.
+     */
     func songClean(){
         if(self.cleanUp){
             for song in musicList {
@@ -390,7 +439,15 @@ class ServerLink {
      * Asynchronous way to get an updated list of music in the song queue.
      */
     func getQueue(completion: (result: [PFObject]) -> Void){
-        if Reachability.isConnectedToNetwork(){
+        let reachability: Reachability
+        do {
+            reachability = try Reachability.reachabilityForInternetConnection()
+        } catch {
+            completion(result: [])
+            Answers.logCustomEventWithName("Reachability Error", customAttributes: nil)
+            return
+        }
+        if reachability.isReachable(){
             self.musicList = []
             let query = PFQuery(className: "SongLibrary")
             query.addAscendingOrder("CreatedAt")
@@ -416,27 +473,6 @@ class ServerLink {
         else{
             completion(result: [])
             return
-        }
-    }
-    
-    func updateSongsVoted(currentSongs:[String]){
-        var temp:[String] = []
-        for item in self.songsVoted[self.partyObject.objectForKey("partyID") as! String]!{
-            if(currentSongs.contains(item)){
-               temp.append(item)
-            }
-        }
-        self.songsVoted[self.partyObject.objectForKey("partyID") as! String] = temp
-    }
-    
-    
-    /**
-     * On party entry it checks to see if the user has voted on any songs in the party
-     *      if they have it sets songsVoted to that list of song titles.
-     */
-    func songsVotedCheck(){
-        if(!songsVoted.keys.contains(partyObject.objectForKey("partyID") as! String)){
-            songsVoted[(partyObject.objectForKey("partyID") as! String)] = []
         }
     }
 
