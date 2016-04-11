@@ -17,18 +17,19 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
     private let spotifyAuthenticator = SPTAuth.defaultInstance()
     private var currentSession: SPTSession? = nil
     
+    @IBOutlet weak var buttonHeight: NSLayoutConstraint!
     @IBOutlet weak var LogInLabel: UILabel!
     @IBOutlet weak var activityRunning: UIActivityIndicatorView!
     @IBOutlet weak var backgroundImage: UIImageView!
     @IBOutlet weak var loginButton: UIButton!
-    
+    @IBOutlet weak var findPartyButton: UIButton!
     
     //MARK: SPTAuthView Delegate
     
     func authenticationViewController(authenticationViewController: SPTAuthViewController!, didLoginWithSession session: SPTSession!) {
 
         setSession(session)
-        performSegueWithIdentifier("segueOne", sender: nil)
+        performSegueWithIdentifier("start_Party", sender: nil)
     }
     
     func authenticationViewControllerDidCancelLogin(authenticationViewController: SPTAuthViewController!) {
@@ -53,13 +54,17 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
         presentViewController(spotifyAuthenticationViewController, animated: false, completion: nil)
     }
     
+    @IBAction func findPartyButtonPressed(sender: UIButton) {
+        performSegueWithIdentifier("find_Party", sender: nil)
+    }
+    
+    
     
     //MARK: Additional Methods
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if (segue.identifier == "segueOne"){
+        if (segue.identifier == "start_Party"){
             sessionHandler.storeSession(currentSession!)
-
         }
     }
     
@@ -72,6 +77,10 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.loginButton.layer.cornerRadius = 15
+        self.findPartyButton.layer.cornerRadius = 15
+        self.buttonHeight.constant = (self.view.bounds.size.height * 0.25)
 
         let session = sessionHandler.getSession()
         
@@ -94,7 +103,7 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
                             self.activityRunning.stopAnimating()
                             self.LogInLabel.hidden = true
                             self.loginButton.hidden = false
-                            self.performSegueWithIdentifier("segueOne", sender: nil)
+                            self.performSegueWithIdentifier("start_Party", sender: nil)
                         }
 						
 					} else {
@@ -115,11 +124,11 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
     }
 
     override func viewDidAppear(animated: Bool) {
-        if (currentSession != nil) {
-            if (currentSession!.isValid()) {
-                performSegueWithIdentifier("segueOne", sender: nil)
-            }
-        }
+//        if (currentSession != nil) {
+//            if (currentSession!.isValid()) {
+//                performSegueWithIdentifier("segueOne", sender: nil)
+//            }
+//        }
     }
     
     override func didReceiveMemoryWarning() {

@@ -12,9 +12,6 @@ import CoreLocation
 
 class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate {
 	
-	private let authController = SpotifyAuth()
-	private let spotifyAuthenticator = SPTAuth.defaultInstance()
-	private var user:SPTUser? = nil
 	var roomsNearby:[PFObject] = []
     var refreshControl:UIRefreshControl!
     var password:UITextField!
@@ -24,7 +21,6 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
     @IBOutlet weak var activityRunningLabel: UILabel!
     @IBOutlet weak var activityRunning: UIActivityIndicatorView!
     
-    @IBOutlet weak var createRoomButton: UIBarButtonItem!
     @IBOutlet weak var backgroundImage: UIImageView!
     @IBOutlet weak var menuButton: UIBarButtonItem!
     @IBOutlet weak var tableView: UITableView!
@@ -57,91 +53,8 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
 	
 
     @IBAction func menuButtonPressed(sender: AnyObject) {
-        toggleSideMenuView()
-    }
-    
-    @IBAction func addButtonPressed(sender: UIBarButtonItem) {
-        
-        self.createRoomButton.enabled = false
-        self.tableView.hidden = true
-        self.activityRunningLabel.hidden = false
-        self.activityRunning.startAnimating()
-		
-		let sessionHandler = SessionHandler()
-		let session = sessionHandler.getSession()
-        
-        if reachability == nil {
-            self.createRoomButton.enabled = true
-            self.tableView.hidden = false
-            self.activityRunningLabel.hidden = true
-            self.activityRunning.stopAnimating()
-            let alertController = UIAlertController(title: "Uh-Oh", message: "Something went wrong. Please try again in a minute.", preferredStyle: UIAlertControllerStyle.Alert)
-            alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Destructive,handler: nil))
-            self.presentViewController(alertController, animated: true, completion: nil)
-            return
-        }
-        
-        if !reachability!.isReachable() {
-            let alertController = UIAlertController(title: "Connection Lost", message: "Internet conneciton lost. Please try again in a minute.", preferredStyle: UIAlertControllerStyle.Alert)
-            alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Destructive,handler: nil))
-            self.presentViewController(alertController, animated: true, completion: nil)
-            
-            self.createRoomButton.enabled = true
-            self.tableView.hidden = false
-            self.activityRunningLabel.hidden = true
-            self.activityRunning.stopAnimating()
-        }
-		
-		else if (user != nil) {
-			if (user!.product.rawValue == 2){
-				authController.setPremiumParameters(spotifyAuthenticator)
-				
-				spotifyAuthenticator.renewSession(session, callback:{
-					(error: NSError?, session:SPTSession?) -> Void in
-					
-					if(error == nil){
-						
-						sessionHandler.storeSession(session!)
-						if(session!.isValid()){
-                            self.createRoomButton.enabled = true
-                            self.tableView.hidden = false
-                            self.activityRunning.stopAnimating()
-                            self.activityRunningLabel.hidden = true
-							self.performSegueWithIdentifier("Home_CreateRoom", sender: nil)
-						}
-						
-					} else {
-                        self.createRoomButton.enabled = true
-						Answers.logCustomEventWithName("Authentication Error", customAttributes:["Code":error!])
-                        
-                        self.tableView.hidden = false
-                        self.activityRunning.stopAnimating()
-                        self.activityRunningLabel.hidden = true
-						let alertController = UIAlertController(title: "Uh-oh!", message: "Looks like something went wrong. Please try again in a minute.", preferredStyle: UIAlertControllerStyle.Alert)
-						alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Destructive,handler: nil))
-						self.presentViewController(alertController, animated: true, completion: nil)
-
-					}
-				})
-				
-			}
-            else {
-                self.createRoomButton.enabled = true
-                self.tableView.hidden = false
-                self.activityRunning.stopAnimating()
-                self.activityRunningLabel.hidden = true
-				let alertController = UIAlertController(title: "Spotify Account", message:
-					"To Create and Host your own room you must be a Premium member of Spotify", preferredStyle: UIAlertControllerStyle.Alert)
-				alertController.addAction(UIAlertAction(title: "No Thanks", style: UIAlertActionStyle.Destructive,handler: nil))
-				alertController.addAction(UIAlertAction(title: "Upgrage", style: UIAlertActionStyle.Default) {
-					(action) in
-					print("Divert to spotify website")
-					Answers.logCustomEventWithName("Upgrade", customAttributes: nil)
-					})
-				
-				self.presentViewController(alertController, animated: true, completion: nil)
-			}
-		}
+        locationManager.stopUpdatingLocation()
+        performSegueWithIdentifier("FindParty_Login", sender: nil)
     }
 	
 	//MARK: TableView Delegate
@@ -192,6 +105,7 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
             }
             let enter = UIAlertAction(title: "Enter", style: UIAlertActionStyle.Default){ alertAction in
                 if(self.password.text! == serverLink.partyObject.objectForKey("partyPin") as! String){
+                    self.locationManager.stopUpdatingLocation()
                     self.performSegueWithIdentifier("Home_ActiveRoom", sender: nil)
                 }
             }
@@ -207,6 +121,7 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
             self.presentViewController(alertController, animated: true, completion: nil)
         }
         else{
+            self.locationManager.stopUpdatingLocation()
             self.performSegueWithIdentifier("Home_ActiveRoom", sender: nil)
         }
     }
@@ -278,9 +193,7 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
     
     override func viewDidLoad() {
         super.viewDidLoad()
-		let sessionHandler = SessionHandler()
-		let session = sessionHandler.getSession()
-
+        
         do {
             reachability = try Reachability.reachabilityForInternetConnection()
         } catch {
@@ -293,13 +206,6 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
         self.locationManager.requestWhenInUseAuthorization()
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         self.locationManager.startUpdatingLocation()
-		
-		//Get user data
-		SPTUser.requestCurrentUserWithAccessToken(session!.accessToken, callback: {
-			(error:NSError!, result:AnyObject!) -> Void in
-			
-			self.user = result as? SPTUser
-		})
 		
         //Checking to see if roomsNearby has all items in songsVoted keys
         self.sideMenuController()?.sideMenu?.delegate = self;

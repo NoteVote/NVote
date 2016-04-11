@@ -10,9 +10,10 @@ import Parse
 import Crashlytics
 
 
-class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate {
+class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate {
     
     let sessionHandler = SessionHandler()
+    var locationManager = CLLocationManager()
 	private var currentPickerRow = 0
     var session:SPTSession? = nil
     @IBOutlet weak var roomName: UITextField!
@@ -86,7 +87,8 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
     }
     	
     @IBAction func doneButtonPressed(sender: UIBarButtonItem) {
-		
+        
+        locationManager.stopUpdatingLocation()
 		//TODO: Delete any existing rooms. (Doesn't work because PartyID is nil)
 		//serverLink.deleteRoomNow()
         if(roomName.text! == ""){
@@ -126,6 +128,20 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
         }
     }
     
+    //MARK: CLLocation Delegate Methods
+    
+    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+        print("Errors with Location: " + error.localizedDescription)
+    }
+    
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let location = locations.last
+        if(location != nil){
+            let currentLocation:PFGeoPoint = PFGeoPoint(latitude: Double(location!.coordinate.latitude), longitude: Double(location!.coordinate.longitude))
+            serverLink.currentLocation = currentLocation
+        }
+    }
+    
     func setCurrentSession(session: SPTSession) {
         self.session = session
     }
@@ -162,6 +178,12 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
         self.sideMenuController()?.sideMenu?.delegate = self;
         let sessionHandler = SessionHandler()
         let session = sessionHandler.getSession()
+        
+        //Geolocation
+        self.locationManager.delegate = self
+        self.locationManager.requestWhenInUseAuthorization()
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        self.locationManager.startUpdatingLocation()
 		
 		//TODO: why are we setting current session?
         setCurrentSession(session!)

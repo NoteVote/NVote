@@ -98,7 +98,7 @@ class MyMenuTableViewController: UITableViewController {
                     
                 }
                 let yes = UIAlertAction(title: "Yes", style: UIAlertActionStyle.Default){ alertAction in
-                    let destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("Home")
+                    let destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("Login")
                     serverLink.deleteRoom()
                     spotifyPlayer.currentURI = ""
                     spotifyPlayer.player?.logout({ (error:NSError!) -> Void in
