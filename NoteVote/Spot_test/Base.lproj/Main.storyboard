@@ -57,7 +57,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="69" id="dHu-yN-t0B"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="34"/>
+                                <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="35"/>
                                 <state key="normal" title="Start A Party">
                                     <color key="titleColor" red="0.1176470588" green="0.1176470588" blue="0.1176470588" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
@@ -78,13 +78,10 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bMi-3C-aqd">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                 <color key="backgroundColor" red="0.12549019610000001" green="0.22352941179999999" blue="0.94509803920000002" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="50"/>
+                                <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="35"/>
                                 <state key="normal" title="Find A Party">
                                     <color key="titleColor" red="0.090196078430000007" green="0.090196078430000007" blue="0.090196078430000007" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
-                                <variation key="heightClass=regular">
-                                    <fontDescription key="fontDescription" type="system" pointSize="35"/>
-                                </variation>
                                 <connections>
                                     <action selector="findPartyButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Ohe-Ex-xVZ"/>
                                 </connections>
@@ -1838,9 +1835,9 @@
         <image name="unvoted" width="51" height="51"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="SGF-lD-RXO"/>
-        <segue reference="RAP-yz-sDC"/>
+        <segue reference="MGp-jG-QCx"/>
         <segue reference="pVf-ab-le3"/>
+        <segue reference="RAP-yz-sDC"/>
         <segue reference="wLP-qv-tEz"/>
         <segue reference="72C-Fl-sSr"/>
         <segue reference="NUq-yw-HRS"/>
