@@ -10,7 +10,7 @@ import Parse
 import Crashlytics
 
 
-class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate {
+class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate{
     
     let sessionHandler = SessionHandler()
     var locationManager = CLLocationManager()
@@ -44,21 +44,21 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
         print("sideMenuDidOpen")
     }
     
+    
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
+        self.view.endEditing(true)
+        return false
     }
 
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        roomName.resignFirstResponder()
+        self.roomName.resignFirstResponder()
     }
     
 	//MARK: Page Options
     
     
     
-    
-	
+
     @IBAction func infoButtonPressedPlaylist(sender: UIButton) {
         let alertController = UIAlertController(title: "Playlist Info", message:
             "Choose a playlist to pull music from when no music is in your party queue. It keeps the party going.", preferredStyle: UIAlertControllerStyle.Alert)
@@ -87,44 +87,53 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
     }
     	
     @IBAction func doneButtonPressed(sender: UIBarButtonItem) {
-        
-        locationManager.stopUpdatingLocation()
-		//TODO: Delete any existing rooms. (Doesn't work because PartyID is nil)
-		//serverLink.deleteRoomNow()
-        if(roomName.text! == ""){
-            let alertController = UIAlertController(title: "Missing Info", message:
-                "You have to input a room name. It is needed so others know its your party.", preferredStyle: UIAlertControllerStyle.Alert)
-            alertController.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default,handler: nil))
-            self.presentViewController(alertController, animated: true, completion: nil)
-        }
-        else{
-            
-            serverLink.musicList = []
-            serverLink.songsVoted[session!.canonicalUsername] = []
-            serverLink.addParty(roomName.text!, partyID: session!.canonicalUsername, priv: privateParty){
-                (result:String) in
-                if(result == "good"){
-                    userDefaults.setObject(self.roomName.text!, forKey: "currentRoom")
-                    userDefaults.setObject(self.session!.canonicalUsername, forKey: "roomID")
-                    userDefaults.synchronize()
-                    
-                    //Playlist Selection and Conversion
-                    if(!self.playlistNames.isEmpty){
-                        spotifyPlayer.playlistToTracks(self.currentPickerRow)
+        if CLLocationManager.locationServicesEnabled() && CLLocationManager.authorizationStatus() == .AuthorizedWhenInUse{
+            locationManager.stopUpdatingLocation()
+            //TODO: Delete any existing rooms. (Doesn't work because PartyID is nil)
+            //serverLink.deleteRoomNow()
+            if(roomName.text! == ""){
+                let alertController = UIAlertController(title: "Missing Info", message:
+                    "You have to input a room name. It is needed so others know its your party.", preferredStyle: UIAlertControllerStyle.Alert)
+                alertController.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default,handler: nil))
+                self.presentViewController(alertController, animated: true, completion: nil)
+            }
+            else{
+                
+                serverLink.musicList = []
+                serverLink.songsVoted[session!.canonicalUsername] = []
+                serverLink.addParty(roomName.text!, partyID: session!.canonicalUsername, priv: privateParty){
+                    (result:String) in
+                    if(result == "good"){
+                        userDefaults.setObject(self.roomName.text!, forKey: "currentRoom")
+                        userDefaults.setObject(self.session!.canonicalUsername, forKey: "roomID")
+                        userDefaults.synchronize()
+                        
+                        //Playlist Selection and Conversion
+                        if(!self.playlistNames.isEmpty){
+                            spotifyPlayer.playlistToTracks(self.currentPickerRow)
+                        }
+                        
+                        //log who created a room
+                        Answers.logCustomEventWithName("Room Created", customAttributes: ["user":self.session!.canonicalUsername])
+                        
+                        self.performSegueWithIdentifier("CreateRoom_HostRoom", sender: nil)
                     }
-                    
-                    //log who created a room
-                    Answers.logCustomEventWithName("Room Created", customAttributes: ["user":self.session!.canonicalUsername])
-                    
-                    self.performSegueWithIdentifier("CreateRoom_HostRoom", sender: nil)
-                }
-                else{
-                    let alertController = UIAlertController(title: "Connection Problem", message:
-                        "Could not create room. Please try again later.", preferredStyle: UIAlertControllerStyle.Alert)
-                    alertController.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default,handler: nil))
-                    self.presentViewController(alertController, animated: true, completion: nil)
+                    else{
+                        let alertController = UIAlertController(title: "Connection Problem", message:
+                            "Could not create room. Please try again later.", preferredStyle: UIAlertControllerStyle.Alert)
+                        alertController.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default,handler: nil))
+                        self.presentViewController(alertController, animated: true, completion: nil)
+                    }
                 }
             }
+        } else {
+            let alertController = UIAlertController(title: "Location Not Enabled", message:
+                "Please go to Settings > NoteVote > Location to enable location for NoteVote.", preferredStyle: UIAlertControllerStyle.Alert)
+            let okay = UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default){ alertAction in
+                (self.performSegueWithIdentifier("CreateRoom_Home", sender: nil))
+            }
+            alertController.addAction(okay)
+            self.presentViewController(alertController, animated: true, completion: nil)
         }
     }
     
@@ -178,6 +187,7 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
         self.sideMenuController()?.sideMenu?.delegate = self;
         let sessionHandler = SessionHandler()
         let session = sessionHandler.getSession()
+        self.roomName.delegate = self
         
         //Geolocation
         self.locationManager.delegate = self

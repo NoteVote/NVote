@@ -68,7 +68,7 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
     
     /*Number of rows of tableView*/
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if(roomsNearby.count < 1 && serverLink.currentLocation != nil){
+        if(roomsNearby.count < 1 && CLLocationManager.authorizationStatus() == .AuthorizedWhenInUse){
             let alertController = UIAlertController(title: "No Parties Nearby", message: "There are no parites near you. Would you like to look again?", preferredStyle: UIAlertControllerStyle.Alert)
             let no = UIAlertAction(title: "No", style: UIAlertActionStyle.Destructive){ alertAction in
                 
@@ -86,6 +86,17 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
             alertController.addAction(no)
             alertController.addAction(yes)
             self.presentViewController(alertController, animated: true, completion: nil)
+            return 0
+        }
+        else if CLLocationManager.authorizationStatus() != .AuthorizedWhenInUse{
+            let alertController = UIAlertController(title: "Location Not Enabled", message:
+                "Please go to Settings > NoteVote > Location to enable location for NoteVote.", preferredStyle: UIAlertControllerStyle.Alert)
+            let okay = UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default){ alertAction in
+                (self.performSegueWithIdentifier("FindParty_Login", sender: nil))
+            }
+            alertController.addAction(okay)
+            self.presentViewController(alertController, animated: true, completion: nil)
+            
             return 0
         }
         else{

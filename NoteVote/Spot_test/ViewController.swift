@@ -47,11 +47,46 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
         
         authController.setParameters(spotifyAuthenticator)
         
-        let spotifyAuthenticationViewController = SPTAuthViewController.authenticationViewController()
-        spotifyAuthenticationViewController.delegate = self
-        spotifyAuthenticationViewController.modalPresentationStyle = UIModalPresentationStyle.OverCurrentContext
-        spotifyAuthenticationViewController.definesPresentationContext = true
-        presentViewController(spotifyAuthenticationViewController, animated: false, completion: nil)
+        let session = sessionHandler.getSession()
+        
+        if (session != nil) {
+            if (session!.isValid()) {
+                setSession(session!)
+                self.performSegueWithIdentifier("start_Party", sender: nil)
+            } else {
+                self.LogInLabel.hidden = false
+                self.loginButton.hidden = true
+                self.findPartyButton.hidden = true
+                self.activityRunning.startAnimating()
+                authController.setParameters(spotifyAuthenticator)
+                
+                spotifyAuthenticator.renewSession(session, callback:{
+                    (error: NSError?, session:SPTSession?) -> Void in
+                    
+                    if(error == nil){
+                        self.setSession(session!)
+                        
+                        if(session!.isValid()){
+                            self.activityRunning.stopAnimating()
+                            self.LogInLabel.hidden = true
+                            self.loginButton.hidden = false
+                            self.findPartyButton.hidden = false
+                            self.performSegueWithIdentifier("start_Party", sender: nil)
+                        }
+                        
+                    } else {
+                        Answers.logCustomEventWithName("Authentication Error", customAttributes:["Type":"Renew"])
+                    }
+                })
+            }
+        }
+        else{
+            let spotifyAuthenticationViewController = SPTAuthViewController.authenticationViewController()
+            spotifyAuthenticationViewController.delegate = self
+            spotifyAuthenticationViewController.modalPresentationStyle = UIModalPresentationStyle.OverCurrentContext
+            spotifyAuthenticationViewController.definesPresentationContext = true
+            presentViewController(spotifyAuthenticationViewController, animated: false, completion: nil)
+        }
     }
     
     @IBAction func findPartyButtonPressed(sender: UIButton) {
@@ -81,38 +116,6 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
         self.loginButton.layer.cornerRadius = 15
         self.findPartyButton.layer.cornerRadius = 15
         self.buttonHeight.constant = (self.view.bounds.size.height * 0.25)
-
-        let session = sessionHandler.getSession()
-        
-        if (session != nil) {
-            if (session!.isValid()) {
-                setSession(session!)
-            } else {
-                self.LogInLabel.hidden = false
-                self.loginButton.hidden = true
-                self.activityRunning.startAnimating()
-				authController.setParameters(spotifyAuthenticator)
-
-				spotifyAuthenticator.renewSession(session, callback:{
-					(error: NSError?, session:SPTSession?) -> Void in
-					
-					if(error == nil){
-                        self.setSession(session!)
-						
-                        if(session!.isValid()){
-                            self.activityRunning.stopAnimating()
-                            self.LogInLabel.hidden = true
-                            self.loginButton.hidden = false
-                            self.performSegueWithIdentifier("start_Party", sender: nil)
-                        }
-						
-					} else {
-                        Answers.logCustomEventWithName("Authentication Error", customAttributes:["Type":"Renew"])
-                    }
-                })
-            }
-        }
-    
     }
     
     override func viewWillAppear(animated: Bool) {

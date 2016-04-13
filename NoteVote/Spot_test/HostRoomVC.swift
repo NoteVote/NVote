@@ -36,6 +36,7 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     @IBOutlet weak var tableView: UITableView!
     var refreshControl:UIRefreshControl!
     
+    @IBOutlet weak var songLoadingActivityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var ProgressWidth: NSLayoutConstraint!
    //MARK: Dropdown View Methods
     
@@ -215,6 +216,9 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     
     
     func startSession(){
+        self.albumImage.hidden = true
+        self.songLoadingActivityIndicator.hidden = false
+        self.songLoadingActivityIndicator.startAnimating()
         let sessionHandler = SessionHandler()
         let session = sessionHandler.getSession()
         spotifyPlayer.playUsingSession(session)
@@ -226,8 +230,10 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     }
     
     func handleArt() {
-    
         albumImage.image = spotifyPlayer.albumArt!
+        self.albumImage.hidden = false
+        self.songLoadingActivityIndicator.stopAnimating()
+        self.songLoadingActivityIndicator.hidden = true
     }
 	
 	func updateProgress() {

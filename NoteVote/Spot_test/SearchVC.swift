@@ -52,12 +52,6 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource, EN
         searchBars.text! = ""
 	}
 	
-	func searchBarTextDidEndEditing(searchBar: UISearchBar) {
-	}
-	
-	func searchBarCancelButtonClicked(searchBar: UISearchBar) {
-	}
-	
 	func searchBarSearchButtonClicked(searchBar: UISearchBar) {
 		if(searchBar.text! != ""){
 			searchHandler.Search(searchBar.text!){
