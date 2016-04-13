@@ -29,8 +29,6 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
     // MARK: - ENSideMenu Delegate
     func sideMenuWillOpen() {
         print("sideMenuWillOpen")
-		let menu = self.sideMenuController()?.sideMenu?.menuViewController as! MyMenuTableViewController
-		menu.options("Home")
 		
     }
     
@@ -40,7 +38,7 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
     
     func sideMenuShouldOpenSideMenu() -> Bool {
         print("sideMenuShouldOpenSideMenu")
-        return true
+        return false
     }
     
     func sideMenuDidClose() {

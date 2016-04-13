@@ -7,20 +7,12 @@
 //
 
 import UIKit
+import Crashlytics
 
 class MyMenuTableViewController: UITableViewController {
     var selectedMenuItem : Int = 0
-    var menuOptions:[String] = ["Log out"]
-    
+    var menuOptions:[String] = ["Close Room"]
 	
-	func options(view: String){
-		if view == "Host" {
-			self.menuOptions = ["Close Room"]
-		} else {
-			self.menuOptions = ["Log out"]
-		}
-		self.tableView.reloadData()
-	}
 	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -91,7 +83,7 @@ class MyMenuTableViewController: UITableViewController {
         var destViewController : UIViewController
         switch (indexPath.row) {
         case 0:
-			if menuOptions[indexPath.row] == "Close Room" {
+			//Close Room
                 serverLink.currentLocation = nil
                 let alertController = UIAlertController(title: "Ending The Party", message: "Are you sure you want to end the party?", preferredStyle: UIAlertControllerStyle.Alert)
                 let no = UIAlertAction(title: "No", style: UIAlertActionStyle.Destructive){ alertAction in
@@ -103,7 +95,7 @@ class MyMenuTableViewController: UITableViewController {
                     spotifyPlayer.currentURI = ""
                     spotifyPlayer.player?.logout({ (error:NSError!) -> Void in
                         if error != nil {
-                            print("Enabling playback got logout error \(error)")
+                            Answers.logCustomEventWithName("Player Error", customAttributes: ["Type":"Logout"])
                             return
                         }
                     })
@@ -113,13 +105,7 @@ class MyMenuTableViewController: UITableViewController {
                 alertController.addAction(no)
                 alertController.addAction(yes)
                 self.presentViewController(alertController, animated: true, completion: nil)
-				
-			} else { //if equal to "Log out"
-				destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("Login")
-				userDefaults.removeObjectForKey("session")
-                sideMenuController()?.setContentViewController(destViewController)
-			}
-            break
+			
 		default:
             destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("ViewController4") 
             sideMenuController()?.setContentViewController(destViewController)

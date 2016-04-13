@@ -37,7 +37,7 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 		if ((player?.loggedIn) == false) {
 			player?.loginWithSession(sessionObj, callback: { (error:NSError!) -> Void in
 				if error != nil {
-					Answers.logCustomEventWithName("Player Error", customAttributes:["Code":error!])
+					Answers.logCustomEventWithName("Player Error", customAttributes:["Type":"Login"])
 					return
 				}
 				
@@ -50,7 +50,7 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 					if(currentTrack != ""){
 						self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
 							if error != nil {
-								Answers.logCustomEventWithName("Player Error", customAttributes:["Code":error!])
+								Answers.logCustomEventWithName("Player Error", customAttributes:["Type":"PlayURI", "Loc":"startupQueue"])
 								return
 							}
 							print("play on login... musicList")
@@ -71,7 +71,7 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
                             }
 							self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
 								if error != nil {
-									Answers.logCustomEventWithName("Player Error", customAttributes:["Code":error!])
+									Answers.logCustomEventWithName("Player Error", customAttributes:["Type":"PlayURI", "Loc":"startupPlaylist"])
 									return
 								}
 							})
@@ -102,7 +102,7 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 				if (currentTrack != "") {
 					self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
 						if error != nil {
-							Answers.logCustomEventWithName("Player Error", customAttributes:["Code":error!])
+							Answers.logCustomEventWithName("Player Error", customAttributes:["Type":"PlayURI", "Loc":"audioQueue"])
 							return
 						}
 					})
@@ -124,7 +124,7 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 					if (currentTrack != "") {
 						self.player?.playURI(NSURL(string: currentTrack), callback: { (error:NSError!) -> Void in
 							if error != nil {
-								Answers.logCustomEventWithName("Player Error", customAttributes:["Code":error!])
+								Answers.logCustomEventWithName("Player Error", customAttributes:["Type":"PlayURI", "Loc":"audioPlaylist"])
 								return
 							}
 						})
@@ -307,7 +307,7 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 		if (session!.isValid()) {
 			return true
 		} else {
-			authController.setPremiumParameters(spotifyAuthenticator)
+			authController.setParameters(spotifyAuthenticator)
 			
 			spotifyAuthenticator.renewSession(session, callback:{
 				(error: NSError?, session:SPTSession?) -> Void in
@@ -317,13 +317,13 @@ class SpotifyPlayer: NSObject, SPTAudioStreamingPlaybackDelegate {
 			
 					self.player?.playURI(NSURL(string: track), callback: { (error:NSError!) -> Void in
 						if error != nil {
-							Answers.logCustomEventWithName("Player Error", customAttributes:["Code":error!])
+							Answers.logCustomEventWithName("Player Error", customAttributes:["Type":"PlayURI", "Loc":"validateSession"])
 							return
 						}
 					})
 				}
 				else{
-					Answers.logCustomEventWithName("Authentication Error", customAttributes:["Code":error!])
+					Answers.logCustomEventWithName("Player Error", customAttributes:["Type":"PlayURI", "Loc":"validateSession"])
 				}
 			})
 			return false

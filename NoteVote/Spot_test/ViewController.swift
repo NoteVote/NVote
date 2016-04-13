@@ -37,7 +37,7 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
     }
     
     func authenticationViewController(authenticationViewController: SPTAuthViewController!, didFailToLogin error: NSError!) {
-		Answers.logCustomEventWithName("Authentication Fail", customAttributes:["Code":error!])
+		Answers.logCustomEventWithName("Authentication Fail", customAttributes:["Type":"Initial"])
     }
     
     
@@ -107,7 +107,7 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
                         }
 						
 					} else {
-                        Answers.logCustomEventWithName("Authentication Error", customAttributes:["Code":error!])
+                        Answers.logCustomEventWithName("Authentication Error", customAttributes:["Type":"Renew"])
                     }
                 })
             }
@@ -124,11 +124,7 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
     }
 
     override func viewDidAppear(animated: Bool) {
-//        if (currentSession != nil) {
-//            if (currentSession!.isValid()) {
-//                performSegueWithIdentifier("segueOne", sender: nil)
-//            }
-//        }
+
     }
     
     override func didReceiveMemoryWarning() {

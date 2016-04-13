@@ -163,8 +163,8 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     // MARK: - ENSideMenu Delegate
     func sideMenuWillOpen() {
         print("sideMenuWillOpen")
-		let menu = self.sideMenuController()?.sideMenu?.menuViewController as! MyMenuTableViewController
-		menu.options("Host")
+		
+		
 	}
     func sideMenuWillClose() {
         print("sideMenuWillClose")
@@ -194,7 +194,7 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
         if (spotifyPlayer.player!.isPlaying) {
             spotifyPlayer.player!.setIsPlaying(false, callback: { (error:NSError!) -> Void in
                 if error != nil {
-                    Answers.logCustomEventWithName("Player Error", customAttributes:["Code":error!])
+                    Answers.logCustomEventWithName("Player Error", customAttributes:["Type":"Play Button"])
                     return
                 }
             })
@@ -203,7 +203,7 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
         } else {
             spotifyPlayer.player!.setIsPlaying(true, callback: { (error:NSError!) -> Void in
                 if error != nil {
-                    Answers.logCustomEventWithName("Player Error", customAttributes:["Code":error!])
+                    Answers.logCustomEventWithName("Player Error", customAttributes:["Type":"Play Button"])
                     return
                 }
             })
