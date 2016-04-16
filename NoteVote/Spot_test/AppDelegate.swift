@@ -27,6 +27,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         UIApplication.sharedApplication().statusBarStyle = .LightContent
         
+        //Resets login info
+        if userDefaults.objectForKey("build") != nil {
+            if userDefaults.objectForKey("build") as! String != "1.1" {
+                if userDefaults.objectForKey("session") != nil {
+                    userDefaults.removeObjectForKey("session")
+                }
+                userDefaults.setObject("1.1", forKey: "build")
+            }
+        }
+        else if userDefaults.objectForKey("build") == nil {
+            if userDefaults.objectForKey("session") != nil {
+                userDefaults.removeObjectForKey("session")
+                userDefaults.setObject("1.1", forKey: "build")
+            }
+            else{
+                userDefaults.setObject("1.1", forKey:"build")
+            }
+        }
+        
+        
         //All stuff for Parse
         Parse.enableLocalDatastore()
         

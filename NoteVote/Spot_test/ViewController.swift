@@ -79,7 +79,8 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
 					
 					let notificationCenter = NSNotificationCenter.defaultCenter()
 					notificationCenter.postNotificationName("UserDataNotification", object: nil)
-				})
+                    return
+                })
             } else {
 				
 				//renew session
@@ -99,6 +100,7 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
 								
 								let notificationCenter = NSNotificationCenter.defaultCenter()
 								notificationCenter.postNotificationName("UserDataNotification", object: nil)
+                                return
 							})
 							
 							
@@ -122,11 +124,6 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
             presentViewController(spotifyAuthenticationViewController, animated: false, completion: nil)
         }
     }
-    
-    @IBAction func findPartyButtonPressed(sender: UIButton) {
-        performSegueWithIdentifier("find_Party", sender: nil)
-    }
-    
     
     
     //MARK: Additional Methods
@@ -173,7 +170,7 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
 				//premium user
 				case 2:
 					self.performSegueWithIdentifier("start_Party", sender: nil)
-					break
+					return
 				
 				//unlimited user (also free)
 				case 3:

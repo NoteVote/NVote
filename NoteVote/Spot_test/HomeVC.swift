@@ -68,7 +68,7 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
     
     /*Number of rows of tableView*/
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if(roomsNearby.count < 1 && CLLocationManager.authorizationStatus() == .AuthorizedWhenInUse){
+        if(roomsNearby.count < 1 && CLLocationManager.authorizationStatus() == .AuthorizedWhenInUse && serverLink.currentLocation != nil){
             let alertController = UIAlertController(title: "No Parties Nearby", message: "There are no parites near you. Would you like to look again?", preferredStyle: UIAlertControllerStyle.Alert)
             let no = UIAlertAction(title: "No", style: UIAlertActionStyle.Destructive){ alertAction in
                 
@@ -192,11 +192,14 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
     //MARK: Default Methods
     
     override func viewWillAppear(animated: Bool) {
+        
         super.viewWillAppear(true)
-        serverLink.findRooms(){
-            (result: [PFObject]) in
-            self.roomsNearby = result
-            self.tableView.reloadData()
+        if(serverLink.currentLocation != nil){
+            serverLink.findRooms(){
+                (result: [PFObject]) in
+                self.roomsNearby = result
+                self.tableView.reloadData()
+            }
         }
     }
     

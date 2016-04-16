@@ -216,9 +216,11 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     
     
     func startSession(){
-        self.albumImage.hidden = true
-        self.songLoadingActivityIndicator.hidden = false
-        self.songLoadingActivityIndicator.startAnimating()
+        if(self.albumImage == nil){
+            self.albumImage.hidden = true
+            self.songLoadingActivityIndicator.hidden = false
+            self.songLoadingActivityIndicator.startAnimating()
+        }
         let sessionHandler = SessionHandler()
         let session = sessionHandler.getSession()
         spotifyPlayer.playUsingSession(session)
@@ -296,13 +298,23 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if(spotifyPlayer.player != nil){
+            if(spotifyPlayer.player!.isPlaying){
+                playPauseButton.setBackgroundImage(UIImage(named: "PauseButton"), forState: UIControlState.Normal)
+            }
+            else{
+                playPauseButton.setBackgroundImage(UIImage(named:"PlayButton"), forState: UIControlState.Normal)
+            }
+        }
+        
         self.ProgressWidth.constant = (self.view.bounds.width * 0.55)
         serverLink.isHosting = true
         self.sideMenuController()?.sideMenu?.delegate = self;
         startSession()
         self.refreshControl = UIRefreshControl()
         self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-        self.refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
+        self.refreshControl.addTarget(self, action: #selector(HostRoomVC.refresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
         self.tableView.addSubview(refreshControl)
         
         
@@ -311,12 +323,12 @@ class HostRoomVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, U
         
         //Notification observer for track metadata
         let defaultCenter = NSNotificationCenter.defaultCenter()
-        defaultCenter.addObserver(self, selector: "handleMetadata", name: "MetadataChangeNotification", object: nil)
+        defaultCenter.addObserver(self, selector: #selector(HostRoomVC.handleMetadata), name: "MetadataChangeNotification", object: nil)
         //Notification observer for album art
-        defaultCenter.addObserver(self, selector: "handleArt", name: "ArtNotification", object: nil)
+        defaultCenter.addObserver(self, selector: #selector(HostRoomVC.handleArt), name: "ArtNotification", object: nil)
 		
 		//displaylink for progress bar
-		let displayLink = CADisplayLink(target: self, selector: "updateProgress")
+		let displayLink = CADisplayLink(target: self, selector: #selector(HostRoomVC.updateProgress))
 		displayLink.addToRunLoop(NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode)
 		
         //increase progress bar size

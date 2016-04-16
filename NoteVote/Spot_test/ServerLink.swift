@@ -104,6 +104,7 @@ class ServerLink {
      * -takes in a Bool(priv) -> used to set the room as private or not.
      */
     func addParty(partyName:String, partyID:String, priv:Bool, completion:(result: String) -> Void) {
+        
         let partyObject = PFObject(className:"PartyObject")
         partyObject["partyName"] = partyName
         partyObject["partyID"] = partyID

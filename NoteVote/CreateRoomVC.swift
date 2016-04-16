@@ -91,6 +91,23 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
             locationManager.stopUpdatingLocation()
             //TODO: Delete any existing rooms. (Doesn't work because PartyID is nil)
             //serverLink.deleteRoomNow()
+            if(serverLink.currentLocation == nil){
+                if CLLocationManager.authorizationStatus() == .Denied {
+                    let alertController = UIAlertController(title: "Location Not Enabled", message:
+                        "Please go to Settings > NoteVote > Location to enable location to create a party.", preferredStyle: UIAlertControllerStyle.Alert)
+                    alertController.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default,handler: nil))
+                    self.presentViewController(alertController, animated: true, completion: nil)
+                    return
+                }
+                else{
+                    let alertController = UIAlertController(title: "Location Not Found", message:
+                        "Location was unable to be found. Please go to Settings > NoteVote > Location to make sure location is enabled.", preferredStyle: UIAlertControllerStyle.Alert)
+                    alertController.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default,handler: nil))
+                    self.presentViewController(alertController, animated: true, completion: nil)
+                    return
+                }
+            }
+            
             if(roomName.text! == ""){
                 let alertController = UIAlertController(title: "Missing Info", message:
                     "You have to input a room name. It is needed so others know its your party.", preferredStyle: UIAlertControllerStyle.Alert)
@@ -130,10 +147,11 @@ class CreateRoomVC: UIViewController, ENSideMenuDelegate, UIPickerViewDataSource
             let alertController = UIAlertController(title: "Location Not Enabled", message:
                 "Please go to Settings > NoteVote > Location to enable location for NoteVote.", preferredStyle: UIAlertControllerStyle.Alert)
             let okay = UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default){ alertAction in
-                (self.performSegueWithIdentifier("CreateRoom_Home", sender: nil))
+                
             }
             alertController.addAction(okay)
             self.presentViewController(alertController, animated: true, completion: nil)
+            return
         }
     }
     

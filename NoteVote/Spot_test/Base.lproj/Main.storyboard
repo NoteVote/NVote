@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="mN5-bb-sYv">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="mN5-bb-sYv">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
@@ -300,8 +300,9 @@
                                                             <exclude reference="hdh-Yb-vj6"/>
                                                         </mask>
                                                     </variation>
-                                                    <variation key="heightClass=regular">
+                                                    <variation key="heightClass=regular" misplaced="YES">
                                                         <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                                        <rect key="frame" x="132" y="0.0" width="100" height="59"/>
                                                         <mask key="constraints">
                                                             <include reference="hdh-Yb-vj6"/>
                                                         </mask>
@@ -495,8 +496,9 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="0.7176381946" green="0.71765524150000004" blue="0.71764606239999995" alpha="0.65000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
-                                                    <variation key="heightClass=regular">
+                                                    <variation key="heightClass=regular" misplaced="YES">
                                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                        <rect key="frame" x="8" y="35" width="166" height="24"/>
                                                     </variation>
                                                     <variation key="widthClass=compact">
                                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
@@ -521,7 +523,8 @@
                                                             <exclude reference="x0X-fO-BDI"/>
                                                         </mask>
                                                     </variation>
-                                                    <variation key="heightClass=regular">
+                                                    <variation key="heightClass=regular" misplaced="YES">
+                                                        <rect key="frame" x="182" y="5" width="50" height="50"/>
                                                         <mask key="constraints">
                                                             <include reference="Nci-EO-WvA"/>
                                                             <include reference="x0X-fO-BDI"/>
@@ -547,8 +550,9 @@
                                                             <exclude reference="dOl-4o-sWG"/>
                                                         </mask>
                                                     </variation>
-                                                    <variation key="heightClass=regular">
+                                                    <variation key="heightClass=regular" misplaced="YES">
                                                         <fontDescription key="fontDescription" type="system" pointSize="35"/>
+                                                        <rect key="frame" x="8" y="0.0" width="166" height="35"/>
                                                         <mask key="constraints">
                                                             <exclude reference="dOl-4o-sWG"/>
                                                         </mask>
@@ -970,9 +974,8 @@
                                 <rect key="frame" x="-25" y="-30" width="97" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="21"/>
                                 <textInputTraits key="textInputTraits" keyboardAppearance="alert"/>
-                                <variation key="heightClass=regular" misplaced="YES">
+                                <variation key="heightClass=regular">
                                     <fontDescription key="fontDescription" type="system" pointSize="30"/>
-                                    <rect key="frame" x="220" y="124" width="160" height="30"/>
                                 </variation>
                                 <variation key="widthClass=compact">
                                     <fontDescription key="fontDescription" type="system" pointSize="21"/>
@@ -1049,7 +1052,8 @@
                                         <exclude reference="sLl-Si-IUV"/>
                                     </mask>
                                 </variation>
-                                <variation key="heightClass=regular">
+                                <variation key="heightClass=regular" misplaced="YES">
+                                    <rect key="frame" x="544" y="357" width="25" height="25"/>
                                     <mask key="constraints">
                                         <include reference="ckP-HQ-8rp"/>
                                         <include reference="sLl-Si-IUV"/>
@@ -1095,7 +1099,7 @@
                                     <outlet property="delegate" destination="Cr3-3m-eo6" id="UsS-yb-DkJ"/>
                                 </connections>
                             </pickerView>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uJ2-Xg-tTC">
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="uJ2-Xg-tTC">
                                 <rect key="frame" x="-25" y="-15" width="51" height="31"/>
                                 <connections>
                                     <action selector="roomCleanupSwitchSwitched:" destination="Cr3-3m-eo6" eventType="valueChanged" id="wkH-6J-aYi"/>
