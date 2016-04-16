@@ -18,7 +18,7 @@ class SpotifyAuth {
 	
 	func setParameters(auth: SPTAuth){
         auth.clientID = kClientID
-        auth.requestedScopes = [SPTAuthUserReadPrivateScope, SPTAuthStreamingScope, SPTAuthPlaylistReadPrivateScope]
+        auth.requestedScopes = [SPTAuthStreamingScope, SPTAuthPlaylistReadPrivateScope, SPTAuthUserReadPrivateScope]
         auth.redirectURL = NSURL(string: kCallbackURL)
         auth.tokenSwapURL = NSURL(string: kTokenSwapURL)
         auth.tokenRefreshURL = NSURL(string: kTokenRefreshURL)
