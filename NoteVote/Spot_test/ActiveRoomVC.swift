@@ -119,18 +119,21 @@ class ActiveRoomVC: UIViewController, UITableViewDelegate, UITableViewDataSource
 	
     override func viewDidLoad() {
         super.viewDidLoad()
-        do {
-            reachability = try Reachability.reachabilityForInternetConnection()
-        } catch {
-            print("Unable to create Reachability")
-            return
-        }
         
         self.sideMenuController()?.sideMenu?.delegate = self;
         self.refreshControl = UIRefreshControl()
         self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         self.refreshControl.addTarget(self, action: #selector(ActiveRoomVC.refresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
         self.tableView.addSubview(refreshControl)
+        
+        
+        do {
+            reachability = try Reachability.reachabilityForInternetConnection()
+            self.refresh("")
+        } catch {
+            print("Unable to create Reachability")
+            return
+        }
     }
 
   
@@ -161,14 +164,6 @@ class ActiveRoomVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.SingleLine
         self.tableView.separatorColor = UIColor.lightGrayColor()
         if reachability != nil{
-            if reachability!.isReachable(){
-                serverLink.getQueue(){
-                    (result: [PFObject]) in
-                    serverLink.musicList = result
-                    PFAnalytics.trackEventInBackground("getqueue", dimensions: ["where":"active"], block: nil)
-                    self.tableView.reloadData()
-                }
-            }
         }
         else{
             Answers.logCustomEventWithName("Reachability Error", customAttributes: nil)

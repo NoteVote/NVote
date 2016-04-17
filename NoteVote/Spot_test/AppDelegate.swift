@@ -32,17 +32,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if userDefaults.objectForKey("build") as! String != "1.1" {
                 if userDefaults.objectForKey("session") != nil {
                     userDefaults.removeObjectForKey("session")
+                    userDefaults.synchronize()
                 }
                 userDefaults.setObject("1.1", forKey: "build")
+                userDefaults.synchronize()
             }
         }
         else if userDefaults.objectForKey("build") == nil {
             if userDefaults.objectForKey("session") != nil {
                 userDefaults.removeObjectForKey("session")
                 userDefaults.setObject("1.1", forKey: "build")
+                userDefaults.synchronize()
             }
             else{
                 userDefaults.setObject("1.1", forKey:"build")
+                userDefaults.synchronize()
             }
         }
         

@@ -13,7 +13,7 @@ import Crashlytics
 class ViewController: UIViewController, SPTAuthViewDelegate {
 	
     private let sessionHandler = SessionHandler()
-    private let authController = SpotifyAuth()
+    private var authController = SpotifyAuth()
     private let spotifyAuthenticator = SPTAuth.defaultInstance()
     private var currentSession: SPTSession? = nil
 	private var user:SPTUser? = nil
@@ -46,7 +46,7 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
     }
 	
     func authenticationViewControllerDidCancelLogin(authenticationViewController: SPTAuthViewController!) {
-
+        endLoading()
     }
     
     func authenticationViewController(authenticationViewController: SPTAuthViewController!, didFailToLogin error: NSError!) {
@@ -100,7 +100,6 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
 								
 								let notificationCenter = NSNotificationCenter.defaultCenter()
 								notificationCenter.postNotificationName("UserDataNotification", object: nil)
-                                return
 							})
 							
 							
@@ -114,6 +113,8 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
             }
         }
         else{
+            
+            self.authController = SpotifyAuth()
 			//set default instance parameters
 			authController.setParameters(spotifyAuthenticator)
 			
@@ -123,6 +124,11 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
             spotifyAuthenticationViewController.definesPresentationContext = true
             presentViewController(spotifyAuthenticationViewController, animated: false, completion: nil)
         }
+    }
+    
+
+    @IBAction func findPartyButtonPressed(sender: UIButton) {
+        performSegueWithIdentifier("find_Party", sender: nil)
     }
     
     
@@ -164,13 +170,15 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
 					self.presentViewController(alertController, animated: true, completion: nil)
 					
 					Answers.logCustomEventWithName("Account Error", customAttributes: ["Account Level" : user!.product.rawValue])
+                    userDefaults.removeObjectForKey("session")
+                    userDefaults.synchronize()
 					
 					break
 			
 				//premium user
 				case 2:
 					self.performSegueWithIdentifier("start_Party", sender: nil)
-					return
+					break
 				
 				//unlimited user (also free)
 				case 3:
@@ -181,6 +189,9 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
 
 					
 					Answers.logCustomEventWithName("Account Error", customAttributes: ["Account Level" : user!.product.rawValue])
+                    
+                    userDefaults.removeObjectForKey("session")
+                    userDefaults.synchronize()
 					
 					break
 				
@@ -192,6 +203,9 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
 					self.presentViewController(alertController, animated: true, completion: nil)
 					
 					Answers.logCustomEventWithName("Account Error", customAttributes: ["Account Level" : user!.product.rawValue])
+                    
+                    userDefaults.removeObjectForKey("session")
+                    userDefaults.synchronize()
 
 					break
 			
@@ -204,6 +218,9 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
 			self.presentViewController(alertController, animated: true, completion: nil)
 
 			Answers.logCustomEventWithName("Get User Error", customAttributes: nil)
+            
+            userDefaults.removeObjectForKey("session")
+            userDefaults.synchronize()
 		}
 	}
 	
@@ -217,7 +234,7 @@ class ViewController: UIViewController, SPTAuthViewDelegate {
         self.buttonHeight.constant = (self.view.bounds.size.height * 0.25)
 		
 		let defaultCenter = NSNotificationCenter.defaultCenter()
-		defaultCenter.addObserver(self, selector: "handleUserData", name: "UserDataNotification", object: nil)
+		defaultCenter.addObserver(self, selector: #selector(ViewController.handleUserData), name: "UserDataNotification", object: nil)
 		
     }
     

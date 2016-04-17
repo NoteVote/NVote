@@ -52,7 +52,7 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
 
     @IBAction func menuButtonPressed(sender: AnyObject) {
         locationManager.stopUpdatingLocation()
-        performSegueWithIdentifier("FindParty_Login", sender: nil)
+        self.performSegueWithIdentifier("findParty_Login", sender: nil)
     }
 	
 	//MARK: TableView Delegate
@@ -68,40 +68,7 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
     
     /*Number of rows of tableView*/
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if(roomsNearby.count < 1 && CLLocationManager.authorizationStatus() == .AuthorizedWhenInUse && serverLink.currentLocation != nil){
-            let alertController = UIAlertController(title: "No Parties Nearby", message: "There are no parites near you. Would you like to look again?", preferredStyle: UIAlertControllerStyle.Alert)
-            let no = UIAlertAction(title: "No", style: UIAlertActionStyle.Destructive){ alertAction in
-                
-            }
-            let yes = UIAlertAction(title: "Yes", style: UIAlertActionStyle.Default){ alertAction in
-                if(serverLink.currentLocation != nil){
-                    serverLink.findRooms(){
-                        (result: [PFObject]) in
-                        self.roomsNearby = result
-                        self.tableView.reloadData()
-                    }
-                    self.refreshControl.endRefreshing()
-                }
-            }
-            alertController.addAction(no)
-            alertController.addAction(yes)
-            self.presentViewController(alertController, animated: true, completion: nil)
-            return 0
-        }
-        else if CLLocationManager.authorizationStatus() != .AuthorizedWhenInUse{
-            let alertController = UIAlertController(title: "Location Not Enabled", message:
-                "Please go to Settings > NoteVote > Location to enable location for NoteVote.", preferredStyle: UIAlertControllerStyle.Alert)
-            let okay = UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default){ alertAction in
-                (self.performSegueWithIdentifier("FindParty_Login", sender: nil))
-            }
-            alertController.addAction(okay)
-            self.presentViewController(alertController, animated: true, completion: nil)
-            
-            return 0
-        }
-        else{
-            return self.roomsNearby.count
-        }
+        return self.roomsNearby.count
     }
     
     /*CurrentPlayer Selected and moves to next page*/
@@ -162,6 +129,32 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
                 (result: [PFObject]) in
                 self.roomsNearby = result
                 self.tableView.reloadData()
+                
+                if CLLocationManager.authorizationStatus() != .AuthorizedWhenInUse{
+                    let alertController = UIAlertController(title: "Location Not Enabled", message:
+                        "Please go to Settings > NoteVote > Location to enable location for NoteVote.", preferredStyle: UIAlertControllerStyle.Alert)
+                    let okay = UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default){ alertAction in
+                        self.performSegueWithIdentifier("findParty_Login", sender: nil)
+                    }
+                    alertController.addAction(okay)
+                    self.presentViewController(alertController, animated: true, completion: nil)
+                }
+                
+                if( self.roomsNearby.count < 1){
+                    let alertController = UIAlertController(title: "No Parties Nearby", message: "There are no parites near you. Would you like to look again?", preferredStyle: UIAlertControllerStyle.Alert)
+                    let no = UIAlertAction(title: "No", style: UIAlertActionStyle.Destructive){ alertAction in
+                        
+                    }
+                    let yes = UIAlertAction(title: "Yes", style: UIAlertActionStyle.Default){ alertAction in
+                        if(serverLink.currentLocation != nil){
+                            self.refresh("")
+                            self.refreshControl.endRefreshing()
+                        }
+                    }
+                    alertController.addAction(no)
+                    alertController.addAction(yes)
+                    self.presentViewController(alertController, animated: true, completion: nil)
+                }
             }
             self.refreshControl.endRefreshing()
         }
@@ -179,27 +172,29 @@ class HomeVC: UIViewController, ENSideMenuDelegate, UITableViewDataSource, UITab
             let currentLocation:PFGeoPoint = PFGeoPoint(latitude: Double(location!.coordinate.latitude), longitude: Double(location!.coordinate.longitude))
             if(serverLink.currentLocation == nil){
                 serverLink.currentLocation = currentLocation
-                serverLink.findRooms(){
-                    (result: [PFObject]) in
-                    self.roomsNearby = result
-                    self.tableView.reloadData()
-                }
+                self.refresh("")
             }
             serverLink.currentLocation = currentLocation
+            
         }
     }
 
     //MARK: Default Methods
     
     override func viewWillAppear(animated: Bool) {
-        
         super.viewWillAppear(true)
-        if(serverLink.currentLocation != nil){
-            serverLink.findRooms(){
-                (result: [PFObject]) in
-                self.roomsNearby = result
-                self.tableView.reloadData()
+        if CLLocationManager.authorizationStatus() != .AuthorizedWhenInUse{
+            let alertController = UIAlertController(title: "Location Not Enabled", message:
+                "Please go to Settings > NoteVote > Location to enable location for NoteVote.", preferredStyle: UIAlertControllerStyle.Alert)
+            let okay = UIAlertAction(title: "Okay", style: UIAlertActionStyle.Default){ alertAction in
+                self.performSegueWithIdentifier("findParty_Login", sender: nil)
             }
+            alertController.addAction(okay)
+            self.presentViewController(alertController, animated: true, completion: nil)
+        }
+        
+        else if(serverLink.currentLocation != nil){
+            self.refresh("")
         }
     }
     
